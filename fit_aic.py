@@ -23,6 +23,14 @@ from cycler import cycler
 import warnings
 warnings.filterwarnings("ignore")
 
+from models import get_models
+
+args = None
+model_dict = None
+
+
+
+
 # Use the built-in catalogue
 with open('catalogue_fluxes_0202_good.pkl', 'rb') as f:
     cat_dict = pickle.load(f)
@@ -342,6 +350,8 @@ if __name__ == '__main__':
     parser.add_argument('--label', help="Output directory label (not compatible with --outdir)", default="AIC")
     args = parser.parse_args()
 
+    model_dict = model_settings()
+
     if args.outdir:
         base_outdir = args.outdir
     else:
@@ -352,7 +362,6 @@ if __name__ == '__main__':
     console.log(f"outdir: {base_outdir}")
 
     job_list = []
-    model_dict = model_settings()
     if args.jname:
         if ';' in args.jname:
             jname_list = args.jname.split(';')
@@ -373,8 +382,8 @@ if __name__ == '__main__':
     # Remove finished jobs
     if args.outdir and not args.override:
         for jname, model_name, outdir in job_list[:]:
-            if Path(f'{outdir}/{jname}/{model_name}_result.png').exists() and Path(
-                    f'{outdir}/{jname}/{model_name}_results.json').exists():
+            if (Path(f'{outdir}/{jname}/{model_name}_result.png').exists() and
+                Path(f'{outdir}/{jname}/{model_name}_results.json').exists()):
                 with open(f'{outdir}/{jname}/{model_name}_results.json', 'r', encoding='utf-8-sig') as f:
                     try:
                         data = json.load(f)
