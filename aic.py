@@ -12,6 +12,7 @@ from plots import plot
 
 def fit_aic(dataset: Dataset, model_name: str, env: Env):
     model = env.model_dict[model_name]['model']
+    labels = env.model_dict[model_name]['labels']
     start_params = env.model_dict[model_name]['start_params'].copy()
     limits = env.model_dict[model_name]['limits'].copy()
 
@@ -47,19 +48,25 @@ def fit_aic(dataset: Dataset, model_name: str, env: Env):
     else:
         aic = 2 * beta + 2 * k
 
+    # Calculate the parameter estimates
+    median, plus_minus = [], []
+    for i in range(len(labels)):
+        median.append(m.values[i])
+        plus_minus.append(m.errors[i])
+
     # Save the results
     with open(f'{env.outdir}/{dataset.jname}/{model_name}_results.json', 'w', encoding='utf-8-sig') as f:
         json.dump({
             'aic': aic,
             'param_estimates': {
-                'value': m.values.to_dict(),
-                'error': m.errors.to_dict(),
+                'median': median,
+                'plus_minus': plus_minus,
             },
             'dataset': dataset.to_dict(),
             'model': model_name,
-            'params': env.model_dict[model_name]['labels'],
-            'start_params': start_params,
-            'limits': limits,
+            'params': labels,
+            'start_params': env.model_dict[model_name]['start_params'],
+            'limits': env.model_dict[model_name]['limits'],
         }, f, ensure_ascii=False, indent=4)
 
     # Plots
@@ -67,7 +74,8 @@ def fit_aic(dataset: Dataset, model_name: str, env: Env):
         dataset=dataset,
         model=model,
         model_name_cap=env.model_dict[model_name]['name'],
-        labels=env.model_dict[model_name]['labels'],
+        labels=labels,
+        param_estimates=(median, plus_minus),
         iminuit_result=m,
         aic=aic,
         outpath=f'{env.outdir}/{dataset.jname}/{model_name}_result',

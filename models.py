@@ -71,7 +71,7 @@ def get_models(model_names: str = '', aic: bool = False) -> dict:
             log_parabolic_spectrum, high_frequency_cut_off_power_law, low_frequency_turn_over_power_law, \
             double_turn_over_spectrum
 
-    # 'start_params' and 'limits' are from pulsar_spectra and used in AIC calculation
+    # 'start_params' and 'limits' are used in AIC calculation via pulsar_spectra
     model_dict = {
         'simple_power_law' : {
             'name': 'simple power law',
@@ -137,7 +137,7 @@ def get_models(model_names: str = '', aic: bool = False) -> dict:
         },
     }
 
-    model_name_list = model_names.split(';')
+    model_name_list = [model_name.strip() for model_name in model_names.split(';') if model_name.strip()]
     for model_name in model_name_list:
         if model_name not in model_dict:
             raise ValueError(f'Model {model_name} not found in model_dict.')

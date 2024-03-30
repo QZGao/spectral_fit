@@ -47,16 +47,12 @@ def plot_corner(samples, labels, scales, outpath):
 
 
 def plot(dataset, model, model_name_cap, labels, outpath, env: Env,
-         samples=None, param_estimates=None, log_evidence=None, log_evidence_err=None,
+         param_estimates=None, samples=None, log_evidence=None, log_evidence_err=None,
          iminuit_result=None, aic=None):
     fig, ax = plt.subplots(figsize=(5*4/3, 5))
 
     if env.args.aic:
-        median, plus = [], []
-        for i in range(len(labels)):
-            median.append(iminuit_result.values[i])
-            plus.append(iminuit_result.errors[i])
-        minus = None
+        median, plus_minus = param_estimates
     else:
         median, plus, minus = param_estimates
 
@@ -138,11 +134,11 @@ def plot(dataset, model, model_name_cap, labels, outpath, env: Env,
         fit_info = f"{model_name_cap}\n$\ln z = {log_evidence:.2f} \pm {log_evidence_err:.2f}$"
     for i in range(len(labels)):
         fit_info += f"\n${labels[i]} = "
-        fit_info += f"{sci_notation(median[i])}" if len(f'{median[i]:.2f}') > 10 else f"{median[i]:.2f}"
-        if minus is None:
-            fit_info += f" \pm {sci_notation(plus[i])}$" if len(f'{plus[i]:.2f}') > 10 else f" \pm {plus[i]:.2f}$"
+        fit_info += f"{sci_notation(median[i])}" if len(f'{median[i]:.2f}') > 8 else f"{median[i]:.2f}"
+        if env.args.aic:
+            fit_info += f" \pm {sci_notation(plus_minus[i])}$" if len(f'{plus_minus[i]:.2f}') > 8 else f" \pm {plus_minus[i]:.2f}$"
         else:
-            fit_info += f"^{{+{sci_notation(plus[i])}}}_{{-{sci_notation(minus[i])}}}$" if len(f'{plus[i]:.2f}') > 10 else f"^{{+{plus[i]:.2f}}}_{{-{minus[i]:.2f}}}$"
+            fit_info += f"^{{+{sci_notation(plus[i])}}}_{{-{sci_notation(minus[i])}}}$" if len(f'{plus[i]:.2f}') > 8 else f"^{{+{plus[i]:.2f}}}_{{-{minus[i]:.2f}}}$"
         if labels[i].startswith('ν'):
             fit_info += ' MHz'
     fit_info += f"\n$ν_0 = {dataset.v0:.2f}$ MHz"
