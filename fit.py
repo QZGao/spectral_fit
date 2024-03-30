@@ -7,6 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from sys import exit
 
+import numpy as np
 from rich.console import Console
 from rich.progress import Progress
 
@@ -25,6 +26,15 @@ def fit(jname, model_name, env: Env):
         dataset = env.catalogue.get_pulsar(jname, nparams=len(env.model_dict[model_name]['labels']), args=env.args)
         if dataset is None:  # Not in the catalogue, or not enough data to fit
             return
+
+        if not env.args.no_requirements:
+            # Check if the dataset meets the requirements
+            if len(dataset.X) < 4:
+                console.log(f"{jname} {model_name}: Not enough data points to fit.", style='yellow')
+                return
+            if np.max(dataset.X) / np.min(dataset.X) < 2:
+                console.log(f"{jname} {model_name}: Not enough frequency range to fit.", style='yellow')
+                return
 
         Path(f'{env.outdir}/{jname}').mkdir(parents=True, exist_ok=True)
 
@@ -46,12 +56,15 @@ def parse_args() -> Namespace:
                                                                                     'log_parabolic_spectrum;'
                                                                                     'high_frequency_cut_off_power_law;'
                                                                                     'low_frequency_turn_over_power_law')
-    parser.add_argument('--fixed_freq_prior', help="Use fixed frequency prior", action='store_true')
 
     # Dataset
     parser.add_argument('--lit_set', help="Customize literature list", type=str, default=None)
     parser.add_argument('--atnf', help="Include ATNF pulsar catalogue", action='store_true')
     parser.add_argument('--jan_set', help="Use Jankowski et al. (2018)'s (reproduced) dataset", action='store_true')
+
+    # Fitting
+    parser.add_argument('--no_requirements', help="Do not require the dataset to have at least 4 points and a frequency range of at least 2", action='store_true')
+    parser.add_argument('--fixed_freq_prior', help="Use fixed frequency prior", action='store_true')
 
     # Dealing with outliers
     # 1) Remove outliers, set minimum YERR / Y, or set all YERR / Y to a value

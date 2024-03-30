@@ -59,7 +59,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
         priors.append((0., dataset.max_yerr_y()))  # up to 50% of the flux density
         labels.append('σ')
 
-    if Path(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl').exists():
+    if not env.args.override and Path(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl').exists():
         with open(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl', 'rb') as f:
             dres = pickle.load(f)
 
