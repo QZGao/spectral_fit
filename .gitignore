@@ -161,4 +161,4 @@ cython_debug/
 
 # Outputs
 output/
-catalogue/
+catalogue/*.pkl

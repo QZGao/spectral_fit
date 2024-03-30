@@ -114,12 +114,12 @@ class Catalogue:
         return Catalogue(cat_dict, citation_dict)
 
 
-def collect_catalogue_from_ATNF(custom_lit: list=None) -> Catalogue:
-    with open('Jankowski_2018_data.csv', 'r', encoding='utf-8-sig') as f:
+def collect_catalogue_from_ATNF() -> Catalogue:
+    with open('catalogue/Jankowski_2018_data.csv', 'r', encoding='utf-8-sig') as f:
         jan_df = pd.read_csv(f)
     jan_jnames = jan_df['PSRJ'].values.tolist()
 
-    print('Collecting data from ATNF Pulsar Catalogue via psrqpy...')
+    print('Collecting data from ATNF Pulsar Catalogue via psrqpy...', end='')
     query = psrqpy.QueryATNF(version='1.54', psrs=jan_jnames).pandas   # Following version used by Jankowski et al. (2018)
     freqs = [key for key in query.keys() if re.fullmatch(r'S\d+G?', key) is not None]
 
@@ -136,9 +136,6 @@ def collect_catalogue_from_ATNF(custom_lit: list=None) -> Catalogue:
         query_id = list(query['PSRJ']).index(jname)
         for x_str in freqs:
             ref = query[f'{x_str}_REF'][query_id]
-            if ref not in custom_lit:
-                continue
-
             y = query[x_str][query_id]
             if np.isnan(y):
                 continue
@@ -147,7 +144,6 @@ def collect_catalogue_from_ATNF(custom_lit: list=None) -> Catalogue:
             yerr = query[f'{x_str}_ERR'][query_id]
             if np.isnan(yerr) or yerr <= 0.:
                 yerr = 0.5 * y  # Assume 50% error if not provided
-
             if x_str.endswith('G'):
                 x = float(x_str[1:-1]) * 1e3   # GHz to MHz
             else:
@@ -159,6 +155,7 @@ def collect_catalogue_from_ATNF(custom_lit: list=None) -> Catalogue:
             cat_dict[jname]['REF'].append(ref)
 
     citation_dict = get_refs_from_ATNF()
+    print(' Done.')
     return Catalogue(cat_dict, citation_dict)
 
 
@@ -307,7 +304,7 @@ def collect_catalogue(custom_lit: list=None) -> Catalogue:
     if custom_lit is not None:
         cat_list = custom_lit
 
-    print(f'Collecting data from {len(cat_list)} literature sources via pulsar_spectra...')
+    print(f'Collecting data from {len(cat_list)} literature sources via pulsar_spectra...', end='')
     pusp_cat_dict = collect_catalogue_fluxes(only_use=cat_list, use_atnf=False)
     pusp_lit = []
     for _, v in pusp_cat_dict.items():
@@ -316,7 +313,7 @@ def collect_catalogue(custom_lit: list=None) -> Catalogue:
 
     # Add Posselt 2023 data if pulsar_catalogue does not have it
     if 'Posselt_2023' in cat_list and 'Posselt_2023' not in pusp_lit:
-        posselt_df = pd.read_csv('Posselt_2023_data.csv')
+        posselt_df = pd.read_csv('catalogue/Posselt_2023_data.csv')
         for _, row in posselt_df.iterrows():
             jname = row['PSRJ']
             x, y, yerr, ref = [], [], [], []
@@ -330,12 +327,11 @@ def collect_catalogue(custom_lit: list=None) -> Catalogue:
 
             if jname in pusp_cat_dict:
                 pusp_cat_dict[jname][0].extend(x)
-                pusp_cat_dict[jname][1].extend(None)  # bandwidth in pulsar_spectra, not used
                 pusp_cat_dict[jname][2].extend(y)
                 pusp_cat_dict[jname][3].extend(yerr)
                 pusp_cat_dict[jname][4].extend(ref)
             else:
-                pusp_cat_dict[jname] = [x, None, y, yerr, ref]
+                pusp_cat_dict[jname] = [x, None, y, yerr, ref]  # bandwidth is not used in this research
 
     # Apply formatting
     cat_dict = {}
@@ -499,28 +495,53 @@ def collect_catalogue(custom_lit: list=None) -> Catalogue:
             else:  # Not in the standard format
                 citation_dict[ref] = ref
 
+    print(' Done.')
+    if 'Posselt_2023' not in pusp_lit:
+        print('Posselt et al. (2023) data is manually added from catalogue/Posselt_2023_data.csv.')
     return Catalogue(cat_dict, citation_dict)
 
 
 def get_catalogue(args):
+    # Reproduce Jankowski et al. (2018)'s dataset
     if args.jan_set:
         # Load catalogue from pickle
-        if os.path.exists('catalogue_jan.pkl'):
-            with open('catalogue_jan.pkl', 'rb') as f:
+        if os.path.exists('catalogue/catalogue_jan.pkl'):
+            with open('catalogue/catalogue_jan.pkl', 'rb') as f:
                 return pickle.load(f)
 
-        cat = collect_catalogue_from_ATNF()
+        jan_lit = [
+            'Bartel_1978',
+            'Izvekova_1981',
+            'Lorimer_1995',
+            'van_Ommen_1997',
+            'Malofeev_2000',
+            'Karastergiou_2005',
+            'Johnston_2006',
+            'Kijak_2007',
+            'Bates_2011',
+            'Keith_2011',
+            'Zakharenko_2013',
+            'Dai_2015',
+            'Basu_2016',
+            'Bell_2016',
+            'Bilous_2016',
+            'Han_2016',
+            'Kijak_2017',
+            'Murphy_2017',
+            'Jankowski_2018'
+        ]
+        cat = collect_catalogue_from_ATNF() + collect_catalogue(custom_lit=jan_lit)
         # Save to pickle
-        with open('catalogue_jan.pkl', 'wb') as f:
+        with open('catalogue/catalogue_jan.pkl', 'wb') as f:
             pickle.dump(cat, f)
         return cat
 
     # Load catalogue from pickle
-    if os.path.exists('catalogue.pkl'):
-        with open('catalogue.pkl', 'rb') as f:
+    if os.path.exists('catalogue/catalogue.pkl'):
+        with open('catalogue/catalogue.pkl', 'rb') as f:
             cat = pickle.load(f)
-    if args.lit_set == cat.embeded_info['lit_set'] and args.atnf == cat.embeded_info['atnf']:
-        return cat
+        if args.lit_set == cat.embeded_info['lit_set'] and args.atnf == cat.embeded_info['atnf']:
+            return cat
 
     if args.lit_set is None:
         catalogue = collect_catalogue()
@@ -537,6 +558,6 @@ def get_catalogue(args):
     }
 
     # Save to pickle
-    with open('catalogue.pkl', 'wb') as f:
+    with open('catalogue/catalogue.pkl', 'wb') as f:
         pickle.dump(catalogue, f)
     return catalogue
