@@ -17,9 +17,9 @@ def parse_args() -> Namespace:
 
 if __name__ == "__main__":
     args = parse_args()
-    outdir = os.path.join('output', args.outdir)
+    outdir = f'output/{args.outdir}'
     console = Console()
-    console.log(f"Extracting {args.var} from {outdir}")
+    console.log(f"Extracting {args.var} from {args.outdir}")
 
     result_dict = {}
     with (Progress() as progress):
@@ -29,20 +29,20 @@ if __name__ == "__main__":
             folders = [f for f in os.listdir(outdir) if os.path.isdir(os.path.join(outdir, f))]
         task = progress.add_task("Processing", total=len(folders))
         for folder in folders:
-            progress.update(task, description=f"Processing {folder}")
+            progress.update(task, description=f"Processing {args.outdir}")
             if args.plot:
                 files = [f for f in os.listdir(os.path.join(outdir, folder)) if f.endswith('.pdf')]
             else:
                 files = [f for f in os.listdir(os.path.join(outdir, folder)) if f.endswith('.json')]
 
             if len(files) == 0:
-                console.log(f'Warning: {folder} does not contain any results.', style='yellow')
+                console.log(f'Warning: {args.outdir} does not contain any results.', style='yellow')
 
             if args.plot:
                 for file in files:
                     # Copy file to new directory
-                    os.makedirs(f'plots_from_{outdir}', exist_ok=True)
-                    shutil.copy(os.path.join(outdir, folder, file), f'plots_from_{outdir}/{folder}_{file}')
+                    os.makedirs(f'output/plots_from_{args.outdir}', exist_ok=True)
+                    shutil.copy(os.path.join(outdir, folder, file), f'output/plots_from_{args.outdir}/{folder}_{file}')
             else:
                 for file in files:
                     # Open file and extract variable
@@ -62,6 +62,6 @@ if __name__ == "__main__":
 
     # Save results to file
     if not args.plot:
-        with open(f'results_{args.var}_from_{outdir}.json', 'w') as f:
+        with open(f'output/results_{args.var}_from_{args.outdir}.json', 'w') as f:
             json.dump(result_dict, f, indent=4)
-        console.log(f"Results saved to results_{args.var}_from_{outdir}.json")
+        console.log(f"Results saved to results_{args.var}_from_{args.outdir}.json")
