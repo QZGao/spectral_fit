@@ -76,7 +76,7 @@ def parse_args() -> Namespace:
     # 2) Use additional systematic error
     parser.add_argument('--no_err', help="Do not use systematic error", action='store_true')
     parser.add_argument('--err_all', help="Use systematic error for all points", action='store_true')
-    parser.add_argument('--err_threshold', help="Threshold for systematic error", type=float, default=0.1)
+    parser.add_argument('--err_thresh', help="Threshold for systematic error", type=float, default=0.1)
 
     # Jan et al. (2018)'s method, a.k.a. AIC method in pulsar_spectra
     parser.add_argument('--aic', help="Use Jankowski et al. (2018)'s method instead", action='store_true')

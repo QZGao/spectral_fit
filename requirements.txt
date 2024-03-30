@@ -1,0 +1,11 @@
+corner
+cycler
+dynesty>=2.1.1
+iminuit>=2.11.1
+jacobi
+matplotlib>=3.4.0
+numpy>=1.13.3
+psrqpy>=1.2.4
+pulsar_spectra==2.0.4
+rich
+ultranest>=3.5.7

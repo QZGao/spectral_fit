@@ -25,7 +25,7 @@ def log_likelihood(p, model, labels, dataset: Dataset, env: Env):
     elif env.args.err_all:  # All with the same systematic error
         combined_err = dataset.combined_err(p[-1])
     else:  # With systematic error for points with yerr/y < threshold
-        combined_err = dataset.combined_err(p[-1], threshold=env.args.err_threshold)
+        combined_err = dataset.combined_err(p[-1], thresh=env.args.err_thresh)
 
     return np.sum(np.log(
         np.exp(- (dataset.Y - Y_model) ** 2 / (combined_err * combined_err)) * (2 * np.pi) ** -0.5 / combined_err))
@@ -132,4 +132,3 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
         outpath=f'{env.outdir}/{dataset.jname}/{model_name}_result',
         env=env,
     )
-

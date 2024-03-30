@@ -36,19 +36,19 @@ class Dataset:
     def max_yerr_y(self):
         return np.max(self.yerr_y())
 
-    def combined_err(self, sigma: float, ix=None, threshold: float = None):
-        if threshold is None:
+    def combined_err(self, sigma: float, ix=None, thresh: float = None):
+        if thresh is None:
             if ix is None:
                 return np.sqrt(self.YERR ** 2 + sigma ** 2 * self.Y ** 2)
             else:
                 return np.sqrt(self.YERR[ix] ** 2 + sigma ** 2 * self.Y[ix] ** 2)
         else:
             if ix is None:
-                return np.where(self.yerr_y() < threshold,
+                return np.where(self.yerr_y() < thresh,
                                 np.sqrt(self.YERR ** 2 + sigma ** 2 * self.Y ** 2),
                                 self.YERR)
             else:
-                return np.where(self.yerr_y(ix) < threshold,
+                return np.where(self.yerr_y(ix) < thresh,
                                 np.sqrt(self.YERR[ix] ** 2 + sigma ** 2 * self.Y[ix] ** 2),
                                 self.YERR[ix])
 

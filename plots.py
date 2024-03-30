@@ -69,7 +69,7 @@ def plot(dataset, model, model_name_cap, labels, outpath, env: Env,
             if env.args.err_all:  # All with the same systematic error
                 combined_err = dataset.combined_err(median[-1], ix)
             else:  # With systematic error for points with yerr/y < threshold
-                combined_err = dataset.combined_err(median[-1], ix, threshold=env.args.err_threshold)
+                combined_err = dataset.combined_err(median[-1], ix, thresh=env.args.err_thresh)
 
             prop_cycle, prop_cycle_copy = itertools.tee(prop_cycle)
             eb = ax.errorbar(dataset.X[ix], dataset.Y[ix], yerr=combined_err,
