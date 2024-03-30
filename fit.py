@@ -175,8 +175,12 @@ def parse_args():
                                                                        'log_parabolic_spectrum;'
                                                                        'high_frequency_cut_off_power_law;'
                                                                        'low_frequency_turn_over_power_law')
-    parser.add_argument('--jan_set', help="Use Jankowski et al. (2018)'s (reproduced) dataset", action='store_true')
     parser.add_argument('--fixed_freq_prior', help="Use fixed frequency prior", action='store_true')
+
+    # Dataset
+    parser.add_argument('--lit_set', help="Customize literature list", type=str, default=None)
+    parser.add_argument('--atnf', help="Include ATNF pulsar catalogue", action='store_true')
+    parser.add_argument('--jan_set', help="Use Jankowski et al. (2018)'s (reproduced) dataset", action='store_true')
 
     # Dealing with outliers
     # 1) Remove outliers, set minimum YERR / Y, or set all YERR / Y to a value

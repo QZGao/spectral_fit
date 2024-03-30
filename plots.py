@@ -68,7 +68,7 @@ def plot(dataset, model, model_name_cap, labels, samples, param_estimates, log_e
     for g in np.unique(dataset.REF):
         ix = np.where(dataset.REF == g)
 
-        if not env.args.not_err:
+        if not env.args.no_err:
             if env.args.err_all:  # All with the same systematic error
                 combined_err = dataset.combined_err(median[-1], ix)
             else:  # With systematic error for points with yerr/y < threshold

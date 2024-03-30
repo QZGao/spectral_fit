@@ -316,12 +316,6 @@ def fit(jname, model_name, outdir):
     YERR = np.array(cat_dict[jname]['YERR'])
     REF = np.array(cat_dict[jname]['REF'])
 
-    # Use the pulsar_spectra catalogue
-    # X = np.array(cat_dict[jname][0])
-    # Y = np.array(cat_dict[jname][2])
-    # YERR = np.array(cat_dict[jname][3])
-    # REF = np.array(cat_dict[jname][4])
-
     # If there are less unique Xs than the number of parameters, skip
     Xs_num = len(np.unique(X))
     params_num = len(model_settings()[model_name][2])
