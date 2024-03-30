@@ -64,62 +64,83 @@ def double_turn_over_spectrum(v, p: dict, v0, **kwargs):
     return np.where(x <= xc1, y1, y2)
 
 
-def get_models(model_names: str = '') -> dict:
+def get_models(model_names: str = '', aic: bool = False) -> dict:
+    if aic:
+        # Use the models from pulsar_spectra instead
+        from pulsar_spectra.models import simple_power_law, broken_power_law, log_parabolic_spectrum, \
+            high_frequency_cut_off_power_law, low_frequency_turn_over_power_law, double_turn_over_spectrum, \
+            double_broken_power_law
+
+    # 'start_params' and 'limits' are from pulsar_spectra and used in AIC calculation
     model_dict = {
-        "simple_power_law" : {
-            "name": 'simple power law',
-            "model": simple_power_law,
-            "labels": ['α', 'b'],
-            "priors": [(-10., 0.), (0., 1e3)],
+        'simple_power_law' : {
+            'name': 'simple power law',
+            'model': simple_power_law,
+            'labels': ['α', 'b'],
+            'priors': [(-10., 0.), (0., 1e3)],
+            'start_params': [-1.6, 100.],
+            'limits': [(-10., 0.), (0., None)],
         },
-        "broken_power_law" : {
-            "name": "broken power law",
-            "model": broken_power_law,
-            "labels": ['ν_b', 'α_1', 'α_2', 'b'],
-            "priors": ['dynamic', (-5., 5.), (-5., 5.), (0., 1e3)],
+        'broken_power_law' : {
+            'name': 'broken power law',
+            'model': broken_power_law,
+            'labels': ['ν_b', 'α_1', 'α_2', 'b'],
+            'priors': ['dynamic', (-5., 5.), (-5., 5.), (0., 1e3)],
+            'start_params': ['xmid', 2., -1.6, 100.],
+            'limits': ['dynamic', (-5., 5.), (-5., 5.), (0., None)],
         },
-        "double_broken_power_law" : {
-            "name": "double broken power law",
-            "model": double_broken_power_law,
-            "labels": ['ν_{b1}', 'ν_{b2}', 'α_1', 'α_2', 'α_3', 'b'],
-            "priors": ['dynamic', 'dynamic', (-5., 5.), (-5., 5.), (-5., 5.), (0., 1e3)],
+        'double_broken_power_law' : {
+            'name': 'double broken power law',
+            'model': double_broken_power_law,
+            'labels': ['ν_{b1}', 'ν_{b2}', 'α_1', 'α_2', 'α_3', 'b'],
+            'priors': ['dynamic', 'dynamic', (-5., 5.), (-5., 5.), (-5., 5.), (0., 1e3)],
+            'start_params': ['xmid', 'xmid', -1.6, -1.6, -1.6, 100.],
+            'limits': ['dynamic', 'dynamic', (-5., 5.), (-5., 5.), (-5., 5.), (0., None)],
         },
-        "log_parabolic_spectrum" : {
-            "name": "log-parabolic spectrum",
-            "model": log_parabolic_spectrum,
-            "labels": ['a', 'b', 'c'],
-            "priors": [(-5., 2.), (-5., 2.), (-10., 10.)],
+        'log_parabolic_spectrum' : {
+            'name': 'log-parabolic spectrum',
+            'model': log_parabolic_spectrum,
+            'labels': ['a', 'b', 'c'],
+            'priors': [(-5., 2.), (-5., 2.), (-10., 10.)],
+            'start_params': [-1., -1., 0.],
+            'limits': [(-5., 2.), (-5., 2.), (None, None)],
         },
-        "high_frequency_cut_off_power_law" : {
-            "name": "high-frequency cut-off power law",
-            "model": high_frequency_cut_off_power_law,
-            "labels": ['ν_c', 'α', 'b'],
-            "priors": ['dynamic_expanded', (-20., 5.), (0., 1e3)],
+        'high_frequency_cut_off_power_law' : {
+            'name': 'high-frequency cut-off power law',
+            'model': high_frequency_cut_off_power_law,
+            'labels': ['ν_c', 'α', 'b'],
+            'priors': ['dynamic_expanded', (-20., 5.), (0., 1e3)],
+            'start_params': ['xmax', -1.6, 1.],
+            'limits': ['dynamic_expanded', (-20., 5.), (0., None)],
         },
-        "high_frequency_cut_off_power_law_jan" : {
-            "name": "high-frequency cut-off power law",
-            "model": high_frequency_cut_off_power_law_jan,
-            "labels": ['ν_c', 'b'],
-            "priors": ['dynamic_expanded', (0., 1e3)],
+        # 'high_frequency_cut_off_power_law_jan' : {
+        #     'name': 'high-frequency cut-off power law',
+        #     'model': high_frequency_cut_off_power_law_jan,
+        #     'labels': ['ν_c', 'b'],
+        #     'priors': ['dynamic_expanded', (0., 1e3)],
+        # },
+        'low_frequency_turn_over_power_law' : {
+            'name': 'low-frequency turn-over power law',
+            'model': low_frequency_turn_over_power_law,
+            'labels': ['ν_c', 'α', 'b', 'β'],
+            'priors': ['dynamic', (-20., 5.), (0., 1e3), (0., 2.1)],
+            'start_params': ['xmid', -1.6, 100., 1.],
+            'limits': ['dynamic', (-20., 5.), (0., None) , (0., 2.1)],
         },
-        "low_frequency_turn_over_power_law" : {
-            "name": "low-frequency turn-over power law",
-            "model": low_frequency_turn_over_power_law,
-            "labels": ['ν_c', 'α', 'b', 'β'],
-            "priors": ['dynamic', (-20., 5.), (0., 1e3), (0., 2.1)],
-        },
-        "double_turn_over_spectrum" : {
-            "name": "double turn-over spectrum",
-            "model": double_turn_over_spectrum,
-            "labels": ['ν_{c1}', 'ν_{c2}', 'α', 'b', 'β'],
-            "priors": ['dynamic_expanded', 'dynamic', (-20., 5.), (0., 1e3), (0., 2.1)],
+        'double_turn_over_spectrum' : {
+            'name': 'double turn-over spectrum',
+            'model': double_turn_over_spectrum,
+            'labels': ['ν_{c1}', 'ν_{c2}', 'α', 'β', 'b'],
+            'priors': ['dynamic_expanded', 'dynamic', (-20., 5.), (0., 2.1), (0., 1e3)],
+            'start_params': ['xmax', 'xmid', -1.6, 100., 1.],
+            'limits': ['dynamic_expanded', 'dynamic', (-20., 5.), (0., 2.1), (0., None)],
         },
     }
 
     model_name_list = model_names.split(';')
     for model_name in model_name_list:
         if model_name not in model_dict:
-            raise ValueError(f"Model {model_name} not found in model_dict.")
+            raise ValueError(f'Model {model_name} not found in model_dict.')
     for model_name in list(model_dict.keys()):
         if model_name not in model_name_list:
             model_dict.pop(model_name)
