@@ -67,9 +67,9 @@ def double_turn_over_spectrum(v, p: dict, v0, **kwargs):
 def get_models(model_names: str = '', aic: bool = False) -> dict:
     if aic:
         # Use the models from pulsar_spectra instead
-        from pulsar_spectra.models import simple_power_law, broken_power_law, log_parabolic_spectrum, \
-            high_frequency_cut_off_power_law, low_frequency_turn_over_power_law, double_turn_over_spectrum, \
-            double_broken_power_law
+        from pulsar_spectra.models import simple_power_law, broken_power_law, double_broken_power_law, \
+            log_parabolic_spectrum, high_frequency_cut_off_power_law, low_frequency_turn_over_power_law, \
+            double_turn_over_spectrum
 
     # 'start_params' and 'limits' are from pulsar_spectra and used in AIC calculation
     model_dict = {

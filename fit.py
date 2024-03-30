@@ -2,7 +2,7 @@ import json
 import multiprocessing
 import traceback
 import warnings
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 from datetime import datetime
 from pathlib import Path
 from sys import exit
@@ -36,16 +36,16 @@ def fit(jname, model_name, env: Env):
         console.log(f"Error: {jname} {model_name}\n{e}\n{traceback.format_exc()}", style='red')
 
 
-def parse_args():
+def parse_args() -> Namespace:
     parser = ArgumentParser()
 
     # Data used for fitting
     parser.add_argument('--jname', help="Specific pulsar name")
     parser.add_argument('--model', help="Specific model name", default='simple_power_law;'
-                                                                       'broken_power_law;'
-                                                                       'log_parabolic_spectrum;'
-                                                                       'high_frequency_cut_off_power_law;'
-                                                                       'low_frequency_turn_over_power_law')
+                                                                                    'broken_power_law;'
+                                                                                    'log_parabolic_spectrum;'
+                                                                                    'high_frequency_cut_off_power_law;'
+                                                                                    'low_frequency_turn_over_power_law')
     parser.add_argument('--fixed_freq_prior', help="Use fixed frequency prior", action='store_true')
 
     # Dataset
