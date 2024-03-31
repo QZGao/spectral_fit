@@ -1,6 +1,7 @@
 import os
 import pickle
 import re
+from argparse import Namespace
 
 import numpy as np
 import pandas as pd
@@ -54,12 +55,12 @@ class Dataset:
 
 
 class Catalogue:
-    def __init__(self, cat_dict, citation_dict):
+    def __init__(self, cat_dict: dict, citation_dict: dict):
         self.cat_dict = cat_dict
         self.citation_dict = citation_dict
         self.embeded_info = None
 
-    def get_pulsar(self, jname: str, nparams: int, args) -> Dataset | None:
+    def get_pulsar(self, jname: str, args: Namespace) -> Dataset | None:
         if jname not in self.cat_dict:
             return
 
@@ -87,14 +88,6 @@ class Catalogue:
         if args.outliers_set_all:
             YERR = np.ones_like(Y) * args.outliers_set_all * Y
 
-        # If there are less unique Xs than the number of parameters, skip
-        if len(np.unique(X)) < nparams:
-            return
-
-        # If Xs do not span at least a factor of 2, skip
-        if X.max() / X.min() < 2:
-            return
-
         v0 = 10 ** ((np.log10(X.max()) + np.log10(X.min())) / 2)  # central frequency
         return Dataset(jname, X, Y, YERR, REF, v0)
 
@@ -121,7 +114,8 @@ def collect_catalogue_from_ATNF() -> Catalogue:
     jan_jnames = jan_df['PSRJ'].values.tolist()
 
     print('Collecting data from ATNF Pulsar Catalogue via psrqpy...', end='')
-    query = psrqpy.QueryATNF(version='1.54', psrs=jan_jnames).pandas   # Following version used by Jankowski et al. (2018)
+    query = psrqpy.QueryATNF(version='1.54',
+                             psrs=jan_jnames).pandas  # Following version used by Jankowski et al. (2018)
     freqs = [key for key in query.keys() if re.fullmatch(r'S\d+G?', key) is not None]
 
     cat_dict = {}
@@ -146,7 +140,7 @@ def collect_catalogue_from_ATNF() -> Catalogue:
             if np.isnan(yerr) or yerr <= 0.:
                 yerr = 0.5 * y  # Assume 50% error if not provided
             if x_str.endswith('G'):
-                x = float(x_str[1:-1]) * 1e3   # GHz to MHz
+                x = float(x_str[1:-1]) * 1e3  # GHz to MHz
             else:
                 x = float(x_str[1:])
 
@@ -198,7 +192,7 @@ def get_refs_from_ATNF() -> dict:
     return citation_dict
 
 
-def collect_catalogue(custom_lit: list=None) -> Catalogue:
+def collect_catalogue(custom_lit: list = None) -> Catalogue:
     cat_list = DEFAULT_LITERATURE_SET  # List of calibrated literature
     if custom_lit is not None:
         cat_list = custom_lit
@@ -237,8 +231,8 @@ def collect_catalogue(custom_lit: list=None) -> Catalogue:
     for jname, (X, _, Y, YERR, REF) in pusp_cat_dict.items():
         # Check correctness of the data
         if (any([np.isnan(x) or x <= 0. for x in X]) or
-            any([np.isnan(y) or y < 0. for y in Y]) or
-            any([np.isnan(y) or y < 0. for y in YERR])):
+                any([np.isnan(y) or y < 0. for y in Y]) or
+                any([np.isnan(y) or y < 0. for y in YERR])):
             raise ValueError(f'Incorrect data for {jname}: X = {X}, Y = {Y}, YERR = {YERR}, REF = {REF}.')
 
         cat_dict[jname] = {
@@ -267,7 +261,7 @@ def collect_catalogue(custom_lit: list=None) -> Catalogue:
     return Catalogue(cat_dict, citation_dict)
 
 
-def get_catalogue(args):
+def get_catalogue(args: Namespace) -> Catalogue:
     # Reproduce Jankowski et al. (2018)'s dataset
     if args.jan_set:
         # Load catalogue from pickle

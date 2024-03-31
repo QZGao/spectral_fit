@@ -20,7 +20,7 @@ def sci_notation(num: float):
     return f"{{{significand} \\times 10^{{{exponent}}}}}"
 
 
-def plot_corner(samples, labels, scales, outpath):
+def plot_corner(samples, labels, scales, outpath: str):
     fig, axes = plt.subplots(len(labels), len(labels), figsize=(3*len(labels), 3*len(labels)))
     corner(
         samples,
@@ -46,7 +46,7 @@ def plot_corner(samples, labels, scales, outpath):
     plt.close()
 
 
-def plot(dataset, model, model_name_cap, labels, outpath, env: Env,
+def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env,
          param_estimates=None, samples=None, log_evidence=None, log_evidence_err=None,
          iminuit_result=None, aic=None):
     fig, ax = plt.subplots(figsize=(5*4/3, 5))

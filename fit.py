@@ -21,15 +21,15 @@ warnings.filterwarnings("ignore")
 console = Console()
 
 
-def fit(jname, model_name, env: Env):
+def fit(jname: str, model_name: str, env: Env):
     try:
-        dataset = env.catalogue.get_pulsar(jname, nparams=len(env.model_dict[model_name]['labels']), args=env.args)
-        if dataset is None:  # Not in the catalogue, or not enough data to fit
+        dataset = env.catalogue.get_pulsar(jname, args=env.args)
+        if dataset is None:  # Not in the catalogue
             return
 
         if not env.args.no_requirements:
             # Check if the dataset meets the requirements
-            if len(dataset.X) < 4:
+            if len(dataset.X) < max(4, len(env.model_dict[model_name]['labels'])):
                 console.log(f"{jname} {model_name}: Not enough data points to fit.", style='yellow')
                 return
             if np.max(dataset.X) / np.min(dataset.X) < 2:
