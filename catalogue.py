@@ -33,8 +33,8 @@ class Dataset:
         else:
             return self.YERR[ix] / self.Y[ix]
 
-    def max_yerr_y(self):
-        return np.max(self.yerr_y())
+    def max_yerr_y(self) -> float:
+        return float(np.max(self.yerr_y()))
 
     def combined_err(self, sigma: float, ix=None, thresh: float = None):
         if thresh is None:

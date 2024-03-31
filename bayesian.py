@@ -110,7 +110,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
             'dataset': dataset.to_dict(),
             'model': model_name,
             'params': labels,
-            'priors': priors,
+            'priors': np.array(priors).tolist(),  # Format changed to numpy.int32 by dynesty, so convert them back for JSON compatibility
         }, f, ensure_ascii=False, indent=4)
 
     # Plots

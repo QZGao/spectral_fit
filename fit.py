@@ -114,16 +114,16 @@ def get_jobs(env: Env) -> list:
     if args.outdir and not args.override:
         for jname, model_name, env in job_list[:]:
             # Check if the job is finished
-            if not Path(f'{outdir}/{jname}/{model_name}_result.png').exists() or not Path(
-                    f'{outdir}/{jname}/{model_name}_results.json').exists():
+            if not Path(f'{env.outdir}/{jname}/{model_name}_result.png').exists() or not Path(
+                    f'{env.outdir}/{jname}/{model_name}_results.json').exists():
                 continue
             if not args.aic:
-                if not Path(f'{outdir}/{jname}/{model_name}_dres.pkl').exists() or not Path(
-                        f'{outdir}/{jname}/{model_name}_corner.png').exists():
+                if not Path(f'{env.outdir}/{jname}/{model_name}_dres.pkl').exists() or not Path(
+                        f'{env.outdir}/{jname}/{model_name}_corner.png').exists():
                     continue
 
             # Check if the result file is readable
-            with open(f'{outdir}/{jname}/{model_name}_results.json', 'r', encoding='utf-8-sig') as f:
+            with open(f'{env.outdir}/{jname}/{model_name}_results.json', 'r', encoding='utf-8-sig') as f:
                 try:
                     data = json.load(f)
                     if ('aic' if args.aic else 'log_evidence') in data:
@@ -138,7 +138,7 @@ if __name__ == '__main__':
     args = parse_args()
 
     if args.outdir:
-        outdir = args.outdir
+        outdir = f'output/{args.outdir}'
     else:
         outdir = f'output/outdir_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}'
         if args.label:
