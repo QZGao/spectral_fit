@@ -24,7 +24,7 @@ console = Console()
 def fit(jname: str, model_name: str, env: Env):
     try:
         dataset = env.catalogue.get_pulsar(jname, args=env.args)
-        if dataset is None:  # Not in the catalogue
+        if dataset is None:  # Not in the catalogue, or no data points
             return
 
         if not env.args.no_requirements:
@@ -69,8 +69,8 @@ def parse_args() -> Namespace:
     # Dealing with outliers
     # 1) Remove outliers, set minimum YERR / Y, or set all YERR / Y to a value
     parser.add_argument('--outliers_rm', help="Remove outliers", action='store_true')
-    parser.add_argument('--outliers_set_min', help="Set minimum YERR / Y (when --outliers_rm is not set)", type=float)
-    parser.add_argument('--outliers_set_all', help="Don't believe in any of the YERRs and set them all to this value",
+    parser.add_argument('--outliers_min', help="Set minimum YERR / Y (when --outliers_rm is not set)", type=float)
+    parser.add_argument('--outliers_all', help="Don't believe in any of the YERRs and set them all to this value",
                         type=float)
 
     # 2) Use additional systematic error

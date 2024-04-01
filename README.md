@@ -8,19 +8,19 @@ pip install -r requirements.txt
 ## Usage
 ### Main dataset
 
-Default fitting (with 10% systematic error threshold):
+Default fitting (adding systematic error to points where yerr/y ≤ 10%):
 ```bash
 python fit.py
 ```
 
-Fitting with 20% error threshold:
+Fitting with added systematic error to points where yerr/y ≤ 20%:
 ```bash
 python fit.py --err_thresh 0.2
 ```
 
-Fitting with all errors set to 50%:
+Fitting with all yerr set to 50% of y (no additional systematic error):
 ```bash
-python fit.py --err_all 0.5
+python fit.py --outliers_all 0.5 --no_err
 ```
 
 Fitting with AIC method:

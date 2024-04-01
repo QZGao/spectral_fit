@@ -81,12 +81,16 @@ class Catalogue:
                 YERR_Y = YERR / Y
         else:
             # Set minimum YERR / Y
-            if args.outliers_set_min:
-                YERR = np.where(YERR / Y < args.outliers_set_min, args.outliers_set_min * Y, YERR)
+            if args.outliers_min:
+                YERR = np.where(YERR / Y < args.outliers_min, args.outliers_min * Y, YERR)
 
         # Don't believe in any of the YERRs
-        if args.outliers_set_all:
-            YERR = np.ones_like(Y) * args.outliers_set_all * Y
+        if args.outliers_all:
+            YERR = np.ones_like(Y) * args.outliers_all * Y
+
+        # Extreme case: no data, or after removing outliers, no data left
+        if len(X) <= 0:
+            return
 
         v0 = 10 ** ((np.log10(X.max()) + np.log10(X.min())) / 2)  # central frequency
         return Dataset(jname, X, Y, YERR, REF, v0)
