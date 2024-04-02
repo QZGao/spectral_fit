@@ -3,8 +3,27 @@ import os
 import shutil
 from argparse import ArgumentParser, Namespace
 
+from PIL import Image
 from rich.console import Console
 from rich.progress import Progress
+
+
+def get_plot(outdir: str, jname: str | list[str], model: str | list[str]):
+    if not os.path.exists(f'output/{outdir}'):
+        raise FileNotFoundError(f"Directory output/{outdir} does not exist.")
+
+    if isinstance(jname, str):
+        jname = [jname]
+    if isinstance(model, str):
+        model = [model]
+
+    for j in jname:
+        for m in model:
+            if not os.path.exists(f'output/{outdir}/{j}/{j}_{m}_result.png'):
+                raise FileNotFoundError(f"File output/{outdir}/{j}/{j}_{m}_result.png does not exist.")
+
+            img = Image.open(f'output/{outdir}/{j}/{j}_{m}_result.png')
+            img.show()
 
 
 def parse_args() -> Namespace:

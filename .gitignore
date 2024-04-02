@@ -160,5 +160,5 @@ cython_debug/
 .idea/
 
 # Outputs
-output/
+output/outdir_*
 catalogue/*.pkl
