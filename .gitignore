@@ -162,3 +162,5 @@ cython_debug/
 # Outputs
 output/
 catalogue/*.pkl
+notebooks/*.pdf
+notebooks/*.png
