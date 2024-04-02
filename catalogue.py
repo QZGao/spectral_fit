@@ -99,6 +99,9 @@ class Catalogue:
         cat_dict = {jname: self.cat_dict[jname] for jname in jname_list}
         return Catalogue(cat_dict, self.citation_dict)
 
+    def at_least_n_points(self, n: int) -> list[str]:
+        return [jname for jname, data in self.cat_dict.items() if len(data['X']) >= n]
+
     def __add__(self, other):
         cat_dict = self.cat_dict.copy()
         for jname, data in other.cat_dict.items():
