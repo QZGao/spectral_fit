@@ -46,7 +46,11 @@ def fit_aic(dataset: Dataset, model_name: str, env: Env):
     if len(dataset.X) - k - 1 != 0:
         aic = 2 * beta + 2 * k + (2 * k * (k + 1)) / (len(dataset.X) - k - 1)
     else:
-        aic = 2 * beta + 2 * k
+        # AIC calculation is not possible if the number of data points is no more than the number of parameters plus 1
+        # See the following link for pulsar_spectra's implementation
+        # https://github.com/NickSwainston/pulsar_spectra/blob/373f65d866c3bf162fd6d93780235cfbd81849b5/pulsar_spectra/spectral_fit.py#L414-L418
+        raise ValueError("For AIC calculation, the number of data points must be more than the number of parameters plus 1.")
+        # This error will not actually be raised, because the number of data points is checked beforehand in fit.py
 
     # Calculate the parameter estimates
     median, plus_minus = [], []
