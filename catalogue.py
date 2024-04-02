@@ -119,18 +119,16 @@ class Catalogue:
         return len(self.cat_dict)
 
 
-def collect_catalogue_from_ATNF() -> Catalogue:
-    with open('catalogue/Jankowski_2018_data.csv', 'r', encoding='utf-8-sig') as f:
-        jan_df = pd.read_csv(f)
-    jan_jnames = jan_df['PSRJ'].values.tolist()
-
+def collect_catalogue_from_ATNF(jname_list: list = None, atnf_ver: str = '1.54') -> Catalogue:
     print('Collecting data from ATNF Pulsar Catalogue via psrqpy...', end='')
-    query = psrqpy.QueryATNF(version='1.54',
-                             psrs=jan_jnames).pandas  # Following version used by Jankowski et al. (2018)
+    query_obj = psrqpy.QueryATNF(psrs=jname_list, version=atnf_ver)
+    query = query_obj.pandas
     freqs = [key for key in query.keys() if re.fullmatch(r'S\d+G?', key) is not None]
+    if jname_list is None:
+        jname_list = list(query['PSRJ'])
 
     cat_dict = {}
-    for jname in jan_jnames:
+    for jname in jname_list:
         if jname not in cat_dict:
             cat_dict[jname] = {
                 'X': [],
@@ -160,13 +158,13 @@ def collect_catalogue_from_ATNF() -> Catalogue:
             cat_dict[jname]['YERR'].append(yerr)
             cat_dict[jname]['REF'].append(ref)
 
-    citation_dict = get_refs_from_ATNF()
-    print(' Done.')
+    citation_dict = get_refs_from_ATNF(atnf_ver=atnf_ver)
+    print(f' Done. (Version: {query_obj.get_version})')
     return Catalogue(cat_dict, citation_dict)
 
 
-def get_refs_from_ATNF() -> dict:
-    ref_dict = psrqpy.get_references(version='1.54')  # Following version used by Jankowski et al. (2018)
+def get_refs_from_ATNF(atnf_ver: str = '1.54') -> dict:
+    ref_dict = psrqpy.get_references(version=atnf_ver)  # Following version used by Jankowski et al. (2018)
     citation_dict = {}
 
     for ref_code, ref_str in ref_dict.items():
@@ -203,20 +201,25 @@ def get_refs_from_ATNF() -> dict:
     return citation_dict
 
 
-def collect_catalogue(custom_lit: list = None) -> Catalogue:
-    cat_list = DEFAULT_LITERATURE_SET  # List of calibrated literature
-    if custom_lit is not None:
-        cat_list = custom_lit
+def collect_catalogue(custom_lit: list = None, jname_list: list = None) -> Catalogue:
+    if custom_lit is None:
+        custom_lit = DEFAULT_LITERATURE_SET
 
-    print(f'Collecting data from {len(cat_list)} literature sources via pulsar_spectra...', end='')
-    pusp_cat_dict = collect_catalogue_fluxes(only_use=cat_list, use_atnf=False)
+    print(f'Collecting data from {len(custom_lit)} literature sources via pulsar_spectra...', end='')
+    pusp_cat_dict = collect_catalogue_fluxes(only_use=custom_lit, use_atnf=False)
+
+    # Delete pulsars not in jname_list
+    if jname_list is not None:
+        pusp_cat_dict = {jname: data for jname, data in pusp_cat_dict.items() if jname in jname_list}
+
+    # Get all references
     pusp_lit = []
     for _, v in pusp_cat_dict.items():
         pusp_lit.extend(v[4])
     pusp_lit = np.unique(pusp_lit)  # List of all references
 
     # Add Posselt 2023 data if pulsar_catalogue does not have it
-    if 'Posselt_2023' in cat_list and 'Posselt_2023' not in pusp_lit:
+    if 'Posselt_2023' in custom_lit and 'Posselt_2023' not in pusp_lit:
         posselt_df = pd.read_csv('catalogue/Posselt_2023_data.csv')
         for _, row in posselt_df.iterrows():
             jname = row['PSRJ']
@@ -267,7 +270,7 @@ def collect_catalogue(custom_lit: list = None) -> Catalogue:
                 citation_dict[ref] = ref
 
     print(' Done.')
-    if 'Posselt_2023' not in pusp_lit:
+    if 'Posselt_2023' in custom_lit and 'Posselt_2023' not in pusp_lit:
         print('Posselt et al. (2023) data is manually added from catalogue/Posselt_2023_data.csv.')
     return Catalogue(cat_dict, citation_dict)
 
@@ -280,12 +283,11 @@ def get_catalogue(args: Namespace) -> Catalogue:
             with open('catalogue/catalogue_jan.pkl', 'rb') as f:
                 return pickle.load(f)
 
-        cat = collect_catalogue_from_ATNF() + collect_catalogue(custom_lit=JANKOWSKI_LITERATURE_SET)
-
         with open('catalogue/Jankowski_2018_data.csv', 'r', encoding='utf-8-sig') as f:
             jan_df = pd.read_csv(f)
         jan_jnames = jan_df['PSRJ'].values.tolist()
-        cat = cat.filter(jan_jnames)
+        cat = (collect_catalogue_from_ATNF(jname_list=jan_jnames, atnf_ver=args.atnf_ver) +
+               collect_catalogue(custom_lit=JANKOWSKI_LITERATURE_SET, jname_list=jan_jnames))
 
         # Save to pickle
         with open('catalogue/catalogue_jan.pkl', 'wb') as f:
@@ -305,7 +307,7 @@ def get_catalogue(args: Namespace) -> Catalogue:
         catalogue = collect_catalogue(custom_lit=args.lit_set.split(';'))
 
     if args.atnf:  # ATNF catalogue
-        cat = collect_catalogue_from_ATNF()
+        cat = collect_catalogue_from_ATNF(atnf_ver=args.atnf_ver)
         catalogue = cat if catalogue is None else catalogue + cat
 
     catalogue.embeded_info = {
@@ -558,7 +560,7 @@ DEFAULT_LITERATURE_CITATIONS = {
 JANKOWSKI_LITERATURE_SET = [  # Part of literature used by Jankowski et al. (2018)
     'Bartel_1978',
     'Izvekova_1981',
-    'Lorimer_1995',
+    'Lorimer_1995b',
     'van_Ommen_1997',
     'Malofeev_2000',
     'Karastergiou_2005',

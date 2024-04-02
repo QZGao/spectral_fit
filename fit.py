@@ -29,7 +29,7 @@ def fit(jname: str, model_name: str, env: Env):
 
         if not env.args.no_requirements:
             # Check if the dataset meets the requirements
-            if len(dataset.X) < max(4, len(env.model_dict[model_name]['labels'])):
+            if len(np.unique(dataset.X)) < max(4, len(env.model_dict[model_name]['labels'])):
                 console.log(f"{jname} {model_name}: Not enough data points to fit.", style='yellow')
                 return
             if np.max(dataset.X) / np.min(dataset.X) < 2:
@@ -60,6 +60,7 @@ def parse_args() -> Namespace:
     # Dataset
     parser.add_argument('--lit_set', help="Customize literature list", type=str, default=None)
     parser.add_argument('--atnf', help="Include ATNF pulsar catalogue", action='store_true')
+    parser.add_argument('--atnf_ver', help="ATNF pulsar catalogue version", type=str, default='1.54')
     parser.add_argument('--jan_set', help="Use Jankowski et al. (2018)'s (reproduced) dataset", action='store_true')
 
     # Fitting
