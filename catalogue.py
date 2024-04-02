@@ -95,6 +95,10 @@ class Catalogue:
         v0 = 10 ** ((np.log10(X.max()) + np.log10(X.min())) / 2)  # central frequency
         return Dataset(jname, X, Y, YERR, REF, v0)
 
+    def filter(self, jname_list: list) -> 'Catalogue':
+        cat_dict = {jname: self.cat_dict[jname] for jname in jname_list}
+        return Catalogue(cat_dict, self.citation_dict)
+
     def __add__(self, other):
         cat_dict = self.cat_dict.copy()
         for jname, data in other.cat_dict.items():
@@ -110,6 +114,9 @@ class Catalogue:
         citation_dict.update(other.citation_dict)
 
         return Catalogue(cat_dict, citation_dict)
+
+    def __len__(self):
+        return len(self.cat_dict)
 
 
 def collect_catalogue_from_ATNF() -> Catalogue:
@@ -274,6 +281,12 @@ def get_catalogue(args: Namespace) -> Catalogue:
                 return pickle.load(f)
 
         cat = collect_catalogue_from_ATNF() + collect_catalogue(custom_lit=JANKOWSKI_LITERATURE_SET)
+
+        with open('catalogue/Jankowski_2018_data.csv', 'r', encoding='utf-8-sig') as f:
+            jan_df = pd.read_csv(f)
+        jan_jnames = jan_df['PSRJ'].values.tolist()
+        cat = cat.filter(jan_jnames)
+
         # Save to pickle
         with open('catalogue/catalogue_jan.pkl', 'wb') as f:
             pickle.dump(cat, f)
