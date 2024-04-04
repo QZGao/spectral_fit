@@ -56,3 +56,6 @@ Extract frequency-flux plots from the output files (`<jname_list>` is a list of 
 ```bash
 python processing.py <output_dir> --plot <jname_list>
 ```
+
+### Notebooks
+Several notebooks are available in the `notebooks` directory. They contain an analysis of the results and the data. To run them, you need to have the output files in the `output` directory. You can generate the output files by running the commands above; or, you can copy the files from the `output/examples` directory to the `output` directory, and the files from the `catalogue/examples` directory to the `catalogue` directory.

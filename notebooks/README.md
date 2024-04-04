@@ -1,5 +1,9 @@
 ## Run locally
-All commands needed to run before running the notebooks in the directory:
+### Based on existing results
+`output/examples` contains the results of multiple runs of the models with different approaches. Copy the `.json` files to the parent directory `output` to use them in the notebooks. Also copy the `.pkl` files from the `catalogue/examples` directory to their parent directory `catalogue`.
+
+### Run from scratch
+Or, you can generate the results from scratch by running the following commands:
 
 ```bash
 python fit.py --outdir "outdir_10_percent_threshold"
@@ -22,3 +26,6 @@ python fit.py --outdir "outdir_aic_jankowski" --aic --jan_set
 python processing.py "outdir_aic_jankowski" --var "aic"
 python processing.py "outdir_aic_jankowski" --var "param_estimates"
 ```
+
+## Interactivity
+Some of the notebooks contain interactive plots. To enable them, change the line `INTERACTIVE = False` to `INTERACTIVE = True` when you found it in the notebook.

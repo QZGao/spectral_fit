@@ -160,7 +160,8 @@ cython_debug/
 .idea/
 
 # Outputs
-output/
+output/*
+!output/examples/
 catalogue/*.pkl
 notebooks/*.pdf
 notebooks/*.png
