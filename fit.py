@@ -59,10 +59,10 @@ def parse_args() -> Namespace:
     # Data used for fitting
     parser.add_argument('--jname', help="Specific pulsar name")
     parser.add_argument('--model', help="Specific model name", default='simple_power_law;'
-                                                                                    'broken_power_law;'
-                                                                                    'log_parabolic_spectrum;'
-                                                                                    'high_frequency_cut_off_power_law;'
-                                                                                    'low_frequency_turn_over_power_law')
+                                                                       'broken_power_law;'
+                                                                       'log_parabolic_spectrum;'
+                                                                       'high_frequency_cut_off_power_law;'
+                                                                       'low_frequency_turn_over_power_law')
 
     # Dataset
     parser.add_argument('--lit_set', help="Customize literature list", type=str, default=None)
