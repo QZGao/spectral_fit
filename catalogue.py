@@ -267,8 +267,7 @@ def collect_catalogue(custom_lit: list = None, jname_list: list = None) -> Catal
     print(' Done.')
     cat = Catalogue(cat_dict, citation_dict)
 
-    # Patches to the catalogue in pulsar_spectra v2.0.4
-    print('Applying patches to the catalogue...')
+    # The following are patches to the catalogue in pulsar_spectra v2.0.4:
 
     # Add data from Posselt et al. (2023)
     if 'Posselt_2023' in custom_lit:
@@ -313,8 +312,8 @@ def collect_catalogue(custom_lit: list = None, jname_list: list = None) -> Catal
 
     # Remove incorrect data from Johnston & Kerr (2018)
     # https://github.com/NickSwainston/pulsar_spectra/issues/93
-    if 'J1842-0359' in cat.cat_dict:
-        ix = np.where(np.array(cat.cat_dict['J1842-0359']['Y']) == 0.01)
+    if 'J1842-0359' in cat.cat_dict and 'Johnston_2018' in cat.cat_dict['J1842-0359']['REF']:
+        ix = np.where(np.array(cat.cat_dict['J1842-0359']['REF']) == 'Johnston_2018')
         cat.cat_dict['J1842-0359']['X'] = np.delete(cat.cat_dict['J1842-0359']['X'], ix)
         cat.cat_dict['J1842-0359']['Y'] = np.delete(cat.cat_dict['J1842-0359']['Y'], ix)
         cat.cat_dict['J1842-0359']['YERR'] = np.delete(cat.cat_dict['J1842-0359']['YERR'], ix)
