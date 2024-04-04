@@ -118,6 +118,20 @@ class Catalogue:
 
         return Catalogue(cat_dict, citation_dict)
 
+    def extend(self, jname: str, X: list, Y: list, YERR: list, REF: list):
+        if jname in self.cat_dict:
+            self.cat_dict[jname]['X'] = np.concatenate((self.cat_dict[jname]['X'], X))
+            self.cat_dict[jname]['Y'] = np.concatenate((self.cat_dict[jname]['Y'], Y))
+            self.cat_dict[jname]['YERR'] = np.concatenate((self.cat_dict[jname]['YERR'], YERR))
+            self.cat_dict[jname]['REF'] = np.concatenate((self.cat_dict[jname]['REF'], REF))
+        else:
+            self.cat_dict[jname] = {
+                'X': X,
+                'Y': Y,
+                'YERR': YERR,
+                'REF': REF
+            }
+
     def __len__(self):
         return len(self.cat_dict)
 
@@ -221,28 +235,6 @@ def collect_catalogue(custom_lit: list = None, jname_list: list = None) -> Catal
         pusp_lit.extend(v[4])
     pusp_lit = np.unique(pusp_lit)  # List of all references
 
-    # Add Posselt 2023 data if pulsar_catalogue does not have it
-    if 'Posselt_2023' in custom_lit and 'Posselt_2023' not in pusp_lit:
-        posselt_df = pd.read_csv('catalogue/Posselt_2023_data.csv')
-        for _, row in posselt_df.iterrows():
-            jname = row['PSRJ']
-            x, y, yerr, ref = [], [], [], []
-            for i in range(1, 9):
-                if not pd.isna(row[f'ch{i}freq']):
-                    x.append(float(row[f'ch{i}freq']))
-                    y.append(float(row[f'ch{i}flux']))
-                    yerr.append(float(row[f'ch{i}errflux']))
-                    ref.append('Posselt_2023')
-            yerr = [0.5 * y[i] if yerr[i] == 0. else yerr[i] for i in range(len(y))]
-
-            if jname in pusp_cat_dict:
-                pusp_cat_dict[jname][0].extend(x)
-                pusp_cat_dict[jname][2].extend(y)
-                pusp_cat_dict[jname][3].extend(yerr)
-                pusp_cat_dict[jname][4].extend(ref)
-            else:
-                pusp_cat_dict[jname] = [x, None, y, yerr, ref]  # bandwidth is not used in this research
-
     # Apply formatting
     cat_dict = {}
     for jname, (X, _, Y, YERR, REF) in pusp_cat_dict.items():
@@ -273,9 +265,63 @@ def collect_catalogue(custom_lit: list = None, jname_list: list = None) -> Catal
                 citation_dict[ref] = ref
 
     print(' Done.')
-    if 'Posselt_2023' in custom_lit and 'Posselt_2023' not in pusp_lit:
-        print('Posselt et al. (2023) data is manually added from catalogue/Posselt_2023_data.csv.')
-    return Catalogue(cat_dict, citation_dict)
+    cat = Catalogue(cat_dict, citation_dict)
+
+    # Patches to the catalogue in pulsar_spectra v2.0.4
+    print('Applying patches to the catalogue...')
+
+    # Add data from Posselt et al. (2023)
+    if 'Posselt_2023' in custom_lit:
+        posselt_df = pd.read_csv('catalogue/Posselt_2023_data.csv')
+        for _, row in posselt_df.iterrows():
+            jname = row['PSRJ']
+            x, y, yerr, ref = [], [], [], []
+            for i in range(1, 9):
+                if not pd.isna(row[f'ch{i}freq']):
+                    x.append(float(row[f'ch{i}freq']))
+                    y.append(float(row[f'ch{i}flux']))
+                    yerr.append(float(row[f'ch{i}errflux']))
+                    ref.append('Posselt_2023')
+            yerr = [0.5 * y[i] if yerr[i] == 0. else yerr[i] for i in range(len(y))]
+            cat.extend(jname, x, y, yerr, ref)
+        print('Posselt_2023: Manually added measurements of 8 frequency channels from Posselt et al. (2023).')
+
+    # Add data from Spiewak et al. (2022)
+    # pulsar_spectra uses the data from Table 1 of the paper, but we can use the supporting data published by the author
+    # https://github.com/NickSwainston/pulsar_spectra/pull/56/commits/824371ddcb3190ff1ddfd7bd22e07d0d39db3544
+    if 'Spiewak_2022' in custom_lit:
+        spiewak_df = pd.read_csv('catalogue/Spiewak_2022_data.csv')
+        for _, row in spiewak_df.iterrows():
+            jname = row['PSRJ']
+            if jname in cat.cat_dict and 'Spiewak_2022' in cat.cat_dict[jname]['REF']:
+                # Remove the existing mean flux data (which only has one mean value for each pulsar)
+                idx = np.where(np.array(cat.cat_dict[jname]['REF']) == 'Spiewak_2022')
+                cat.cat_dict[jname]['X'] = np.delete(cat.cat_dict[jname]['X'], idx)
+                cat.cat_dict[jname]['Y'] = np.delete(cat.cat_dict[jname]['Y'], idx)
+                cat.cat_dict[jname]['YERR'] = np.delete(cat.cat_dict[jname]['YERR'], idx)
+                cat.cat_dict[jname]['REF'] = np.delete(cat.cat_dict[jname]['REF'], idx)
+            x, y, yerr, ref = [], [], [], []
+            for i in range(0, 8):
+                if not pd.isna(row[f'FLUX_{i}_FRQ']):
+                    x.append(float(row[f'FLUX_{i}_FRQ']))
+                    y.append(float(row[f'FLUX_{i}_VAL']))
+                    yerr.append(float(row[f'FLUX_{i}_ERR']))
+                    ref.append('Spiewak_2022')
+            yerr = [0.5 * y[i] if yerr[i] == 0. else yerr[i] for i in range(len(y))]
+            cat.extend(jname, x, y, yerr, ref)
+        print('Spiewak_2022: Manually added measurements of 8 frequency channels from Spiewak et al. (2022).')
+
+    # Remove incorrect data from Johnston & Kerr (2018)
+    # https://github.com/NickSwainston/pulsar_spectra/issues/93
+    if 'J1842-0359' in cat.cat_dict:
+        ix = np.where(np.array(cat.cat_dict['J1842-0359']['Y']) == 0.01)
+        cat.cat_dict['J1842-0359']['X'] = np.delete(cat.cat_dict['J1842-0359']['X'], ix)
+        cat.cat_dict['J1842-0359']['Y'] = np.delete(cat.cat_dict['J1842-0359']['Y'], ix)
+        cat.cat_dict['J1842-0359']['YERR'] = np.delete(cat.cat_dict['J1842-0359']['YERR'], ix)
+        cat.cat_dict['J1842-0359']['REF'] = np.delete(cat.cat_dict['J1842-0359']['REF'], ix)
+        print('Johnston_2018: Removed incorrect data for J1842-0359 (0.01 mJy, class "N") from Johnston & Kerr (2018).')
+
+    return cat
 
 
 def get_catalogue(args: Namespace) -> Catalogue:
