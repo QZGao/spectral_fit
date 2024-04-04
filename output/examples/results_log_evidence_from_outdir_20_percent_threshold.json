@@ -6,6 +6,13 @@
         "low_frequency_turn_over_power_law": -46.40366069105929,
         "simple_power_law": -50.16353559673279
     },
+    "J0023+0923": {
+        "broken_power_law": -18.385949431011255,
+        "high_frequency_cut_off_power_law": -20.12318687463667,
+        "log_parabolic_spectrum": -16.500018657676733,
+        "low_frequency_turn_over_power_law": -17.715437813089295,
+        "simple_power_law": -19.750193675695513
+    },
     "J0024-7204C": {
         "broken_power_law": 13.377976799694855,
         "high_frequency_cut_off_power_law": 9.428127011093073,
@@ -35,18 +42,18 @@
         "simple_power_law": -15.45698902804821
     },
     "J0030+0451": {
-        "broken_power_law": -67.84372678280022,
-        "high_frequency_cut_off_power_law": -75.27780342281224,
-        "log_parabolic_spectrum": -69.70229705433742,
-        "low_frequency_turn_over_power_law": -69.0894494232092,
-        "simple_power_law": -75.93355101244755
+        "broken_power_law": -70.06571934253353,
+        "high_frequency_cut_off_power_law": -77.05577721610909,
+        "log_parabolic_spectrum": -71.26367991238762,
+        "low_frequency_turn_over_power_law": -70.99182208645567,
+        "simple_power_law": -79.82503705254722
     },
     "J0034-0534": {
-        "broken_power_law": -204.08349864746972,
-        "high_frequency_cut_off_power_law": -207.2134960176456,
-        "log_parabolic_spectrum": -207.60323319771504,
-        "low_frequency_turn_over_power_law": -212.93580538208894,
-        "simple_power_law": -220.0674925385285
+        "broken_power_law": -198.88576903528048,
+        "high_frequency_cut_off_power_law": -207.8967950468182,
+        "log_parabolic_spectrum": -201.35067683939891,
+        "low_frequency_turn_over_power_law": -205.41155441275342,
+        "simple_power_law": -212.37396754214595
     },
     "J0034-0721": {
         "broken_power_law": -307.56505108548697,
@@ -293,6 +300,13 @@
         "low_frequency_turn_over_power_law": -24.228390132783428,
         "simple_power_law": -21.807912140392165
     },
+    "J0348+0432": {
+        "broken_power_law": -9.267476185608748,
+        "high_frequency_cut_off_power_law": -11.24939257126273,
+        "log_parabolic_spectrum": -9.26052512596099,
+        "low_frequency_turn_over_power_law": -9.111650121589717,
+        "simple_power_law": -12.019176904855625
+    },
     "J0357+5236": {
         "broken_power_law": -29.903646937007284,
         "high_frequency_cut_off_power_law": -30.686318556300815,
@@ -322,11 +336,11 @@
         "simple_power_law": -40.07736845128513
     },
     "J0407+1607": {
-        "broken_power_law": -22.341563696833067,
-        "high_frequency_cut_off_power_law": -23.180094645284598,
-        "log_parabolic_spectrum": -22.5052870145838,
-        "low_frequency_turn_over_power_law": -24.26945423149379,
-        "simple_power_law": -24.63410761883332
+        "broken_power_law": -19.944067410320553,
+        "high_frequency_cut_off_power_law": -22.074971732055925,
+        "log_parabolic_spectrum": -20.34215550884999,
+        "low_frequency_turn_over_power_law": -22.86810725962039,
+        "simple_power_law": -21.202716348449044
     },
     "J0415+6954": {
         "broken_power_law": -25.695116635146487,
@@ -357,11 +371,11 @@
         "simple_power_law": -26.77339094657223
     },
     "J0437-4715": {
-        "broken_power_law": -445.1228431515996,
-        "high_frequency_cut_off_power_law": -468.145509831133,
-        "log_parabolic_spectrum": -445.35358404986266,
-        "low_frequency_turn_over_power_law": -469.0804557328375,
-        "simple_power_law": -453.83134369143335
+        "broken_power_law": -493.7654303934745,
+        "high_frequency_cut_off_power_law": -516.0758636252585,
+        "log_parabolic_spectrum": -493.43651781654887,
+        "low_frequency_turn_over_power_law": -514.8676258614047,
+        "simple_power_law": -501.9588319340699
     },
     "J0450-1248": {
         "broken_power_law": -42.54928451196689,
@@ -490,11 +504,11 @@
         "simple_power_law": -46.464497199996686
     },
     "J0613-0200": {
-        "broken_power_law": -61.23848521043969,
-        "high_frequency_cut_off_power_law": -61.25775377137387,
-        "log_parabolic_spectrum": -59.955168518254574,
-        "low_frequency_turn_over_power_law": -59.898305384585115,
-        "simple_power_law": -60.00941563868082
+        "broken_power_law": -66.71251386230884,
+        "high_frequency_cut_off_power_law": -66.41029893412643,
+        "log_parabolic_spectrum": -64.47895966175486,
+        "low_frequency_turn_over_power_law": -62.491907464603194,
+        "simple_power_law": -67.53529342552912
     },
     "J0614+2229": {
         "broken_power_law": -76.37219786549166,
@@ -511,11 +525,11 @@
         "simple_power_law": -14.474332051972631
     },
     "J0621+1002": {
-        "broken_power_law": -46.30091214536316,
-        "high_frequency_cut_off_power_law": -45.81868349341402,
-        "log_parabolic_spectrum": -45.74783008960726,
-        "low_frequency_turn_over_power_law": -47.307037118164835,
-        "simple_power_law": -47.281509178995414
+        "broken_power_law": -53.47448424305727,
+        "high_frequency_cut_off_power_law": -53.33404539524504,
+        "log_parabolic_spectrum": -52.89401652054334,
+        "low_frequency_turn_over_power_law": -53.93526786435714,
+        "simple_power_law": -57.314176055433855
     },
     "J0624-0424": {
         "broken_power_law": -52.11342941854318,
@@ -609,11 +623,18 @@
         "simple_power_law": -28.780257884865726
     },
     "J0711-6830": {
-        "broken_power_law": -52.70556359576812,
-        "high_frequency_cut_off_power_law": -55.84847361935621,
-        "log_parabolic_spectrum": -51.543562966558135,
-        "low_frequency_turn_over_power_law": -56.06372242096867,
-        "simple_power_law": -52.38283184347921
+        "broken_power_law": -62.81284934820186,
+        "high_frequency_cut_off_power_law": -65.01723708297362,
+        "log_parabolic_spectrum": -61.5686194132389,
+        "low_frequency_turn_over_power_law": -66.40025557301479,
+        "simple_power_law": -62.50247041876252
+    },
+    "J0721-2038": {
+        "broken_power_law": 5.039607976149343,
+        "high_frequency_cut_off_power_law": 0.7220763017665035,
+        "log_parabolic_spectrum": 7.48161540772514,
+        "low_frequency_turn_over_power_law": 2.757681937967998,
+        "simple_power_law": 4.203278296577445
     },
     "J0725-1635": {
         "broken_power_law": -14.680165926887755,
@@ -637,11 +658,11 @@
         "simple_power_law": -47.60560542285333
     },
     "J0737-3039A": {
-        "broken_power_law": -92.1616268976075,
-        "high_frequency_cut_off_power_law": -92.78106483386009,
-        "log_parabolic_spectrum": -92.92370437476289,
-        "low_frequency_turn_over_power_law": -98.90008724841994,
-        "simple_power_law": -91.48304968835804
+        "broken_power_law": -103.64217598443645,
+        "high_frequency_cut_off_power_law": -104.07203495591767,
+        "log_parabolic_spectrum": -104.42609639102096,
+        "low_frequency_turn_over_power_law": -110.04102994713561,
+        "simple_power_law": -102.18050613720877
     },
     "J0738-4042": {
         "broken_power_law": -204.5165469141218,
@@ -679,11 +700,11 @@
         "simple_power_law": -16.60537819596219
     },
     "J0751+1807": {
-        "broken_power_law": -44.87085665676481,
-        "high_frequency_cut_off_power_law": -45.58270455512945,
-        "log_parabolic_spectrum": -43.58046559649399,
-        "low_frequency_turn_over_power_law": -43.853069299230896,
-        "simple_power_law": -44.21267891486578
+        "broken_power_law": -46.756300880119696,
+        "high_frequency_cut_off_power_law": -48.16842535451262,
+        "log_parabolic_spectrum": -46.37660366156651,
+        "low_frequency_turn_over_power_law": -46.9834975452194,
+        "simple_power_law": -47.330607880364575
     },
     "J0754+3231": {
         "broken_power_law": -37.80021992494986,
@@ -889,11 +910,11 @@
         "simple_power_law": -22.86366383311085
     },
     "J0900-3144": {
-        "broken_power_law": -20.655458750591308,
-        "high_frequency_cut_off_power_law": -20.991790499925006,
-        "log_parabolic_spectrum": -17.554091543796172,
-        "low_frequency_turn_over_power_law": -18.686420494316156,
-        "simple_power_law": -26.242928082877015
+        "broken_power_law": -23.245424121820896,
+        "high_frequency_cut_off_power_law": -22.849079929043565,
+        "log_parabolic_spectrum": -14.0144368583859,
+        "low_frequency_turn_over_power_law": -15.05628544651028,
+        "simple_power_law": -31.110584473333507
     },
     "J0901-4624": {
         "broken_power_law": -38.7284149402907,
@@ -1204,11 +1225,11 @@
         "simple_power_law": -27.410009250336056
     },
     "J1017-7156": {
-        "broken_power_law": -5.77687604575298,
-        "high_frequency_cut_off_power_law": -10.786394277575265,
-        "log_parabolic_spectrum": -7.681576976914043,
-        "low_frequency_turn_over_power_law": -15.123957640378638,
-        "simple_power_law": -13.585055547897298
+        "broken_power_law": 3.878877259106207,
+        "high_frequency_cut_off_power_law": -9.449889105900738,
+        "log_parabolic_spectrum": -4.395026529818707,
+        "low_frequency_turn_over_power_law": -14.771421891594926,
+        "simple_power_law": -14.141717921512491
     },
     "J1018-1642": {
         "broken_power_law": -31.81064345419764,
@@ -1232,18 +1253,18 @@
         "simple_power_law": -2.2950278846919527
     },
     "J1022+1001": {
-        "broken_power_law": -109.2104070655612,
-        "high_frequency_cut_off_power_law": -111.63213240209224,
-        "log_parabolic_spectrum": -107.3303741471758,
-        "low_frequency_turn_over_power_law": -106.91299260784125,
-        "simple_power_law": -128.50931213716922
+        "broken_power_law": -126.0368956078816,
+        "high_frequency_cut_off_power_law": -125.91441691354171,
+        "log_parabolic_spectrum": -120.52533464009821,
+        "low_frequency_turn_over_power_law": -120.5405203553795,
+        "simple_power_law": -152.18693526238917
     },
     "J1024-0719": {
-        "broken_power_law": -74.57673951548949,
-        "high_frequency_cut_off_power_law": -76.56645527379105,
-        "log_parabolic_spectrum": -71.81074383821303,
-        "low_frequency_turn_over_power_law": -77.29342917142255,
-        "simple_power_law": -73.1348114352388
+        "broken_power_law": -86.59911789299271,
+        "high_frequency_cut_off_power_law": -89.33759652123243,
+        "log_parabolic_spectrum": -86.46139616843766,
+        "low_frequency_turn_over_power_law": -88.19782820630914,
+        "simple_power_law": -87.01367690770213
     },
     "J1028-5819": {
         "broken_power_law": 1.4278448672990942,
@@ -1272,6 +1293,13 @@
         "log_parabolic_spectrum": -15.283894183343525,
         "low_frequency_turn_over_power_law": -17.7094913361804,
         "simple_power_law": -21.6347804585449
+    },
+    "J1038+0032": {
+        "broken_power_law": -0.8593648081885537,
+        "high_frequency_cut_off_power_law": -4.704488095523546,
+        "log_parabolic_spectrum": -0.4668308660832776,
+        "low_frequency_turn_over_power_law": -7.622803226801342,
+        "simple_power_law": -2.0920837738920075
     },
     "J1038-5831": {
         "broken_power_law": -33.542546694232136,
@@ -1302,11 +1330,11 @@
         "simple_power_law": -40.84606511321724
     },
     "J1045-4509": {
-        "broken_power_law": -50.026361395423855,
-        "high_frequency_cut_off_power_law": -49.79773950446284,
-        "log_parabolic_spectrum": -46.72366724119035,
-        "low_frequency_turn_over_power_law": -50.10359748372623,
-        "simple_power_law": -58.90735601768322
+        "broken_power_law": -48.391845402217335,
+        "high_frequency_cut_off_power_law": -53.847223403881664,
+        "log_parabolic_spectrum": -48.61890099627001,
+        "low_frequency_turn_over_power_law": -52.77908169895974,
+        "simple_power_law": -68.8710573349595
     },
     "J1046-5813": {
         "broken_power_law": -32.385138543795975,
@@ -1624,11 +1652,11 @@
         "simple_power_law": -35.283183944901914
     },
     "J1231-1411": {
-        "broken_power_law": -13.453245271543695,
-        "high_frequency_cut_off_power_law": -17.347110442781965,
-        "log_parabolic_spectrum": -14.302290281757244,
-        "low_frequency_turn_over_power_law": -14.048307562232601,
-        "simple_power_law": -16.081959568462857
+        "broken_power_law": -4.0588586493246375,
+        "high_frequency_cut_off_power_law": -10.844448576782883,
+        "log_parabolic_spectrum": -6.56993765459596,
+        "low_frequency_turn_over_power_law": -6.237694540777306,
+        "simple_power_law": -9.39466070119545
     },
     "J1236-0159": {
         "broken_power_law": -13.95955295829477,
@@ -1708,11 +1736,11 @@
         "simple_power_law": -23.276432930882002
     },
     "J1300+1240": {
-        "broken_power_law": -73.91424423909581,
-        "high_frequency_cut_off_power_law": -92.77494708239523,
-        "log_parabolic_spectrum": -74.00699885712604,
-        "low_frequency_turn_over_power_law": -74.65660982833676,
-        "simple_power_law": -96.32733328849605
+        "broken_power_law": -74.87370639371518,
+        "high_frequency_cut_off_power_law": -95.39156424032619,
+        "log_parabolic_spectrum": -81.65368145787488,
+        "low_frequency_turn_over_power_law": -77.73764460251616,
+        "simple_power_law": -96.906406892679
     },
     "J1301-6305": {
         "broken_power_law": 6.398241848406614,
@@ -1980,6 +2008,13 @@
         "low_frequency_turn_over_power_law": -78.06377124558392,
         "simple_power_law": -76.60898714064663
     },
+    "J1400-1431": {
+        "broken_power_law": -4.24220210499561,
+        "high_frequency_cut_off_power_law": -5.183991562334701,
+        "log_parabolic_spectrum": -4.698923786303155,
+        "low_frequency_turn_over_power_law": -4.29838414351553,
+        "simple_power_law": -7.615995269439726
+    },
     "J1401-6357": {
         "broken_power_law": -60.647845938554624,
         "high_frequency_cut_off_power_law": -63.03318377904434,
@@ -2100,11 +2135,11 @@
         "simple_power_law": -39.85750000809242
     },
     "J1446-4701": {
-        "broken_power_law": -13.51387877041184,
-        "high_frequency_cut_off_power_law": -20.92885787184524,
-        "log_parabolic_spectrum": -0.2815297536405268,
-        "low_frequency_turn_over_power_law": -37.78611195272163,
-        "simple_power_law": -11.591346733190491
+        "broken_power_law": 1.7908103957427293,
+        "high_frequency_cut_off_power_law": -4.324973308521347,
+        "log_parabolic_spectrum": 11.658837920923085,
+        "low_frequency_turn_over_power_law": -13.046353869470629,
+        "simple_power_law": 2.9319679245268118
     },
     "J1452-5851": {
         "broken_power_law": 3.5783814579739768,
@@ -2121,11 +2156,11 @@
         "simple_power_law": -23.004065088580038
     },
     "J1453+1902": {
-        "broken_power_law": -7.102518773358961,
-        "high_frequency_cut_off_power_law": -9.395231426971742,
-        "log_parabolic_spectrum": -5.961494863664732,
-        "low_frequency_turn_over_power_law": -8.49037184696365,
-        "simple_power_law": -10.406421455514426
+        "broken_power_law": -30.556419648087882,
+        "high_frequency_cut_off_power_law": -15.472830897898659,
+        "log_parabolic_spectrum": -21.53048338780943,
+        "low_frequency_turn_over_power_law": -10.64909357071767,
+        "simple_power_law": -30.56745907140972
     },
     "J1453-6413": {
         "broken_power_law": -196.47624092277562,
@@ -2135,11 +2170,11 @@
         "simple_power_law": -212.68179883733063
     },
     "J1455-3330": {
-        "broken_power_law": -30.7430477393268,
-        "high_frequency_cut_off_power_law": -31.30282112760622,
-        "log_parabolic_spectrum": -30.484574075514423,
-        "low_frequency_turn_over_power_law": -34.56136899358206,
-        "simple_power_law": -31.435842913714335
+        "broken_power_law": -28.409092747472297,
+        "high_frequency_cut_off_power_law": -30.166818920441052,
+        "log_parabolic_spectrum": -27.998381285743672,
+        "low_frequency_turn_over_power_law": -33.31175475418941,
+        "simple_power_law": -29.7016502167062
     },
     "J1456-6843": {
         "broken_power_law": -197.15062316264746,
@@ -2303,11 +2338,11 @@
         "simple_power_law": -19.941165681780152
     },
     "J1537+1155": {
-        "broken_power_law": -37.44985639372897,
-        "high_frequency_cut_off_power_law": -40.04558208344472,
-        "log_parabolic_spectrum": -36.742796308720244,
-        "low_frequency_turn_over_power_law": -39.09406095370414,
-        "simple_power_law": -39.038399468589205
+        "broken_power_law": -44.051937432239356,
+        "high_frequency_cut_off_power_law": -49.94041595544194,
+        "log_parabolic_spectrum": -42.36503556428542,
+        "low_frequency_turn_over_power_law": -49.734321794292,
+        "simple_power_law": -43.19736443092693
     },
     "J1538-5551": {
         "broken_power_law": 5.365152332804009,
@@ -2345,11 +2380,11 @@
         "simple_power_law": -156.12343451194778
     },
     "J1543-5149": {
-        "broken_power_law": -36.77949855767229,
-        "high_frequency_cut_off_power_law": -44.60276163291696,
-        "log_parabolic_spectrum": -38.84541529457755,
-        "low_frequency_turn_over_power_law": -39.368350978899606,
-        "simple_power_law": -53.60496139176
+        "broken_power_law": -6.684049440609573,
+        "high_frequency_cut_off_power_law": -8.29255874453779,
+        "log_parabolic_spectrum": -7.393845798522753,
+        "low_frequency_turn_over_power_law": -9.271383713933213,
+        "simple_power_law": -35.30148437453951
     },
     "J1543-5459": {
         "broken_power_law": -7.26745375551192,
@@ -2366,11 +2401,11 @@
         "simple_power_law": -43.84236152413921
     },
     "J1545-4550": {
-        "broken_power_law": -7.929755124562943,
-        "high_frequency_cut_off_power_law": -9.10388619211487,
-        "log_parabolic_spectrum": -4.362597390002723,
-        "low_frequency_turn_over_power_law": -13.23661118083913,
-        "simple_power_law": -6.255999729432715
+        "broken_power_law": -1.2373590794598088,
+        "high_frequency_cut_off_power_law": -4.782784611309259,
+        "log_parabolic_spectrum": 1.3773948203843016,
+        "low_frequency_turn_over_power_law": -14.76265234338588,
+        "simple_power_law": -0.6236704917977718
     },
     "J1548-4927": {
         "broken_power_law": -13.204717520527346,
@@ -2443,11 +2478,11 @@
         "simple_power_law": -136.20664088412002
     },
     "J1600-3053": {
-        "broken_power_law": -26.527207695137367,
-        "high_frequency_cut_off_power_law": -24.063168722659572,
-        "log_parabolic_spectrum": -18.159835579779028,
-        "low_frequency_turn_over_power_law": -19.056684285235846,
-        "simple_power_law": -34.723995012505505
+        "broken_power_law": -30.145847021520257,
+        "high_frequency_cut_off_power_law": -24.90491387276034,
+        "log_parabolic_spectrum": -15.773327559917977,
+        "low_frequency_turn_over_power_law": -15.264364791982967,
+        "simple_power_law": -41.56550519756512
     },
     "J1600-5044": {
         "broken_power_law": -80.45729179002822,
@@ -2492,11 +2527,11 @@
         "simple_power_law": -41.62568512294752
     },
     "J1603-7202": {
-        "broken_power_law": -37.96603169423295,
-        "high_frequency_cut_off_power_law": -42.062594242813915,
-        "log_parabolic_spectrum": -39.234656260393194,
-        "low_frequency_turn_over_power_law": -43.58002566217086,
-        "simple_power_law": -41.39285806167738
+        "broken_power_law": -39.96682644763928,
+        "high_frequency_cut_off_power_law": -47.93134179993734,
+        "log_parabolic_spectrum": -44.10990215210915,
+        "low_frequency_turn_over_power_law": -48.498852597388534,
+        "simple_power_law": -47.914514351916594
     },
     "J1604-4909": {
         "broken_power_law": -53.89391625265859,
@@ -2779,11 +2814,11 @@
         "simple_power_law": -17.550103205456182
     },
     "J1640+2224": {
-        "broken_power_law": -49.63852967752018,
-        "high_frequency_cut_off_power_law": -53.41540475645302,
-        "log_parabolic_spectrum": -49.30782059195026,
-        "low_frequency_turn_over_power_law": -50.28354805940279,
-        "simple_power_law": -50.523833954461274
+        "broken_power_law": -60.619294023272154,
+        "high_frequency_cut_off_power_law": -64.63377529063148,
+        "log_parabolic_spectrum": -60.9115417365949,
+        "low_frequency_turn_over_power_law": -61.811415926509966,
+        "simple_power_law": -62.6725803913917
     },
     "J1640-4715": {
         "broken_power_law": -9.85750379878925,
@@ -2800,11 +2835,11 @@
         "simple_power_law": -15.531757394725092
     },
     "J1643-1224": {
-        "broken_power_law": -69.48165747737632,
-        "high_frequency_cut_off_power_law": -79.10065375802573,
-        "log_parabolic_spectrum": -70.26321721354341,
-        "low_frequency_turn_over_power_law": -79.58380182965608,
-        "simple_power_law": -67.77048521211577
+        "broken_power_law": -75.58761221146261,
+        "high_frequency_cut_off_power_law": -84.98759510816015,
+        "log_parabolic_spectrum": -76.33127440239856,
+        "low_frequency_turn_over_power_law": -87.25817194363258,
+        "simple_power_law": -73.76375987400644
     },
     "J1643-4505": {
         "broken_power_law": 1.2434218979471332,
@@ -3065,6 +3100,13 @@
         "low_frequency_turn_over_power_law": -25.80729959317956,
         "simple_power_law": -20.924414956754546
     },
+    "J1709+2313": {
+        "broken_power_law": -4.404089035774165,
+        "high_frequency_cut_off_power_law": -9.75509619655735,
+        "log_parabolic_spectrum": -4.907714900595028,
+        "low_frequency_turn_over_power_law": -5.1518265209364715,
+        "simple_power_law": -10.77952492140205
+    },
     "J1709-1640": {
         "broken_power_law": -140.52480173995136,
         "high_frequency_cut_off_power_law": -141.24838816868234,
@@ -3094,11 +3136,11 @@
         "simple_power_law": -17.23195154420421
     },
     "J1713+0747": {
-        "broken_power_law": -109.24412940288066,
-        "high_frequency_cut_off_power_law": -112.03231401383407,
-        "log_parabolic_spectrum": -112.84510857056199,
-        "low_frequency_turn_over_power_law": -114.52079395127463,
-        "simple_power_law": -141.7164257474873
+        "broken_power_law": -128.93598477932858,
+        "high_frequency_cut_off_power_law": -135.82522722689924,
+        "log_parabolic_spectrum": -132.4413765864639,
+        "low_frequency_turn_over_power_law": -133.5952755731721,
+        "simple_power_law": -182.2788884050791
     },
     "J1715-3903": {
         "broken_power_law": -6.1580945715919615,
@@ -3227,11 +3269,11 @@
         "simple_power_law": -45.78978011801619
     },
     "J1730-2304": {
-        "broken_power_law": -86.69404460839677,
-        "high_frequency_cut_off_power_law": -85.64514951109992,
-        "log_parabolic_spectrum": -93.31598485884953,
-        "low_frequency_turn_over_power_law": -96.30184518101093,
-        "simple_power_law": -102.14171622052532
+        "broken_power_law": -98.19803118464289,
+        "high_frequency_cut_off_power_law": -96.58231034875922,
+        "log_parabolic_spectrum": -106.82087176968354,
+        "low_frequency_turn_over_power_law": -110.21440413154563,
+        "simple_power_law": -120.129028565943
     },
     "J1730-3350": {
         "broken_power_law": -29.253611816833025,
@@ -3255,11 +3297,11 @@
         "simple_power_law": -15.627694555681273
     },
     "J1732-5049": {
-        "broken_power_law": -17.58581353477262,
-        "high_frequency_cut_off_power_law": -17.377278333504368,
-        "log_parabolic_spectrum": -14.321577986999046,
-        "low_frequency_turn_over_power_law": -19.56496853222735,
-        "simple_power_law": -16.274195875812453
+        "broken_power_law": -14.681424542525463,
+        "high_frequency_cut_off_power_law": -15.543192394823318,
+        "log_parabolic_spectrum": -12.523352741531895,
+        "low_frequency_turn_over_power_law": -18.866472036529714,
+        "simple_power_law": -14.537695128414825
     },
     "J1733-2228": {
         "broken_power_law": -27.58047693495195,
@@ -3332,11 +3374,11 @@
         "simple_power_law": -26.490911945733487
     },
     "J1738+0333": {
-        "broken_power_law": -14.661933921450732,
-        "high_frequency_cut_off_power_law": -19.372556406660618,
-        "log_parabolic_spectrum": -12.101032837277582,
-        "low_frequency_turn_over_power_law": -12.74431004071777,
-        "simple_power_law": -16.012805190004542
+        "broken_power_law": -18.397550499165277,
+        "high_frequency_cut_off_power_law": -26.155668772656785,
+        "log_parabolic_spectrum": -18.26094515094523,
+        "low_frequency_turn_over_power_law": -20.031497073258762,
+        "simple_power_law": -30.98209220734061
     },
     "J1738-2955": {
         "broken_power_law": -3.1000096620696036,
@@ -3395,11 +3437,11 @@
         "simple_power_law": -61.487339902745994
     },
     "J1741+1351": {
-        "broken_power_law": -7.41070933405392,
-        "high_frequency_cut_off_power_law": -8.924877440219094,
-        "log_parabolic_spectrum": -4.525288967948807,
-        "low_frequency_turn_over_power_law": -10.522664820519271,
-        "simple_power_law": -13.1639007538689
+        "broken_power_law": -15.763840867883804,
+        "high_frequency_cut_off_power_law": -16.263214513908068,
+        "log_parabolic_spectrum": -13.6608229417522,
+        "low_frequency_turn_over_power_law": -18.232486372726594,
+        "simple_power_law": -19.421880491241907
     },
     "J1741+2758": {
         "broken_power_law": -25.908662932055304,
@@ -3465,11 +3507,11 @@
         "simple_power_law": -63.23842708174906
     },
     "J1744-1134": {
-        "broken_power_law": -91.4896180306328,
-        "high_frequency_cut_off_power_law": -92.62817312261828,
-        "log_parabolic_spectrum": -91.52228352724633,
-        "low_frequency_turn_over_power_law": -93.801920648519,
-        "simple_power_law": -94.68625170136755
+        "broken_power_law": -99.94398552224062,
+        "high_frequency_cut_off_power_law": -102.37395547785933,
+        "log_parabolic_spectrum": -100.0190443641748,
+        "low_frequency_turn_over_power_law": -101.71018059836491,
+        "simple_power_law": -109.03758398174473
     },
     "J1744-3130": {
         "broken_power_law": -9.112676353723932,
@@ -3500,11 +3542,11 @@
         "simple_power_law": -28.540871732138434
     },
     "J1747-4036": {
-        "broken_power_law": -20.65719695701387,
-        "high_frequency_cut_off_power_law": -27.103857824401583,
-        "log_parabolic_spectrum": -21.448244365660578,
-        "low_frequency_turn_over_power_law": -30.253345958280207,
-        "simple_power_law": -19.08326511654282
+        "broken_power_law": -13.512608693044946,
+        "high_frequency_cut_off_power_law": -28.977263727772673,
+        "log_parabolic_spectrum": -16.653694703930544,
+        "low_frequency_turn_over_power_law": -32.48949024481496,
+        "simple_power_law": -13.79616587819305
     },
     "J1748-1300": {
         "broken_power_law": -54.328191030946286,
@@ -3668,11 +3710,11 @@
         "simple_power_law": -30.37035984806035
     },
     "J1802-2124": {
-        "broken_power_law": -10.154971471928533,
-        "high_frequency_cut_off_power_law": -14.467328858306171,
-        "log_parabolic_spectrum": -11.052148049028316,
-        "low_frequency_turn_over_power_law": -15.142137973502784,
-        "simple_power_law": -11.510310472655409
+        "broken_power_law": 0.457216217415358,
+        "high_frequency_cut_off_power_law": -4.168366794573389,
+        "log_parabolic_spectrum": 0.7786742238038433,
+        "low_frequency_turn_over_power_law": -8.695758286175762,
+        "simple_power_law": -3.3452942820517952
     },
     "J1803-2137": {
         "broken_power_law": -136.12081604125856,
@@ -3689,11 +3731,11 @@
         "simple_power_law": -12.027414190792935
     },
     "J1804-2717": {
-        "broken_power_law": -34.63033969104203,
-        "high_frequency_cut_off_power_law": -36.19182068678737,
-        "log_parabolic_spectrum": -33.25546908933383,
-        "low_frequency_turn_over_power_law": -37.64934997203628,
-        "simple_power_law": -37.46788375033542
+        "broken_power_law": -50.00291165833718,
+        "high_frequency_cut_off_power_law": -52.418285505755556,
+        "log_parabolic_spectrum": -49.08419409976475,
+        "low_frequency_turn_over_power_law": -53.138951754702134,
+        "simple_power_law": -53.48506173456473
     },
     "J1805+0306": {
         "broken_power_law": -28.33049108132536,
@@ -3708,6 +3750,13 @@
         "log_parabolic_spectrum": -14.090835817419348,
         "low_frequency_turn_over_power_law": -17.055035540226722,
         "simple_power_law": -15.251124568749074
+    },
+    "J1806+2819": {
+        "broken_power_law": -3.6234115569032253,
+        "high_frequency_cut_off_power_law": -9.499929194719458,
+        "log_parabolic_spectrum": -5.501685797327285,
+        "low_frequency_turn_over_power_law": -5.33990084601274,
+        "simple_power_law": -6.9413600087025635
     },
     "J1806-1154": {
         "broken_power_law": -23.060379483934106,
@@ -4087,6 +4136,13 @@
         "low_frequency_turn_over_power_law": -32.26383588246152,
         "simple_power_law": -42.483879007870065
     },
+    "J1829+2456": {
+        "broken_power_law": 8.244439753671234,
+        "high_frequency_cut_off_power_law": 5.529303328759921,
+        "log_parabolic_spectrum": 11.738930506535466,
+        "low_frequency_turn_over_power_law": 3.0729824149997125,
+        "simple_power_law": 2.3084704157555165
+    },
     "J1829-1751": {
         "broken_power_law": -87.16713821884989,
         "high_frequency_cut_off_power_law": -83.80832357325741,
@@ -4130,11 +4186,11 @@
         "simple_power_law": -82.16087119391496
     },
     "J1832-0836": {
-        "broken_power_law": -15.697429635783138,
-        "high_frequency_cut_off_power_law": -18.826986214168848,
-        "log_parabolic_spectrum": -10.32383737871978,
-        "low_frequency_turn_over_power_law": -20.41416253739757,
-        "simple_power_law": -13.242984181325037
+        "broken_power_law": -15.747229142754396,
+        "high_frequency_cut_off_power_law": -21.482686466228678,
+        "log_parabolic_spectrum": -12.101088638844924,
+        "low_frequency_turn_over_power_law": -27.256844060874403,
+        "simple_power_law": -15.511648262718266
     },
     "J1832-1021": {
         "broken_power_law": -70.15991080247464,
@@ -4354,11 +4410,11 @@
         "simple_power_law": -39.669005822215
     },
     "J1842-0359": {
-        "broken_power_law": -134.0216237134348,
-        "high_frequency_cut_off_power_law": -134.90699694149407,
-        "log_parabolic_spectrum": -131.05194423144107,
-        "low_frequency_turn_over_power_law": -130.71893747331606,
-        "simple_power_law": -136.24543663364264
+        "broken_power_law": -57.68898277240432,
+        "high_frequency_cut_off_power_law": -65.304033016296,
+        "log_parabolic_spectrum": -61.56768155743574,
+        "low_frequency_turn_over_power_law": -63.273322781994956,
+        "simple_power_law": -58.914511372125304
     },
     "J1842-0905": {
         "broken_power_law": -39.047347194158085,
@@ -4403,11 +4459,11 @@
         "simple_power_law": -25.471077400816718
     },
     "J1843-1113": {
-        "broken_power_law": -80.02178549202166,
-        "high_frequency_cut_off_power_law": -83.83434018375878,
-        "log_parabolic_spectrum": -79.87263493622277,
-        "low_frequency_turn_over_power_law": -83.27476981021937,
-        "simple_power_law": -91.50992162006177
+        "broken_power_law": -104.14051361511622,
+        "high_frequency_cut_off_power_law": -108.54270717448843,
+        "log_parabolic_spectrum": -105.16358163959106,
+        "low_frequency_turn_over_power_law": -107.14271686270646,
+        "simple_power_law": -113.94458613229826
     },
     "J1844+1454": {
         "broken_power_law": -73.2332074738733,
@@ -4599,11 +4655,11 @@
         "simple_power_law": -23.91788450581872
     },
     "J1853+1303": {
-        "broken_power_law": -17.001817458383492,
-        "high_frequency_cut_off_power_law": -17.3375335678364,
-        "log_parabolic_spectrum": -16.932347597920785,
-        "low_frequency_turn_over_power_law": -17.79202686297939,
-        "simple_power_law": -20.04415758704616
+        "broken_power_law": -25.509514982266193,
+        "high_frequency_cut_off_power_law": -26.032493223938303,
+        "log_parabolic_spectrum": -24.82660912818862,
+        "low_frequency_turn_over_power_law": -25.936316316793214,
+        "simple_power_law": -29.430730277199125
     },
     "J1853-0004": {
         "broken_power_law": -34.75714919412359,
@@ -4655,11 +4711,11 @@
         "simple_power_law": -36.72644977505773
     },
     "J1857+0943": {
-        "broken_power_law": -85.70056683165768,
-        "high_frequency_cut_off_power_law": -88.70171346463235,
-        "log_parabolic_spectrum": -85.89011714079531,
-        "low_frequency_turn_over_power_law": -87.8223467786998,
-        "simple_power_law": -84.69849874674975
+        "broken_power_law": -108.57754965479799,
+        "high_frequency_cut_off_power_law": -109.92126719138386,
+        "log_parabolic_spectrum": -107.89998377017231,
+        "low_frequency_turn_over_power_law": -108.56854886321506,
+        "simple_power_law": -108.99063772816667
     },
     "J1859+1526": {
         "broken_power_law": -13.754562293727586,
@@ -4746,11 +4802,11 @@
         "simple_power_law": -39.315058176426255
     },
     "J1902-5105": {
-        "broken_power_law": -21.930569993440287,
-        "high_frequency_cut_off_power_law": -30.489462543612568,
-        "log_parabolic_spectrum": -27.005935433326613,
-        "low_frequency_turn_over_power_law": -27.793224557421713,
-        "simple_power_law": -28.343957929838187
+        "broken_power_law": 0.5327242262316407,
+        "high_frequency_cut_off_power_law": -20.556276795520553,
+        "log_parabolic_spectrum": -7.428165652970817,
+        "low_frequency_turn_over_power_law": -13.857146547180141,
+        "simple_power_law": -24.751234777091888
     },
     "J1903+0135": {
         "broken_power_law": -60.09699393032973,
@@ -4758,6 +4814,13 @@
         "log_parabolic_spectrum": -64.04293107859651,
         "low_frequency_turn_over_power_law": -62.220337354316804,
         "simple_power_law": -73.52128824469575
+    },
+    "J1903+0327": {
+        "broken_power_law": -4.9851995908992075,
+        "high_frequency_cut_off_power_law": -6.90837460994796,
+        "log_parabolic_spectrum": -1.593292409903138,
+        "low_frequency_turn_over_power_law": -0.9906222295578389,
+        "simple_power_law": -5.119539531242063
     },
     "J1903+2225": {
         "broken_power_law": -0.22562005109556293,
@@ -4886,11 +4949,11 @@
         "simple_power_law": -12.441528388298515
     },
     "J1909-3744": {
-        "broken_power_law": -41.92995549517217,
-        "high_frequency_cut_off_power_law": -44.53880304644034,
-        "log_parabolic_spectrum": -40.78273497107254,
-        "low_frequency_turn_over_power_law": -41.64946893734182,
-        "simple_power_law": -43.024924453212584
+        "broken_power_law": -45.83816830252314,
+        "high_frequency_cut_off_power_law": -50.62359865768214,
+        "log_parabolic_spectrum": -46.265509737936824,
+        "low_frequency_turn_over_power_law": -47.67616147078493,
+        "simple_power_law": -48.19421958840606
     },
     "J1910+0358": {
         "broken_power_law": -64.1073314165205,
@@ -4920,6 +4983,13 @@
         "low_frequency_turn_over_power_law": -15.943969063185483,
         "simple_power_law": -21.243091479635183
     },
+    "J1910+1256": {
+        "broken_power_law": -18.02833666305638,
+        "high_frequency_cut_off_power_law": -18.462066420481637,
+        "log_parabolic_spectrum": -13.716731688287746,
+        "low_frequency_turn_over_power_law": -16.507565528111254,
+        "simple_power_law": -17.24689757654895
+    },
     "J1910-0309": {
         "broken_power_law": -52.6080189565375,
         "high_frequency_cut_off_power_law": -55.83340160807117,
@@ -4935,11 +5005,11 @@
         "simple_power_law": -7.5904887828918355
     },
     "J1911-1114": {
-        "broken_power_law": -39.23116134499642,
-        "high_frequency_cut_off_power_law": -43.02979631767799,
-        "log_parabolic_spectrum": -38.77079116593181,
-        "low_frequency_turn_over_power_law": -38.46111213488603,
-        "simple_power_law": -45.14572401923612
+        "broken_power_law": -45.994257986738965,
+        "high_frequency_cut_off_power_law": -49.15374227989436,
+        "log_parabolic_spectrum": -44.99958473243787,
+        "low_frequency_turn_over_power_law": -45.297374175690756,
+        "simple_power_law": -53.58361749078451
     },
     "J1912+2104": {
         "broken_power_law": -26.302828502629875,
@@ -5075,11 +5145,11 @@
         "simple_power_law": -7.604126994892898
     },
     "J1918-0642": {
-        "broken_power_law": -22.989230666441017,
-        "high_frequency_cut_off_power_law": -24.653936585092307,
-        "log_parabolic_spectrum": -23.321881048483178,
-        "low_frequency_turn_over_power_law": -24.477920343459367,
-        "simple_power_law": -25.350095420952286
+        "broken_power_law": -22.03088230068385,
+        "high_frequency_cut_off_power_law": -17.31351273882578,
+        "log_parabolic_spectrum": -20.894314960540303,
+        "low_frequency_turn_over_power_law": -20.912502309944625,
+        "simple_power_law": -31.499702191682417
     },
     "J1919+0021": {
         "broken_power_law": -29.097025648025486,
@@ -5124,11 +5194,11 @@
         "simple_power_law": -42.42899163489259
     },
     "J1923+2515": {
-        "broken_power_law": -13.389949797460286,
-        "high_frequency_cut_off_power_law": -15.064057444470494,
-        "log_parabolic_spectrum": -13.127590352661544,
-        "low_frequency_turn_over_power_law": -16.17274127686162,
-        "simple_power_law": -14.9017871439841
+        "broken_power_law": -11.79712671032884,
+        "high_frequency_cut_off_power_law": -12.073974859737083,
+        "log_parabolic_spectrum": -10.951557270382875,
+        "low_frequency_turn_over_power_law": -13.480324307037517,
+        "simple_power_law": -12.725700972167651
     },
     "J1926+0431": {
         "broken_power_law": -57.74254626907247,
@@ -5215,11 +5285,11 @@
         "simple_power_law": -2.6799064672229056
     },
     "J1933-6211": {
-        "broken_power_law": -14.288156651932667,
-        "high_frequency_cut_off_power_law": -14.415106134318808,
-        "log_parabolic_spectrum": -10.76518345302762,
-        "low_frequency_turn_over_power_law": -14.6789325094524,
-        "simple_power_law": -13.52675284512357
+        "broken_power_law": -14.267221962800242,
+        "high_frequency_cut_off_power_law": -13.277820890674324,
+        "log_parabolic_spectrum": -9.94222860291159,
+        "low_frequency_turn_over_power_law": -14.992187087567656,
+        "simple_power_law": -12.890534537209536
     },
     "J1935+1159": {
         "broken_power_law": -3.505095125274801,
@@ -5250,11 +5320,11 @@
         "simple_power_law": -8.561435682748037
     },
     "J1939+2134": {
-        "broken_power_law": -104.93647772595222,
-        "high_frequency_cut_off_power_law": -116.50092630709868,
-        "log_parabolic_spectrum": -109.87384661026616,
-        "low_frequency_turn_over_power_law": -107.01722952033717,
-        "simple_power_law": -116.1938118222681
+        "broken_power_law": -127.83295174372046,
+        "high_frequency_cut_off_power_law": -142.0556266472104,
+        "log_parabolic_spectrum": -133.3831911796865,
+        "low_frequency_turn_over_power_law": -129.98431424195036,
+        "simple_power_law": -144.4028249912206
     },
     "J1941+0121": {
         "broken_power_law": -14.278571342668764,
@@ -5292,11 +5362,11 @@
         "simple_power_law": -49.91677154294017
     },
     "J1944+0907": {
-        "broken_power_law": -45.79095136093175,
-        "high_frequency_cut_off_power_law": -47.62703278021556,
-        "log_parabolic_spectrum": -43.797155869041354,
-        "low_frequency_turn_over_power_law": -46.81317555930287,
-        "simple_power_law": -46.02981729212804
+        "broken_power_law": -58.75031845852991,
+        "high_frequency_cut_off_power_law": -59.31373464503394,
+        "log_parabolic_spectrum": -58.334442021001806,
+        "low_frequency_turn_over_power_law": -57.84123692173942,
+        "simple_power_law": -61.8735715876878
     },
     "J1945-0040": {
         "broken_power_law": -42.782761681926615,
@@ -5376,11 +5446,11 @@
         "simple_power_law": -63.167431524209924
     },
     "J1955+2908": {
-        "broken_power_law": -31.17646577944599,
-        "high_frequency_cut_off_power_law": -31.4202866628584,
-        "log_parabolic_spectrum": -30.163791418908566,
-        "low_frequency_turn_over_power_law": -32.46468306486933,
-        "simple_power_law": -42.47091366109946
+        "broken_power_law": -38.617270698520315,
+        "high_frequency_cut_off_power_law": -34.3449951916478,
+        "log_parabolic_spectrum": -35.92865612302109,
+        "low_frequency_turn_over_power_law": -38.17026408497368,
+        "simple_power_law": -49.10697610692905
     },
     "J1955+5059": {
         "broken_power_law": -63.911134941534584,
@@ -5397,11 +5467,11 @@
         "simple_power_law": -17.205980507649027
     },
     "J1959+2048": {
-        "broken_power_law": -21.124999584033525,
-        "high_frequency_cut_off_power_law": -23.23414662108061,
-        "log_parabolic_spectrum": -21.36502973317672,
-        "low_frequency_turn_over_power_law": -24.497531567938612,
-        "simple_power_law": -22.715720219700803
+        "broken_power_law": -18.33924918893371,
+        "high_frequency_cut_off_power_law": -21.24505902240051,
+        "log_parabolic_spectrum": -18.06694370300442,
+        "low_frequency_turn_over_power_law": -22.566637198549813,
+        "simple_power_law": -18.409981132697986
     },
     "J2002+1637": {
         "broken_power_law": -7.396822279697629,
@@ -5445,6 +5515,13 @@
         "low_frequency_turn_over_power_law": -13.401674248729757,
         "simple_power_law": -11.374218314186052
     },
+    "J2007+2722": {
+        "broken_power_law": -11.558626132057599,
+        "high_frequency_cut_off_power_law": -12.69364828861054,
+        "log_parabolic_spectrum": -6.764885363193447,
+        "low_frequency_turn_over_power_law": -4.963621761612999,
+        "simple_power_law": -25.94349123178719
+    },
     "J2008+2513": {
         "broken_power_law": -22.59679126450876,
         "high_frequency_cut_off_power_law": -23.8771146927973,
@@ -5453,11 +5530,11 @@
         "simple_power_law": -23.68314933451568
     },
     "J2010-1323": {
-        "broken_power_law": -5.849220337031387,
-        "high_frequency_cut_off_power_law": -8.207876514524202,
-        "log_parabolic_spectrum": -2.863813983404655,
-        "low_frequency_turn_over_power_law": -5.045793542168287,
-        "simple_power_law": -5.6079641695864755
+        "broken_power_law": 6.75550846884032,
+        "high_frequency_cut_off_power_law": 0.9928003246823041,
+        "log_parabolic_spectrum": 8.704286339142135,
+        "low_frequency_turn_over_power_law": 1.573705235537872,
+        "simple_power_law": 7.276026768879412
     },
     "J2013+3845": {
         "broken_power_law": -44.718436332232635,
@@ -5467,11 +5544,11 @@
         "simple_power_law": -49.97829543914237
     },
     "J2017+0603": {
-        "broken_power_law": -12.987182592998874,
-        "high_frequency_cut_off_power_law": -13.354600134867814,
-        "log_parabolic_spectrum": -7.002236629374077,
-        "low_frequency_turn_over_power_law": -6.451078962441121,
-        "simple_power_law": -11.660779764159903
+        "broken_power_law": -9.303136151550712,
+        "high_frequency_cut_off_power_law": -16.08454387724421,
+        "log_parabolic_spectrum": -8.50003145434907,
+        "low_frequency_turn_over_power_law": -11.247326104440448,
+        "simple_power_law": -16.21585214370802
     },
     "J2017+2043": {
         "broken_power_law": -10.737751278552476,
@@ -5488,11 +5565,11 @@
         "simple_power_law": -199.46763353598428
     },
     "J2019+2425": {
-        "broken_power_law": -30.277964391295498,
-        "high_frequency_cut_off_power_law": -32.991723658327544,
-        "log_parabolic_spectrum": -29.507515177282503,
-        "low_frequency_turn_over_power_law": -30.340512556856176,
-        "simple_power_law": -32.55571869725308
+        "broken_power_law": -25.04894046738851,
+        "high_frequency_cut_off_power_law": -28.21926308527022,
+        "log_parabolic_spectrum": -23.458583673616094,
+        "low_frequency_turn_over_power_law": -23.76739216320128,
+        "simple_power_law": -38.129043355869854
     },
     "J2022+2854": {
         "broken_power_law": -108.10067926967095,
@@ -5537,11 +5614,11 @@
         "simple_power_law": -19.417242659963424
     },
     "J2033+1734": {
-        "broken_power_law": -24.651752157927582,
-        "high_frequency_cut_off_power_law": -29.925925953560608,
-        "log_parabolic_spectrum": -24.71549033020985,
-        "low_frequency_turn_over_power_law": -33.1765202731862,
-        "simple_power_law": -24.065208581817696
+        "broken_power_law": -18.01094979356494,
+        "high_frequency_cut_off_power_law": -20.056759864722526,
+        "log_parabolic_spectrum": -17.455576602816024,
+        "low_frequency_turn_over_power_law": -24.23974033170265,
+        "simple_power_law": -16.667695920162195
     },
     "J2037+1942": {
         "broken_power_law": -25.277157367345062,
@@ -5579,11 +5656,11 @@
         "simple_power_law": -14.135470682655095
     },
     "J2043+1711": {
-        "broken_power_law": -11.746246432734221,
-        "high_frequency_cut_off_power_law": -15.022179794326503,
-        "log_parabolic_spectrum": -10.901424630026098,
-        "low_frequency_turn_over_power_law": -15.807032735752347,
-        "simple_power_law": -12.11466837940377
+        "broken_power_law": -11.7204806436652,
+        "high_frequency_cut_off_power_law": -12.775104347434555,
+        "log_parabolic_spectrum": -12.105188099114434,
+        "low_frequency_turn_over_power_law": -16.974933233832637,
+        "simple_power_law": -21.116281075173617
     },
     "J2043+2740": {
         "broken_power_law": -42.68408766612398,
@@ -5726,11 +5803,11 @@
         "simple_power_law": -27.205897123502254
     },
     "J2124-3358": {
-        "broken_power_law": -66.53227438240245,
-        "high_frequency_cut_off_power_law": -69.72572216850652,
-        "log_parabolic_spectrum": -66.5573809764815,
-        "low_frequency_turn_over_power_law": -70.678920678355,
-        "simple_power_law": -67.48395013747678
+        "broken_power_law": -89.33952063490956,
+        "high_frequency_cut_off_power_law": -93.49584046145765,
+        "log_parabolic_spectrum": -89.91808107661747,
+        "low_frequency_turn_over_power_law": -91.73494343812023,
+        "simple_power_law": -93.2638842138101
     },
     "J2127-6648": {
         "broken_power_law": -2.8556712249078258,
@@ -5740,11 +5817,11 @@
         "simple_power_law": -5.8600312006310045
     },
     "J2129-5721": {
-        "broken_power_law": -28.664586050066397,
-        "high_frequency_cut_off_power_law": -32.46590236033879,
-        "log_parabolic_spectrum": -28.853020619051314,
-        "low_frequency_turn_over_power_law": -34.498572880058795,
-        "simple_power_law": -30.567480188074736
+        "broken_power_law": -34.87882623534018,
+        "high_frequency_cut_off_power_law": -39.26552135277305,
+        "log_parabolic_spectrum": -34.47772084845697,
+        "low_frequency_turn_over_power_law": -39.07632031315357,
+        "simple_power_law": -37.71651884925817
     },
     "J2139+2242": {
         "broken_power_law": -46.17446234040419,
@@ -5761,11 +5838,11 @@
         "simple_power_law": -21.199759187302263
     },
     "J2145-0750": {
-        "broken_power_law": -328.7872066022123,
-        "high_frequency_cut_off_power_law": -354.3375457621846,
-        "log_parabolic_spectrum": -337.82273183774663,
-        "low_frequency_turn_over_power_law": -327.08652744525807,
-        "simple_power_law": -349.59908389670795
+        "broken_power_law": -363.86296705923746,
+        "high_frequency_cut_off_power_law": -390.1408743838845,
+        "log_parabolic_spectrum": -368.12267630249187,
+        "low_frequency_turn_over_power_law": -360.40512158775545,
+        "simple_power_law": -390.1774648639304
     },
     "J2149+6329": {
         "broken_power_law": -45.14376272866759,
@@ -5845,11 +5922,11 @@
         "simple_power_law": -141.39163441602835
     },
     "J2222-0137": {
-        "broken_power_law": -33.0072797591379,
-        "high_frequency_cut_off_power_law": -36.309497060959664,
-        "log_parabolic_spectrum": -34.79804116384435,
-        "low_frequency_turn_over_power_law": -37.66512858355808,
-        "simple_power_law": -35.48816143148926
+        "broken_power_law": -31.94297536098885,
+        "high_frequency_cut_off_power_law": -34.28420937864876,
+        "log_parabolic_spectrum": -33.890682877865444,
+        "low_frequency_turn_over_power_law": -35.537552316877935,
+        "simple_power_law": -37.23755900991286
     },
     "J2225+6535": {
         "broken_power_law": -64.41493848111699,
@@ -5859,11 +5936,11 @@
         "simple_power_law": -63.39575496091361
     },
     "J2229+2643": {
-        "broken_power_law": -35.44430488174267,
-        "high_frequency_cut_off_power_law": -37.64967324232097,
-        "log_parabolic_spectrum": -34.2834167266637,
-        "low_frequency_turn_over_power_law": -36.0063708336784,
-        "simple_power_law": -34.225868554875305
+        "broken_power_law": -45.38392789034288,
+        "high_frequency_cut_off_power_law": -47.245513197984806,
+        "log_parabolic_spectrum": -45.338555406425854,
+        "low_frequency_turn_over_power_law": -46.27221003357008,
+        "simple_power_law": -45.248502279072184
     },
     "J2229+6205": {
         "broken_power_law": -34.24025942819995,
@@ -5872,12 +5949,19 @@
         "low_frequency_turn_over_power_law": -34.48549956461512,
         "simple_power_law": -37.40785627793086
     },
+    "J2234+0611": {
+        "broken_power_law": -12.311805653617357,
+        "high_frequency_cut_off_power_law": -14.6356524080527,
+        "log_parabolic_spectrum": -8.435727779901951,
+        "low_frequency_turn_over_power_law": -8.125142860465791,
+        "simple_power_law": -12.596678293387876
+    },
     "J2234+0944": {
-        "broken_power_law": -21.45536033775831,
-        "high_frequency_cut_off_power_law": -23.767984182365513,
-        "log_parabolic_spectrum": -19.214925101629277,
-        "low_frequency_turn_over_power_law": -18.6320519830621,
-        "simple_power_law": -25.710299769233483
+        "broken_power_law": -32.7715309557697,
+        "high_frequency_cut_off_power_law": -38.489291016153864,
+        "log_parabolic_spectrum": -31.05308361166835,
+        "low_frequency_turn_over_power_law": -31.293285105355793,
+        "simple_power_law": -43.968778996388
     },
     "J2234+2114": {
         "broken_power_law": -36.12422830848407,
@@ -5887,11 +5971,11 @@
         "simple_power_law": -35.846958385178496
     },
     "J2241-5236": {
-        "broken_power_law": -180.17553617869476,
-        "high_frequency_cut_off_power_law": -183.43893837492297,
-        "log_parabolic_spectrum": -181.69491438691176,
-        "low_frequency_turn_over_power_law": -190.64089342309936,
-        "simple_power_law": -179.84113322641272
+        "broken_power_law": -188.8560605726643,
+        "high_frequency_cut_off_power_law": -191.70598484467143,
+        "log_parabolic_spectrum": -190.60227892801413,
+        "low_frequency_turn_over_power_law": -198.5971839621403,
+        "simple_power_law": -188.7326537464443
     },
     "J2242+6950": {
         "broken_power_law": -25.25136426120923,
@@ -5964,11 +6048,11 @@
         "simple_power_law": -123.52566804288172
     },
     "J2317+1439": {
-        "broken_power_law": -59.30897894650566,
-        "high_frequency_cut_off_power_law": -57.98654239203748,
-        "log_parabolic_spectrum": -57.50007626886729,
-        "low_frequency_turn_over_power_law": -58.095488181552646,
-        "simple_power_law": -60.53048929083697
+        "broken_power_law": -57.027372679906335,
+        "high_frequency_cut_off_power_law": -54.63624412662436,
+        "log_parabolic_spectrum": -54.06725460949816,
+        "low_frequency_turn_over_power_law": -55.19003231970538,
+        "simple_power_law": -60.46307605098406
     },
     "J2317+2149": {
         "broken_power_law": -82.95178827487358,
@@ -5985,11 +6069,11 @@
         "simple_power_law": -107.6103106487316
     },
     "J2322+2057": {
-        "broken_power_law": -13.860447429447463,
-        "high_frequency_cut_off_power_law": -17.374342743248146,
-        "log_parabolic_spectrum": -12.955765140137252,
-        "low_frequency_turn_over_power_law": -12.579864319620576,
-        "simple_power_law": -18.102963201223677
+        "broken_power_law": -8.17248071435876,
+        "high_frequency_cut_off_power_law": -9.733422586771965,
+        "log_parabolic_spectrum": -4.849746012429076,
+        "low_frequency_turn_over_power_law": -5.1141819826187875,
+        "simple_power_law": -19.44602870504964
     },
     "J2324-6054": {
         "broken_power_law": -29.857219878072954,
