@@ -60,7 +60,7 @@ class Catalogue:
         self.citation_dict = citation_dict
         self.embeded_info = None
 
-    def get_pulsar(self, jname: str, args: Namespace) -> Dataset | None:
+    def get_pulsar(self, jname: str, args: Namespace = None) -> Dataset | None:
         if jname not in self.cat_dict:
             return
 
@@ -69,24 +69,25 @@ class Catalogue:
         YERR = np.array(self.cat_dict[jname]['YERR'])
         REF = np.array(self.cat_dict[jname]['REF'])
 
-        # Remove outlier YERRs
-        if args.outliers_rm:
-            YERR_Y = YERR / Y
-            while np.median(YERR_Y) / np.min(YERR_Y) >= 10.:
-                ix = np.where(YERR_Y == np.min(YERR_Y))
-                X = np.delete(X, ix)
-                Y = np.delete(Y, ix)
-                YERR = np.delete(YERR, ix)
-                REF = np.delete(REF, ix)
+        if args is not None:
+            # Remove outlier YERRs
+            if args.outliers_rm:
                 YERR_Y = YERR / Y
-        else:
-            # Set minimum YERR / Y
-            if args.outliers_min:
-                YERR = np.where(YERR / Y < args.outliers_min, args.outliers_min * Y, YERR)
+                while np.median(YERR_Y) / np.min(YERR_Y) >= 10.:
+                    ix = np.where(YERR_Y == np.min(YERR_Y))
+                    X = np.delete(X, ix)
+                    Y = np.delete(Y, ix)
+                    YERR = np.delete(YERR, ix)
+                    REF = np.delete(REF, ix)
+                    YERR_Y = YERR / Y
+            else:
+                # Set minimum YERR / Y
+                if args.outliers_min:
+                    YERR = np.where(YERR / Y < args.outliers_min, args.outliers_min * Y, YERR)
 
-        # Don't believe in any of the YERRs
-        if args.outliers_all:
-            YERR = np.ones_like(Y) * args.outliers_all * Y
+            # Don't believe in any of the YERRs
+            if args.outliers_all:
+                YERR = np.ones_like(Y) * args.outliers_all * Y
 
         # Extreme case: no data, or after removing outliers, no data left
         if len(X) <= 0:

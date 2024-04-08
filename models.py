@@ -64,7 +64,7 @@ def double_turn_over_spectrum(v, p: dict, v0, **kwargs):
     return np.where(x <= xc1, y1, y2)
 
 
-def get_models(model_names: str = '', aic: bool = False) -> dict:
+def get_models(model_names: str | list, aic: bool = False) -> dict:
     if aic:
         # Use the models from pulsar_spectra instead
         from pulsar_spectra.models import simple_power_law, broken_power_law, double_broken_power_law, \
@@ -140,7 +140,10 @@ def get_models(model_names: str = '', aic: bool = False) -> dict:
         },
     }
 
-    model_name_list = [model_name.strip() for model_name in model_names.split(';') if model_name.strip()]
+    if isinstance(model_names, str):
+        model_name_list = [model_name.strip() for model_name in model_names.split(';') if model_name.strip()]
+    else:
+        model_name_list = model_names
     for model_name in model_name_list:
         if model_name not in model_dict:
             raise ValueError(f'Model {model_name} not found in model_dict.')

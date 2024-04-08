@@ -88,6 +88,7 @@ def parse_args() -> Namespace:
 
     # Jan et al. (2018)'s method, a.k.a. AIC method in pulsar_spectra
     parser.add_argument('--aic', help="Use Jankowski et al. (2018)'s method instead", action='store_true')
+    parser.add_argument('--aic_no_corr', help="Do not apply the correction term in AIC calculation", action='store_true')
 
     # Output & multiprocessing
     parser.add_argument('--label', help="Output directory label (when --outdir is not set)")
