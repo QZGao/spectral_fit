@@ -36,7 +36,7 @@ def fit(jname: str, model_name: str, env: Env):
                 console.log(f"{jname} {model_name}: Not enough frequency range to fit.", style='yellow')
                 return
 
-        if env.args.aic and len(dataset.X) <= len(env.model_dict[model_name]['labels']) + 1:
+        if env.args.aic and (not env.args.aic_no_corr) and len(dataset.X) <= len(env.model_dict[model_name]['labels']) + 1:
             # AIC calculation is not possible if the number of data points is no more than the number of parameters plus 1
             # See the following link for pulsar_spectra's implementation
             # https://github.com/NickSwainston/pulsar_spectra/blob/373f65d866c3bf162fd6d93780235cfbd81849b5/pulsar_spectra/spectral_fit.py#L414-L418

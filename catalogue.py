@@ -28,6 +28,9 @@ class Dataset:
             'v0': self.v0,
         }
 
+    def dof(self, n_params: int) -> int:
+        return len(self.Y) - n_params
+
     def yerr_y(self, ix=None):
         if ix is None:
             return self.YERR / self.Y
@@ -324,7 +327,10 @@ def collect_catalogue(custom_lit: list = None, jname_list: list = None) -> Catal
     return cat
 
 
-def get_catalogue(args: Namespace) -> Catalogue:
+def get_catalogue(args: Namespace = None) -> Catalogue:
+    if args is None:
+        args = Namespace(jan_set=False, lit_set=None, atnf=False, atnf_ver='1.54')
+
     # Reproduce Jankowski et al. (2018)'s dataset
     if args.jan_set:
         # Load catalogue from pickle
@@ -350,10 +356,10 @@ def get_catalogue(args: Namespace) -> Catalogue:
         if args.lit_set == cat.embeded_info['lit_set'] and args.atnf == cat.embeded_info['atnf']:
             return cat
 
-    if args.lit_set is None:
-        catalogue = collect_catalogue()
-    else:  # Custom literature set
+    if args.lit_set is not None:  # Custom literature set
         catalogue = collect_catalogue(custom_lit=args.lit_set.split(';'))
+    else:
+        catalogue = collect_catalogue()
 
     if args.atnf:  # ATNF catalogue
         cat = collect_catalogue_from_ATNF(atnf_ver=args.atnf_ver)
