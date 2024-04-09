@@ -69,6 +69,7 @@ def parse_args() -> Namespace:
     parser.add_argument('--atnf', help="Include ATNF pulsar catalogue", action='store_true')
     parser.add_argument('--atnf_ver', help="ATNF pulsar catalogue version", type=str, default='1.54')
     parser.add_argument('--jan_set', help="Use Jankowski et al. (2018)'s (reproduced) dataset", action='store_true')
+    parser.add_argument('--print_lit', help="Print literature list", action='store_true')
 
     # Fitting
     parser.add_argument('--no_requirements', help="Do not require the dataset to have at least 4 points and a frequency range of at least 2", action='store_true')
@@ -152,10 +153,15 @@ if __name__ == '__main__':
         outdir = f'output/outdir_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}'
         if args.label:
             outdir += f'_{args.label.replace(" ", "_")}'
-    Path(outdir).mkdir(parents=True, exist_ok=True)
-    console.log(f"outdir: {outdir}")
+    if not args.print_lit:
+        Path(outdir).mkdir(parents=True, exist_ok=True)
+        console.log(f"outdir: {outdir}")
 
     env = Env(args, get_models(args.model, aic=args.aic), get_catalogue(args), outdir)
+    if args.print_lit:
+        env.catalogue.print_lit()
+        exit()
+
     job_list = get_jobs(env)
     if len(job_list) == 0:
         console.log("All jobs finished.")

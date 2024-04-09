@@ -139,6 +139,43 @@ class Catalogue:
     def __len__(self):
         return len(self.cat_dict)
 
+    def print_lit(self):
+        # name, pulsar_count, frequency_range
+        lit_dict = {}
+        for jname, data in self.cat_dict.items():
+            ref_in_pulsar = []
+            for (x, y, yerr, ref) in zip(data['X'], data['Y'], data['YERR'], data['REF']):
+                if ref not in self.citation_dict or self.citation_dict[ref].startswith('ATNF'):
+                    ref = 'ATNF'
+                    citation = '1000'
+                else:
+                    citation = self.citation_dict[ref]
+                if ref not in lit_dict:
+                    lit_dict[ref] = {
+                        'Citation': citation,
+                        'Count': 0,
+                        'Frequency range (MHz)': [np.inf, 0.]
+                    }
+                ref_in_pulsar.append(ref)
+                lit_dict[ref]['Frequency range (MHz)'][0] = min(lit_dict[ref]['Frequency range (MHz)'][0], x)
+                lit_dict[ref]['Frequency range (MHz)'][1] = max(lit_dict[ref]['Frequency range (MHz)'][1], x)
+
+            ref_in_pulsar = np.unique(ref_in_pulsar)
+            for ref in ref_in_pulsar:
+                lit_dict[ref]['Count'] += 1
+
+        lit_df = pd.DataFrame(lit_dict).T
+        lit_df['Frequency range (MHz)'] = lit_df['Frequency range (MHz)'].apply(lambda x: f'{x[0]:.0f}-{x[1]:.0f}')
+
+        # Sort by year
+        lit_df['Year'] = lit_df['Citation'].apply(lambda ref: int(re.search(r'([1-2]{1}[0-9]{3})', ref).group(0)))
+        lit_df = lit_df.sort_values('Year').drop(columns='Year')
+        lit_df['Citation'] = lit_df['Citation'].apply(lambda x: 'The ATNF Pulsar Catalogue' if x == '1000' else x)
+
+        # Save to CSV
+        lit_df.to_csv('catalogue/literature.csv', index_label='Citekey')
+        print('Literature list saved to catalogue/literature.csv.')
+
 
 def collect_catalogue_from_ATNF(jname_list: list = None, atnf_ver: str = '1.54') -> Catalogue:
     print('Collecting data from ATNF Pulsar Catalogue via psrqpy...', end='')

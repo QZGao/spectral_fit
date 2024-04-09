@@ -162,6 +162,7 @@ cython_debug/
 # Outputs
 output/*
 !output/examples/
-catalogue/*.pkl
+catalogue/*
+!catalogue/*_data.csv
 notebooks/*.pdf
 notebooks/*.png
