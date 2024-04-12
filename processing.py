@@ -59,6 +59,7 @@ if __name__ == "__main__":
             folders = args.plot.split(';')
         else:
             folders = [f for f in os.listdir(outdir) if os.path.isdir(os.path.join(outdir, f))]
+            result_dict = {}
         task = progress.add_task("Processing", total=len(folders))
         for folder in folders:
             progress.update(task, description=f"Processing {args.outdir}")
@@ -115,7 +116,6 @@ if __name__ == "__main__":
                         pickle.dump(chi_squared_all, f)
 
             else:
-                result_dict = {}
                 for file in files:
                     model_name = file.removesuffix("_results.json")
                     # Open file and extract variable
@@ -130,8 +130,9 @@ if __name__ == "__main__":
                             result_dict[folder] = {}
                         result_dict[folder][model_name] = data[args.var]
 
-                with open(f'output/results_{args.var}_from_{args.outdir}.json', 'w') as f:
-                    json.dump(result_dict, f, indent=4)
-                console.log(f"Results saved to results_{args.var}_from_{args.outdir}.json")
-
             progress.advance(task)
+
+    if not args.plot and args.var not in ['chi_squared', 'reduced_chi_squared']:
+        with open(f'output/results_{args.var}_from_{args.outdir}.json', 'w') as f:
+            json.dump(result_dict, f, indent=4)
+        console.log(f"Results saved to results_{args.var}_from_{args.outdir}.json")

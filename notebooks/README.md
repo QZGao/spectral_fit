@@ -1,6 +1,6 @@
 ## Run locally
 ### Based on existing results
-`output/examples` contains the results of multiple runs of the models with different approaches. Copy the `.json` files to the parent directory `output` to use them in the notebooks. Also copy the `.pkl` files from the `catalogue/examples` directory to their parent directory `catalogue`.
+`./output/examples` contains the results of multiple runs of the models with different approaches. Copy the `.json` files to the parent directory `./output` to use them in the notebooks. Also copy the `.pkl` files from the `./catalogue/examples` directory to their parent directory `./catalogue`.
 
 Still, the display of fitted spectra in some notebooks will not be shown, unless the whole fitting process is run locally. Or, you can fit only the pulsars you need by running the following commands (where `<pulsar_list>` is a list of PSRJ names separated by `;`):
 
@@ -33,10 +33,18 @@ python fit.py --outdir "outdir_aic" --aic
 python processing.py "outdir_aic" --var "aic"
 python processing.py "outdir_aic" --var "param_estimates"
 
+python fit.py --outdir "outdir_aic_without" --aic --aic_no_corr
+python processing.py "outdir_aic_without" --var "aic"
+python processing.py "outdir_aic_without" --var "param_estimates"
+
 # AIC with reproduced Jankowski's set
 python fit.py --outdir "outdir_aic_jankowski" --aic --jan_set
 python processing.py "outdir_aic_jankowski" --var "aic"
 python processing.py "outdir_aic_jankowski" --var "param_estimates"
+
+python fit.py --outdir "outdir_aic_jankowski_without" --aic --aic_no_corr --jan_set
+python processing.py "outdir_aic_jankowski_without" --var "aic"
+python processing.py "outdir_aic_jankowski_without" --var "param_estimates"
 ```
 
 ## Interactivity

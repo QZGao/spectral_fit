@@ -70,6 +70,7 @@ def parse_args() -> Namespace:
     parser.add_argument('--atnf_ver', help="ATNF pulsar catalogue version", type=str, default='1.54')
     parser.add_argument('--jan_set', help="Use Jankowski et al. (2018)'s (reproduced) dataset", action='store_true')
     parser.add_argument('--print_lit', help="Print literature list", action='store_true')
+    parser.add_argument('--refresh', help="Refresh the catalogue", action='store_true')
 
     # Fitting
     parser.add_argument('--no_requirements', help="Do not require the dataset to have at least 4 points and a frequency range of at least 2", action='store_true')

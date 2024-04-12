@@ -100,7 +100,7 @@ class Catalogue:
         return Dataset(jname, X, Y, YERR, REF, v0)
 
     def filter(self, jname_list: list) -> 'Catalogue':
-        cat_dict = {jname: self.cat_dict[jname] for jname in jname_list}
+        cat_dict = {jname: self.cat_dict[jname] for jname in jname_list if jname in self.cat_dict}
         return Catalogue(cat_dict, self.citation_dict)
 
     def at_least_n_points(self, n: int) -> list[str]:
@@ -122,7 +122,15 @@ class Catalogue:
 
         return Catalogue(cat_dict, citation_dict)
 
-    def extend(self, jname: str, X: list, Y: list, YERR: list, REF: list):
+    def extend(self, jname: str, X: float | list, Y: float | list, YERR: float | list, REF: str | list):
+        if isinstance(X, float):
+            X = [X]
+        if isinstance(Y, float):
+            Y = [Y]
+        if isinstance(YERR, float):
+            YERR = [YERR]
+        if isinstance(REF, str):
+            REF = [REF]
         if jname in self.cat_dict:
             self.cat_dict[jname]['X'] = np.concatenate((self.cat_dict[jname]['X'], X))
             self.cat_dict[jname]['Y'] = np.concatenate((self.cat_dict[jname]['Y'], Y))
@@ -140,6 +148,8 @@ class Catalogue:
         return len(self.cat_dict)
 
     def print_lit(self):
+        print(f'Pulsar count: {len(self.cat_dict)}')
+
         # name, pulsar_count, frequency_range
         lit_dict = {}
         for jname, data in self.cat_dict.items():
@@ -153,7 +163,7 @@ class Catalogue:
                 if ref not in lit_dict:
                     lit_dict[ref] = {
                         'Citation': citation,
-                        'Count': 0,
+                        'Pulsar count': 0,
                         'Frequency range (MHz)': [np.inf, 0.]
                     }
                 ref_in_pulsar.append(ref)
@@ -162,7 +172,7 @@ class Catalogue:
 
             ref_in_pulsar = np.unique(ref_in_pulsar)
             for ref in ref_in_pulsar:
-                lit_dict[ref]['Count'] += 1
+                lit_dict[ref]['Pulsar count'] += 1
 
         lit_df = pd.DataFrame(lit_dict).T
         lit_df['Frequency range (MHz)'] = lit_df['Frequency range (MHz)'].apply(lambda x: f'{x[0]:.0f}-{x[1]:.0f}')
@@ -175,6 +185,82 @@ class Catalogue:
         # Save to CSV
         lit_df.to_csv('catalogue/literature.csv', index_label='Citekey')
         print('Literature list saved to catalogue/literature.csv.')
+
+    def apply_fixes(self, lit_set: list):
+        """Patches to the catalogue in pulsar_spectra v2.0.4"""
+
+        # Add data from Sieber (1973) (for the sake of reproducing Jankowski et al. (2018))
+        # https://github.com/NickSwainston/pulsar_spectra/commit/1793a21607eed71a4556701517ccd14f6193b6f4
+        # Extracted from Table 1 of the paper, flux densities are calculated by Swainston
+        if 'Sieber_1973' in lit_set:
+            sieber_df = pd.read_csv('catalogue/Sieber_1973_data.csv')
+            for _, row in sieber_df.iterrows():
+                self.extend(row['PSRJ'], float(row['FREQ']), float(row['FLUX']), float(row['FLUX_ERR']), 'Sieber_1973')
+            print('Sieber_1973: Manually added measurements from Sieber (1973).')
+
+        # Add data from Maron et al. (2000) (for the sake of reproducing Jankowski et al. (2018))
+        # https://web.archive.org/web/20100106132709/http://astro.ia.uz.zgora.pl/olaf/paper1/
+        # Extracted from a PostScript file named "table2.ps" in the "tables.tar.gz".
+        if 'Maron_2000' in lit_set:
+            maron_df = pd.read_csv('catalogue/Maron_2000_data.csv')
+            for _, row in maron_df.iterrows():
+                self.extend(
+                    row['PSRJ'], X=float(row['FREQ']), Y=float(row['FLUX']), REF='Maron_2000',
+                    YERR=float(row['FLUX_ERR']) if float(row['FLUX_ERR']) > 0. else 0.5 * float(row['FLUX'])
+                )
+            print('Maron_2000: Manually added measurements from Maron et al. (2000).')
+
+        # Remove incorrect data from Johnston & Kerr (2018)
+        # https://github.com/NickSwainston/pulsar_spectra/issues/93
+        if 'J1842-0359' in self.cat_dict and 'Johnston_2018' in self.cat_dict['J1842-0359']['REF']:
+            ix = np.where(np.array(self.cat_dict['J1842-0359']['REF']) == 'Johnston_2018')
+            self.cat_dict['J1842-0359']['X'] = np.delete(self.cat_dict['J1842-0359']['X'], ix)
+            self.cat_dict['J1842-0359']['Y'] = np.delete(self.cat_dict['J1842-0359']['Y'], ix)
+            self.cat_dict['J1842-0359']['YERR'] = np.delete(self.cat_dict['J1842-0359']['YERR'], ix)
+            self.cat_dict['J1842-0359']['REF'] = np.delete(self.cat_dict['J1842-0359']['REF'], ix)
+            print('Johnston_2018: Removed incorrect data for J1842-0359 (0.01 mJy, class "N") from Johnston & Kerr (2018).')
+
+        # Add data from Spiewak et al. (2022)
+        # pulsar_spectra uses the data from Table 1 of the paper, but we can use the supporting data published by the author
+        # https://github.com/NickSwainston/pulsar_spectra/pull/56/commits/824371ddcb3190ff1ddfd7bd22e07d0d39db3544
+        if 'Spiewak_2022' in lit_set:
+            spiewak_df = pd.read_csv('catalogue/Spiewak_2022_data.csv')
+            for _, row in spiewak_df.iterrows():
+                jname = row['PSRJ']
+                if jname in self.cat_dict and 'Spiewak_2022' in self.cat_dict[jname]['REF']:
+                    # Remove the existing mean flux data (which only has one mean value for each pulsar)
+                    idx = np.where(np.array(self.cat_dict[jname]['REF']) == 'Spiewak_2022')
+                    self.cat_dict[jname]['X'] = np.delete(self.cat_dict[jname]['X'], idx)
+                    self.cat_dict[jname]['Y'] = np.delete(self.cat_dict[jname]['Y'], idx)
+                    self.cat_dict[jname]['YERR'] = np.delete(self.cat_dict[jname]['YERR'], idx)
+                    self.cat_dict[jname]['REF'] = np.delete(self.cat_dict[jname]['REF'], idx)
+                x, y, yerr, ref = [], [], [], []
+                for i in range(0, 8):
+                    if not pd.isna(row[f'FLUX_{i}_FRQ']):
+                        x.append(float(row[f'FLUX_{i}_FRQ']))
+                        y.append(float(row[f'FLUX_{i}_VAL']))
+                        yerr.append(float(row[f'FLUX_{i}_ERR']))
+                        ref.append('Spiewak_2022')
+                yerr = [0.5 * y[i] if yerr[i] == 0. else yerr[i] for i in range(len(y))]
+                self.extend(jname, x, y, yerr, ref)
+            print('Spiewak_2022: Manually added measurements of 8 frequency channels from Spiewak et al. (2022).')
+
+        # Add data from Posselt et al. (2023)
+        # Extracted from the supporting data published by the author
+        if 'Posselt_2023' in lit_set:
+            posselt_df = pd.read_csv('catalogue/Posselt_2023_data.csv')
+            for _, row in posselt_df.iterrows():
+                jname = row['PSRJ']
+                x, y, yerr, ref = [], [], [], []
+                for i in range(1, 9):
+                    if not pd.isna(row[f'ch{i}freq']):
+                        x.append(float(row[f'ch{i}freq']))
+                        y.append(float(row[f'ch{i}flux']))
+                        yerr.append(float(row[f'ch{i}errflux']))
+                        ref.append('Posselt_2023')
+                yerr = [0.5 * y[i] if yerr[i] == 0. else yerr[i] for i in range(len(y))]
+                self.extend(jname, x, y, yerr, ref)
+            print('Posselt_2023: Manually added measurements of 8 frequency channels from Posselt et al. (2023).')
 
 
 def collect_catalogue_from_ATNF(jname_list: list = None, atnf_ver: str = '1.54') -> Catalogue:
@@ -215,6 +301,10 @@ def collect_catalogue_from_ATNF(jname_list: list = None, atnf_ver: str = '1.54')
             cat_dict[jname]['Y'].append(y)
             cat_dict[jname]['YERR'].append(yerr)
             cat_dict[jname]['REF'].append(ref)
+
+        if len(cat_dict[jname]['X']) == 0:
+            # No flux density measurements available in the ATNF Pulsar Catalogue
+            del cat_dict[jname]
 
     citation_dict = get_refs_from_ATNF(atnf_ver=atnf_ver)
     print(f' Done. (Version: {query_obj.get_version})')
@@ -266,10 +356,6 @@ def collect_catalogue(custom_lit: list = None, jname_list: list = None) -> Catal
     print(f'Collecting data from {len(custom_lit)} literature sources via pulsar_spectra...', end='')
     pusp_cat_dict = collect_catalogue_fluxes(only_use=custom_lit, use_atnf=False)
 
-    # Delete pulsars not in jname_list
-    if jname_list is not None:
-        pusp_cat_dict = {jname: data for jname, data in pusp_cat_dict.items() if jname in jname_list}
-
     # Get all references
     pusp_lit = []
     for _, v in pusp_cat_dict.items():
@@ -307,59 +393,13 @@ def collect_catalogue(custom_lit: list = None, jname_list: list = None) -> Catal
 
     print(' Done.')
     cat = Catalogue(cat_dict, citation_dict)
+    cat.apply_fixes(lit_set=custom_lit)
 
-    # The following are patches to the catalogue in pulsar_spectra v2.0.4:
-
-    # Add data from Posselt et al. (2023)
-    if 'Posselt_2023' in custom_lit:
-        posselt_df = pd.read_csv('catalogue/Posselt_2023_data.csv')
-        for _, row in posselt_df.iterrows():
-            jname = row['PSRJ']
-            x, y, yerr, ref = [], [], [], []
-            for i in range(1, 9):
-                if not pd.isna(row[f'ch{i}freq']):
-                    x.append(float(row[f'ch{i}freq']))
-                    y.append(float(row[f'ch{i}flux']))
-                    yerr.append(float(row[f'ch{i}errflux']))
-                    ref.append('Posselt_2023')
-            yerr = [0.5 * y[i] if yerr[i] == 0. else yerr[i] for i in range(len(y))]
-            cat.extend(jname, x, y, yerr, ref)
-        print('Posselt_2023: Manually added measurements of 8 frequency channels from Posselt et al. (2023).')
-
-    # Add data from Spiewak et al. (2022)
-    # pulsar_spectra uses the data from Table 1 of the paper, but we can use the supporting data published by the author
-    # https://github.com/NickSwainston/pulsar_spectra/pull/56/commits/824371ddcb3190ff1ddfd7bd22e07d0d39db3544
-    if 'Spiewak_2022' in custom_lit:
-        spiewak_df = pd.read_csv('catalogue/Spiewak_2022_data.csv')
-        for _, row in spiewak_df.iterrows():
-            jname = row['PSRJ']
-            if jname in cat.cat_dict and 'Spiewak_2022' in cat.cat_dict[jname]['REF']:
-                # Remove the existing mean flux data (which only has one mean value for each pulsar)
-                idx = np.where(np.array(cat.cat_dict[jname]['REF']) == 'Spiewak_2022')
-                cat.cat_dict[jname]['X'] = np.delete(cat.cat_dict[jname]['X'], idx)
-                cat.cat_dict[jname]['Y'] = np.delete(cat.cat_dict[jname]['Y'], idx)
-                cat.cat_dict[jname]['YERR'] = np.delete(cat.cat_dict[jname]['YERR'], idx)
-                cat.cat_dict[jname]['REF'] = np.delete(cat.cat_dict[jname]['REF'], idx)
-            x, y, yerr, ref = [], [], [], []
-            for i in range(0, 8):
-                if not pd.isna(row[f'FLUX_{i}_FRQ']):
-                    x.append(float(row[f'FLUX_{i}_FRQ']))
-                    y.append(float(row[f'FLUX_{i}_VAL']))
-                    yerr.append(float(row[f'FLUX_{i}_ERR']))
-                    ref.append('Spiewak_2022')
-            yerr = [0.5 * y[i] if yerr[i] == 0. else yerr[i] for i in range(len(y))]
-            cat.extend(jname, x, y, yerr, ref)
-        print('Spiewak_2022: Manually added measurements of 8 frequency channels from Spiewak et al. (2022).')
-
-    # Remove incorrect data from Johnston & Kerr (2018)
-    # https://github.com/NickSwainston/pulsar_spectra/issues/93
-    if 'J1842-0359' in cat.cat_dict and 'Johnston_2018' in cat.cat_dict['J1842-0359']['REF']:
-        ix = np.where(np.array(cat.cat_dict['J1842-0359']['REF']) == 'Johnston_2018')
-        cat.cat_dict['J1842-0359']['X'] = np.delete(cat.cat_dict['J1842-0359']['X'], ix)
-        cat.cat_dict['J1842-0359']['Y'] = np.delete(cat.cat_dict['J1842-0359']['Y'], ix)
-        cat.cat_dict['J1842-0359']['YERR'] = np.delete(cat.cat_dict['J1842-0359']['YERR'], ix)
-        cat.cat_dict['J1842-0359']['REF'] = np.delete(cat.cat_dict['J1842-0359']['REF'], ix)
-        print('Johnston_2018: Removed incorrect data for J1842-0359 (0.01 mJy, class "N") from Johnston & Kerr (2018).')
+    if jname_list is not None:  # Filter by pulsar names
+        for jname in jname_list:
+            if jname not in cat.cat_dict:
+                print(f'Warning: {jname} not found in the catalogue.')
+        cat = cat.filter(jname_list)
 
     return cat
 
@@ -371,7 +411,7 @@ def get_catalogue(args: Namespace = None) -> Catalogue:
     # Reproduce Jankowski et al. (2018)'s dataset
     if args.jan_set:
         # Load catalogue from pickle
-        if os.path.exists('catalogue/catalogue_jan.pkl'):
+        if not args.refresh and os.path.exists('catalogue/catalogue_jan.pkl'):
             with open('catalogue/catalogue_jan.pkl', 'rb') as f:
                 return pickle.load(f)
 
@@ -387,7 +427,7 @@ def get_catalogue(args: Namespace = None) -> Catalogue:
         return cat
 
     # Load catalogue from pickle
-    if os.path.exists('catalogue/catalogue.pkl'):
+    if not args.refresh and os.path.exists('catalogue/catalogue.pkl'):
         with open('catalogue/catalogue.pkl', 'rb') as f:
             cat = pickle.load(f)
         if args.lit_set == cat.embeded_info['lit_set'] and args.atnf == cat.embeded_info['atnf']:
@@ -516,6 +556,7 @@ DEFAULT_LITERATURE_SET = [
     'Posselt_2023'
 ]
 DEFAULT_LITERATURE_CITATIONS = {
+    'Sieber_1973': 'Sieber (1973)',
     'McLean_1973': 'McLean (1973)',
     'Bartel_1978': 'Bartel et al. (1978)',
     'Manchester_1978a': 'Manchester et al. (1978)',
@@ -558,6 +599,7 @@ DEFAULT_LITERATURE_CITATIONS = {
     'Weisberg_1999': 'Weisberg et al. (1999)',
     'Kouwenhoven_2000': 'Kouwenhoven (2000)',
     'Lommen_2000': 'Lommen et al. (2000)',
+    'Maron_2000': 'Maron et al. (2000)',
     'Malofeev_2000': 'Malofeev et al. (2000)',
     'Crawford_2001': 'Crawford et al. (2001)',
     'Giacani_2001': 'Giacani et al. (2001)',
@@ -650,23 +692,26 @@ DEFAULT_LITERATURE_CITATIONS = {
     'Posselt_2023': 'Posselt et al. (2023)'
 }
 JANKOWSKI_LITERATURE_SET = [  # Part of literature used by Jankowski et al. (2018)
+    'Jankowski_2018',
+    'Sieber_1973',
     'Bartel_1978',
     'Izvekova_1981',
     'Lorimer_1995b',
     'van_Ommen_1997',
+    'Maron_2000',
     'Malofeev_2000',
     'Karastergiou_2005',
     'Johnston_2006',
     'Kijak_2007',
-    'Bates_2011',
     'Keith_2011',
+    'Bates_2011',
+    'Kijak_2011',
     'Zakharenko_2013',
-    'Dai_2015',
-    'Basu_2016',
-    'Bell_2016',
     'Bilous_2016',
+    'Dai_2015',
+    'Bell_2016',
+    'Basu_2016',
     'Han_2016',
-    'Kijak_2017',
     'Murphy_2017',
-    'Jankowski_2018'
+    'Kijak_2017'
 ]
