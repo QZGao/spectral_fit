@@ -103,8 +103,23 @@ class Catalogue:
         cat_dict = {jname: self.cat_dict[jname] for jname in jname_list if jname in self.cat_dict}
         return Catalogue(cat_dict, self.citation_dict)
 
+    def more_than_n_points(self, n: int) -> list[str]:
+        return [jname for jname, data in self.cat_dict.items() if len(data['X']) > n]
+
+    def less_than_n_points(self, n: int) -> list[str]:
+        return [jname for jname, data in self.cat_dict.items() if len(data['X']) < n]
+
+    def exactly_n_points(self, n: int) -> list[str]:
+        return [jname for jname, data in self.cat_dict.items() if len(data['X']) == n]
+
     def at_least_n_points(self, n: int) -> list[str]:
         return [jname for jname, data in self.cat_dict.items() if len(data['X']) >= n]
+
+    def at_most_n_points(self, n: int) -> list[str]:
+        return [jname for jname, data in self.cat_dict.items() if len(data['X']) <= n]
+
+    def range_points(self, i: int, j: int) -> list[str]:
+        return [jname for jname, data in self.cat_dict.items() if i <= len(data['X']) <= j]
 
     def __add__(self, other):
         cat_dict = self.cat_dict.copy()
@@ -147,7 +162,7 @@ class Catalogue:
     def __len__(self):
         return len(self.cat_dict)
 
-    def print_lit(self):
+    def print_lit(self, outdir: str):
         print(f'Pulsar count: {len(self.cat_dict)}')
 
         # name, pulsar_count, frequency_range
@@ -183,8 +198,8 @@ class Catalogue:
         lit_df['Citation'] = lit_df['Citation'].apply(lambda x: 'The ATNF Pulsar Catalogue' if x == '1000' else x)
 
         # Save to CSV
-        lit_df.to_csv('catalogue/literature.csv', index_label='Citekey')
-        print('Literature list saved to catalogue/literature.csv.')
+        lit_df.to_csv(f'{outdir}/literature.csv', index_label='Citekey')
+        print(f'Literature list saved to {outdir}/literature.csv.')
 
     def apply_fixes(self, lit_set: list):
         """Patches to the catalogue in pulsar_spectra v2.0.4"""
@@ -404,51 +419,49 @@ def collect_catalogue(custom_lit: list = None, jname_list: list = None) -> Catal
     return cat
 
 
-def get_catalogue(args: Namespace = None) -> Catalogue:
-    if args is None:
-        args = Namespace(jan_set=False, lit_set=None, atnf=False, atnf_ver='1.54')
+def get_catalogue(args: Namespace = None, load_dir: str = '') -> Catalogue:
+    # Load catalogue from pickle
+    if load_dir:  # Bypass other options
+        if os.getcwd().endswith('notebooks'):
+            load_dir = f'../output/{load_dir}'
+        if not os.path.exists(f'{load_dir}/catalogue.pkl'):
+            raise FileNotFoundError(f'{load_dir}/catalogue.pkl')
+        with open(f'{load_dir}/catalogue.pkl', 'rb') as f:
+            cat = pickle.load(f)
+        return cat
+    if not args.refresh and os.path.exists(f'{args.outdir}/catalogue.pkl'):
+        with open(f'{args.outdir}/catalogue.pkl', 'rb') as f:
+            cat = pickle.load(f)
+        if args.lit_set == cat.embeded_info['lit_set'] and args.atnf == cat.embeded_info['atnf'] and \
+                args.atnf_ver == cat.embeded_info['atnf_ver'] and args.jan_set == cat.embeded_info['jan_set']:
+            return cat
 
     # Reproduce Jankowski et al. (2018)'s dataset
     if args.jan_set:
-        # Load catalogue from pickle
-        if not args.refresh and os.path.exists('catalogue/catalogue_jan.pkl'):
-            with open('catalogue/catalogue_jan.pkl', 'rb') as f:
-                return pickle.load(f)
-
         with open('catalogue/Jankowski_2018_data.csv', 'r', encoding='utf-8-sig') as f:
             jan_df = pd.read_csv(f)
         jan_jnames = jan_df['PSRJ'].values.tolist()
-        cat = (collect_catalogue_from_ATNF(jname_list=jan_jnames, atnf_ver=args.atnf_ver) +
+        catalogue = (collect_catalogue_from_ATNF(jname_list=jan_jnames, atnf_ver=args.atnf_ver) +
                collect_catalogue(custom_lit=JANKOWSKI_LITERATURE_SET, jname_list=jan_jnames))
 
-        # Save to pickle
-        with open('catalogue/catalogue_jan.pkl', 'wb') as f:
-            pickle.dump(cat, f)
-        return cat
-
-    # Load catalogue from pickle
-    if not args.refresh and os.path.exists('catalogue/catalogue.pkl'):
-        with open('catalogue/catalogue.pkl', 'rb') as f:
-            cat = pickle.load(f)
-        if args.lit_set == cat.embeded_info['lit_set'] and args.atnf == cat.embeded_info['atnf']:
-            return cat
-
-    if args.lit_set is not None:  # Custom literature set
-        catalogue = collect_catalogue(custom_lit=args.lit_set.split(';'))
     else:
-        catalogue = collect_catalogue()
+        if args.lit_set is not None:  # Custom literature set
+            catalogue = collect_catalogue(custom_lit=args.lit_set.split(';'))
+        else:
+            catalogue = collect_catalogue()
 
-    if args.atnf:  # ATNF catalogue
-        cat = collect_catalogue_from_ATNF(atnf_ver=args.atnf_ver)
-        catalogue = cat if catalogue is None else catalogue + cat
+        if args.atnf:  # ATNF catalogue
+            cat = collect_catalogue_from_ATNF(atnf_ver=args.atnf_ver)
+            catalogue = cat if catalogue is None else catalogue + cat
 
     catalogue.embeded_info = {
         'lit_set': args.lit_set,
-        'atnf': args.atnf
+        'atnf': args.atnf, 'atnf_ver': args.atnf_ver,
+        'jan_set': args.jan_set
     }
 
     # Save to pickle
-    with open('catalogue/catalogue.pkl', 'wb') as f:
+    with open(f'{args.outdir}/catalogue.pkl', 'wb') as f:
         pickle.dump(catalogue, f)
     return catalogue
 

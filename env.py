@@ -4,8 +4,11 @@ from catalogue import Catalogue
 
 
 class Env:
-    def __init__(self, args: Namespace, model_dict: dict, catalogue: Catalogue, outdir: str):
+    def __init__(self, args: Namespace, model_dict: dict, catalogue: Catalogue):
         self.args = args
         self.model_dict = model_dict
         self.catalogue = catalogue
-        self.outdir = outdir
+
+    @property
+    def outdir(self):
+        return self.args.outdir

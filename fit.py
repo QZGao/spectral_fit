@@ -149,18 +149,17 @@ if __name__ == '__main__':
     args = parse_args()
 
     if args.outdir:
-        outdir = f'output/{args.outdir}'
+        args.outdir = f'output/{args.outdir}'
     else:
-        outdir = f'output/outdir_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}'
+        args.outdir = f'output/outdir_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}'
         if args.label:
-            outdir += f'_{args.label.replace(" ", "_")}'
-    if not args.print_lit:
-        Path(outdir).mkdir(parents=True, exist_ok=True)
-        console.log(f"outdir: {outdir}")
+            args.outdir += f'_{args.label.replace(" ", "_")}'
+    Path(args.outdir).mkdir(parents=True, exist_ok=True)
+    console.log(f"outdir: {args.outdir}")
 
-    env = Env(args, get_models(args.model, aic=args.aic), get_catalogue(args), outdir)
+    env = Env(args, get_models(args.model, aic=args.aic), get_catalogue(args))
     if args.print_lit:
-        env.catalogue.print_lit()
+        env.catalogue.print_lit(args.outdir)
         exit()
 
     job_list = get_jobs(env)

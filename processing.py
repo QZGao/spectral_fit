@@ -42,6 +42,7 @@ def parse_args() -> Namespace:
     parser.add_argument("outdir", help="Output directory")
     parser.add_argument('-v', '--var', help="Variable to process (default: log_evidence)", default='log_evidence')
     parser.add_argument('-p', '--plot', help="Extract pictures", default='')
+    parser.add_argument('--plot_format', help="Format of the plot (default: png)", default='png')
     return parser.parse_args()
 
 
@@ -53,10 +54,25 @@ if __name__ == "__main__":
 
     with (Progress() as progress):
         if args.var in ['chi_squared', 'reduced_chi_squared']:
-            catalogue = get_catalogue()
+            catalogue = get_catalogue(load_dir=outdir)
             models = {}
         if args.plot:
-            folders = args.plot.split(';')
+            catalogue = get_catalogue(load_dir=outdir)
+            if '>' or '<' or '=' in args.plot:
+                if args.plot.startswith('>='):
+                    folders = catalogue.at_least_n_points(int(args.plot[2:]))
+                elif args.plot.startswith('<='):
+                    folders = catalogue.at_most_n_points(int(args.plot[2:]))
+                elif args.plot.startswith('=='):
+                    folders = catalogue.exactly_n_points(int(args.plot[2:]))
+                elif args.plot.startswith('>'):
+                    folders = catalogue.more_than_n_points(int(args.plot[1:]))
+                elif args.plot.startswith('<'):
+                    folders = catalogue.less_than_n_points(int(args.plot[1:]))
+                else:
+                    raise ValueError(f"Invalid argument {args.plot}")
+            else:  # Pure list
+                folders = args.plot.split(';')
         else:
             folders = [f for f in os.listdir(outdir) if os.path.isdir(os.path.join(outdir, f))]
             result_dict = {}
@@ -64,7 +80,9 @@ if __name__ == "__main__":
         for folder in folders:
             progress.update(task, description=f"Processing {args.outdir}")
             if args.plot:
-                files = [f for f in os.listdir(os.path.join(outdir, folder)) if f.endswith('.pdf')]
+                if not os.path.exists(os.path.join(outdir, folder)):
+                    continue
+                files = [f for f in os.listdir(os.path.join(outdir, folder)) if f.endswith(f'.{args.plot_format}')]
             elif args.var in ['chi_squared', 'reduced_chi_squared']:
                 files = [f for f in os.listdir(os.path.join(outdir, folder)) if f.endswith('.pkl')]
             else:

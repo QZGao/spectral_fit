@@ -1,18 +1,10 @@
 ## Run locally
-### Based on existing results
-`./output/examples` contains the results of multiple runs of the models with different approaches. Copy the `.json` files to the parent directory `./output` to use them in the notebooks. Also copy the `.pkl` files from the `./catalogue/examples` directory to their parent directory `./catalogue`.
-
-Still, the display of fitted spectra in some notebooks will not be shown, unless the whole fitting process is run locally. Or, you can fit only the pulsars you need by running the following commands (where `<pulsar_list>` is a list of PSRJ names separated by `;`):
+You can generate everything you need in the notebooks by running the following commands:
 
 ```bash
-python fit.py --outdir "outdir_10_percent_threshold" --jname <pulsar_list>
-python fit.py --outdir "outdir_aic" --aic --jname <pulsar_list>
-```
+# Back to the root directory if not there
+cd ..
 
-### Run from scratch
-You can generate everything from scratch by running the following commands:
-
-```bash
 # 10% error threshold
 python fit.py --outdir "outdir_10_percent_threshold"
 python processing.py "outdir_10_percent_threshold"
