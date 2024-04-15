@@ -62,7 +62,8 @@ def parse_args() -> Namespace:
                                                                        'broken_power_law;'
                                                                        'log_parabolic_spectrum;'
                                                                        'high_frequency_cut_off_power_law;'
-                                                                       'low_frequency_turn_over_power_law')
+                                                                       'low_frequency_turn_over_power_law;'
+                                                                       'double_turn_over_spectrum')
 
     # Dataset
     parser.add_argument('--lit_set', help="Customize literature list", type=str, default=None)
