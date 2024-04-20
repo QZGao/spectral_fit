@@ -52,6 +52,10 @@ def fit(jname: str, model_name: str, env: Env):
     except Exception as e:
         console.log(f"Error: {jname} {model_name}\n{e}\n{traceback.format_exc()}", style='red')
 
+        # Clean up
+        if Path(f'{env.outdir}/{jname}/{model_name}_dres.pkl').exists():
+            Path(f'{env.outdir}/{jname}/{model_name}_dres.pkl').unlink()
+
 
 def parse_args() -> Namespace:
     parser = ArgumentParser()
@@ -78,6 +82,8 @@ def parse_args() -> Namespace:
     parser.add_argument('--fixed_freq_prior', help="Use fixed frequency prior", action='store_true')
 
     # Dealing with outliers
+    parser.add_argument('--students_t', help="Use Student's t-distribution", action='store_true')
+
     # 1) Remove outliers, set minimum YERR / Y, or set all YERR / Y to a value
     parser.add_argument('--outliers_rm', help="Remove outliers", action='store_true')
     parser.add_argument('--outliers_min', help="Set minimum YERR / Y (when --outliers_rm is not set)", type=float)

@@ -7,6 +7,7 @@ from dynesty import DynamicNestedSampler
 from dynesty.utils import quantile as _quantile
 from dynesty.utils import resample_equal
 from scipy.special import logsumexp
+import scipy.stats as ss
 
 from catalogue import Dataset
 from env import Env
@@ -27,7 +28,10 @@ def log_likelihood(p, model, labels, dataset: Dataset, env: Env):
     else:  # With systematic error for points with yerr/y < threshold
         combined_err = dataset.combined_err(p[-1], thresh=env.args.err_thresh)
 
-    return np.sum(np.log(
+    if env.args.students_t:
+        return ss.t.logpdf(dataset.Y, df=len(dataset.Y) - 1, loc=Y_model, scale=combined_err).sum()
+    else:
+        return np.sum(np.log(
         np.exp(- (dataset.Y - Y_model) ** 2 / (combined_err * combined_err)) * (2 * np.pi) ** -0.5 / combined_err))
 
 
@@ -74,6 +78,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
         )
         sampler.run_nested(
             print_progress=False,
+            maxiter=20000,
         )
 
         dres = sampler.results
