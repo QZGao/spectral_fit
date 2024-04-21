@@ -5,22 +5,12 @@ You can generate everything you need in the notebooks by running the following c
 # Back to the root directory if not there
 cd ..
 
-# 10% error threshold
-python fit.py --outdir "outdir_10_percent_threshold"
-python processing.py "outdir_10_percent_threshold"
-python processing.py "outdir_10_percent_threshold" --var "param_estimates"
+# Bayesian
+python fit.py --outdir "outdir_st"
+python processing.py "outdir_st"
+python processing.py "outdir_st" --var "param_estimates"
 
-# 20% error threshold
-python fit.py --outdir "outdir_20_percent_threshold" --err_thresh 0.2
-python processing.py "outdir_20_percent_threshold"
-python processing.py "outdir_20_percent_threshold" --var "param_estimates"
-
-# 50% unified uncertainty
-python fit.py --outdir "outdir_50_percent_error" --no_err --outliers_all 0.5
-python processing.py "outdir_50_percent_error"
-python processing.py "outdir_50_percent_error" --var "param_estimates"
-
-# AIC
+# Frequentist
 python fit.py --outdir "outdir_aic" --aic
 python processing.py "outdir_aic" --var "aic"
 python processing.py "outdir_aic" --var "param_estimates"
@@ -29,7 +19,7 @@ python fit.py --outdir "outdir_aic_without" --aic --aic_no_corr
 python processing.py "outdir_aic_without" --var "aic"
 python processing.py "outdir_aic_without" --var "param_estimates"
 
-# AIC with reproduced Jankowski's set, only run the five models that Jankowski used
+# Frequentist with reproduced Jankowski's set, only run the five models that Jankowski used
 python fit.py --outdir "outdir_aic_jankowski" --aic --jan_set --model "simple_power_law;broken_power_law;log_parabolic_spectrum;low_frequency_turn_over_power_law;high_frequency_cut_off_power_law"
 python processing.py "outdir_aic_jankowski" --var "aic"
 python processing.py "outdir_aic_jankowski" --var "param_estimates"
@@ -40,4 +30,4 @@ python processing.py "outdir_aic_jankowski_without" --var "param_estimates"
 ```
 
 ## Interactivity
-Some of the notebooks contain interactive plots. To enable them, change the line `INTERACTIVE = False` to `INTERACTIVE = True` when you found it in the notebook.
+Interactive plots are supported in some plots with the help of `mplcursors`. To enable them, change the line `INTERACTIVE = False` to `INTERACTIVE = True` in the code.

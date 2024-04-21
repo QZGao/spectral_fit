@@ -50,11 +50,20 @@ def fit(jname: str, model_name: str, env: Env):
         else:
             fit_bayesian(dataset, model_name, env=env)
     except Exception as e:
+        # Most likely due to very wrong data points, can't fit at all
         console.log(f"Error: {jname} {model_name}\n{e}\n{traceback.format_exc()}", style='red')
 
         # Clean up
         if Path(f'{env.outdir}/{jname}/{model_name}_dres.pkl').exists():
             Path(f'{env.outdir}/{jname}/{model_name}_dres.pkl').unlink()
+        if Path(f'{env.outdir}/{jname}/{model_name}_corner.png').exists():
+            Path(f'{env.outdir}/{jname}/{model_name}_corner.png').unlink()
+        if Path(f'{env.outdir}/{jname}/{model_name}_result.png').exists():
+            Path(f'{env.outdir}/{jname}/{model_name}_result.png').unlink()
+        if Path(f'{env.outdir}/{jname}/{model_name}_result.pdf').exists():
+            Path(f'{env.outdir}/{jname}/{model_name}_result.pdf').unlink()
+        if Path(f'{env.outdir}/{jname}/{model_name}_results.json').exists():
+            Path(f'{env.outdir}/{jname}/{model_name}_results.json').unlink()
 
 
 def parse_args() -> Namespace:
@@ -81,19 +90,19 @@ def parse_args() -> Namespace:
     parser.add_argument('--no_requirements', help="Do not require the dataset to have at least 4 points and a frequency range of at least 2", action='store_true')
     parser.add_argument('--fixed_freq_prior', help="Use fixed frequency prior", action='store_true')
 
-    # Dealing with outliers
-    parser.add_argument('--students_t', help="Use Student's t-distribution", action='store_true')
+    # Dealing with outliers (not applicable to AIC method)
+    # 1) Use Gaussian distribution
+    parser.add_argument('--gaussian', help="Use Gaussian distribution", action='store_true')
 
-    # 1) Remove outliers, set minimum YERR / Y, or set all YERR / Y to a value
+    # 2) Remove outliers, set minimum YERR / Y, or set all YERR / Y to a value
     parser.add_argument('--outliers_rm', help="Remove outliers", action='store_true')
     parser.add_argument('--outliers_min', help="Set minimum YERR / Y (when --outliers_rm is not set)", type=float)
     parser.add_argument('--outliers_all', help="Don't believe in any of the YERRs and set them all to this value",
                         type=float)
 
-    # 2) Use additional systematic error
-    parser.add_argument('--no_err', help="Do not use systematic error", action='store_true')
+    # 3) Use additional systematic error
     parser.add_argument('--err_all', help="Use systematic error for all points", action='store_true')
-    parser.add_argument('--err_thresh', help="Threshold for systematic error", type=float, default=0.1)
+    parser.add_argument('--err_thresh', help="Threshold for systematic error", type=float)
 
     # Jan et al. (2018)'s method, a.k.a. AIC method in pulsar_spectra
     parser.add_argument('--aic', help="Use Jankowski et al. (2018)'s method instead", action='store_true')
@@ -163,6 +172,8 @@ if __name__ == '__main__':
             args.outdir += f'_{args.label.replace(" ", "_")}'
     Path(args.outdir).mkdir(parents=True, exist_ok=True)
     console.log(f"outdir: {args.outdir}")
+    with open(f'{args.outdir}/config.json', 'w', encoding='utf-8-sig') as f:
+        json.dump(vars(args), f, ensure_ascii=False, indent=4)  # Save arguments
 
     env = Env(args, get_models(args.model, aic=args.aic), get_catalogue(args))
     if args.print_lit:

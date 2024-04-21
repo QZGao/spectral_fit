@@ -28,8 +28,15 @@ class Dataset:
             'v0': self.v0,
         }
 
+    @property
+    def len(self):
+        return len(self.X)
+
+    def __len__(self):
+        return self.len
+
     def dof(self, n_params: int) -> int:
-        return len(self.Y) - n_params
+        return self.len - n_params
 
     def yerr_y(self, ix=None):
         if ix is None:
@@ -99,6 +106,18 @@ class Catalogue:
         v0 = 10 ** ((np.log10(X.max()) + np.log10(X.min())) / 2)  # central frequency
         return Dataset(jname, X, Y, YERR, REF, v0)
 
+    def is_MSP(self, jname: str) -> bool:
+        if jname not in self.cat_dict:
+            return False
+        if 'P' not in self.cat_dict[jname]:
+            return False
+        # P < 100 ms and P_DOT < 1e-16
+        return self.cat_dict[jname]['P'] < 0.1 and self.cat_dict[jname]['P_DOT'] < 1e-16
+
+    @property
+    def MSPs(self) -> list[str]:
+        return [jname for jname in self.cat_dict if self.is_MSP(jname)]
+
     def filter(self, jname_list: list) -> 'Catalogue':
         cat_dict = {jname: self.cat_dict[jname] for jname in jname_list if jname in self.cat_dict}
         return Catalogue(cat_dict, self.citation_dict)
@@ -159,8 +178,20 @@ class Catalogue:
                 'REF': REF
             }
 
-    def __len__(self):
+    @property
+    def len(self):
         return len(self.cat_dict)
+
+    def __len__(self):
+        return self.len
+
+    def cleanup(self):
+        """Remove pulsars with no data."""
+        cat_dict = {}
+        for jname, data in self.cat_dict.items():
+            if len(data['X']) > 0:
+                cat_dict[jname] = data
+        self.cat_dict = cat_dict
 
     def print_lit(self, outdir: str):
         print(f'Pulsar count: {len(self.cat_dict)}')
@@ -278,7 +309,7 @@ class Catalogue:
             print('Posselt_2023: Manually added measurements of 8 frequency channels from Posselt et al. (2023).')
 
 
-def collect_catalogue_from_ATNF(jname_list: list = None, atnf_ver: str = '1.54') -> Catalogue:
+def collect_catalogue_from_ATNF(jname_list: list = None, atnf_ver: str = '1.54', p_only: bool = False) -> Catalogue:
     print('Collecting data from ATNF Pulsar Catalogue via psrqpy...', end='')
     query_obj = psrqpy.QueryATNF(psrs=jname_list, version=atnf_ver)
     query = query_obj.pandas
@@ -293,10 +324,18 @@ def collect_catalogue_from_ATNF(jname_list: list = None, atnf_ver: str = '1.54')
                 'X': [],
                 'Y': [],
                 'YERR': [],
-                'REF': []
+                'REF': [],
             }
 
         query_id = list(query['PSRJ']).index(jname)
+        P = query['P0'][query_id]
+        P_dot = query['P1'][query_id]
+        if not np.isnan(P) and not np.isnan(P_dot):
+            cat_dict[jname]['P'] = P
+            cat_dict[jname]['P_DOT'] = P_dot
+
+        if p_only:
+            continue
         for x_str in freqs:
             ref = query[f'{x_str}_REF'][query_id]
             y = query[x_str][query_id]
@@ -445,15 +484,13 @@ def get_catalogue(args: Namespace = None, load_dir: str = '') -> Catalogue:
                collect_catalogue(custom_lit=JANKOWSKI_LITERATURE_SET, jname_list=jan_jnames))
 
     else:
+        catalogue = collect_catalogue_from_ATNF(atnf_ver=args.atnf_ver, p_only=not args.atnf)
         if args.lit_set is not None:  # Custom literature set
-            catalogue = collect_catalogue(custom_lit=args.lit_set.split(';'))
+            catalogue += collect_catalogue(custom_lit=args.lit_set.split(';'))
         else:
-            catalogue = collect_catalogue()
+            catalogue += collect_catalogue()
 
-        if args.atnf:  # ATNF catalogue
-            cat = collect_catalogue_from_ATNF(atnf_ver=args.atnf_ver)
-            catalogue = cat if catalogue is None else catalogue + cat
-
+    catalogue.cleanup()
     catalogue.embeded_info = {
         'lit_set': args.lit_set,
         'atnf': args.atnf, 'atnf_ver': args.atnf_ver,

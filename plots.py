@@ -65,14 +65,14 @@ def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env,
     for g in np.unique(dataset.REF):
         ix = np.where(dataset.REF == g)
 
-        if not env.args.aic and not env.args.no_err:
+        if not env.args.aic and (env.args.err_all or env.args.err_thresh):
             if env.args.err_all:  # All with the same systematic error
-                combined_err = dataset.combined_err(median[-1], ix)
+                err = dataset.combined_err(median[-1], ix)
             else:  # With systematic error for points with yerr/y < threshold
-                combined_err = dataset.combined_err(median[-1], ix, thresh=env.args.err_thresh)
+                err = dataset.combined_err(median[-1], ix, thresh=env.args.err_thresh)
 
             prop_cycle, prop_cycle_copy = itertools.tee(prop_cycle)
-            eb = ax.errorbar(dataset.X[ix], dataset.Y[ix], yerr=combined_err,
+            eb = ax.errorbar(dataset.X[ix], dataset.Y[ix], yerr=err,
                         linestyle='None',
                         mec='k',
                         markeredgewidth=.5,

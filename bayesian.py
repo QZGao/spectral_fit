@@ -21,18 +21,19 @@ def log_likelihood(p, model, labels, dataset: Dataset, env: Env):
         dataset.v0,
     )
 
-    if env.args.no_err:  # Without systematic error
-        combined_err = dataset.YERR
-    elif env.args.err_all:  # All with the same systematic error
-        combined_err = dataset.combined_err(p[-1])
-    else:  # With systematic error for points with yerr/y < threshold
-        combined_err = dataset.combined_err(p[-1], thresh=env.args.err_thresh)
+    err = dataset.YERR
+    if env.args.err_all:  # All with the same systematic error
+        err = dataset.combined_err(p[-1])
+    elif env.args.err_thresh:  # With systematic error for points with yerr/y < threshold
+        err = dataset.combined_err(p[-1], thresh=env.args.err_thresh)
 
-    if env.args.students_t:
-        return ss.t.logpdf(dataset.Y, df=len(dataset.Y) - 1, loc=Y_model, scale=combined_err).sum()
-    else:
-        return np.sum(np.log(
-        np.exp(- (dataset.Y - Y_model) ** 2 / (combined_err * combined_err)) * (2 * np.pi) ** -0.5 / combined_err))
+    if env.args.gaussian:  # Gaussian likelihood
+        if dataset.len < 3:
+            return np.sum(np.log(np.exp(- (dataset.Y - Y_model) ** 2 / (err * err)) * (2 * np.pi) ** -0.5 / err))
+        else:
+            return ss.norm.logpdf(dataset.Y, loc=Y_model, scale=err).sum()
+    else:  # Student's-t likelihood
+        return ss.t.logpdf(dataset.Y, df=len(dataset.Y) - 1, loc=Y_model, scale=err).sum()
 
 
 def prior_transform(u, priors):

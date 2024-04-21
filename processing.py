@@ -50,6 +50,8 @@ if __name__ == "__main__":
     args = parse_args()
     outdir = f'output/{args.outdir}'
     console = Console()
+    if args.plot:
+        args.var = 'plots'
     console.log(f"Extracting {args.var} from {args.outdir}")
 
     with (Progress() as progress):
@@ -58,7 +60,7 @@ if __name__ == "__main__":
             models = {}
         if args.plot:
             catalogue = get_catalogue(load_dir=outdir)
-            if '>' or '<' or '=' in args.plot:
+            if '>' in args.plot or '<' in args.plot or '=' in args.plot:
                 if args.plot.startswith('>='):
                     folders = catalogue.at_least_n_points(int(args.plot[2:]))
                 elif args.plot.startswith('<='):
