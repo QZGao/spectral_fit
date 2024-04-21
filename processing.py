@@ -65,8 +65,8 @@ if __name__ == "__main__":
                     folders = catalogue.at_least_n_points(int(args.plot[2:]))
                 elif args.plot.startswith('<='):
                     folders = catalogue.at_most_n_points(int(args.plot[2:]))
-                elif args.plot.startswith('=='):
-                    folders = catalogue.exactly_n_points(int(args.plot[2:]))
+                elif args.plot.startswith('='):
+                    folders = catalogue.exactly_n_points(int(args.plot[1:]))
                 elif args.plot.startswith('>'):
                     folders = catalogue.more_than_n_points(int(args.plot[1:]))
                 elif args.plot.startswith('<'):
