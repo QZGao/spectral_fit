@@ -27,7 +27,12 @@ def fit(jname: str, model_name: str, env: Env):
         if dataset is None:  # Not in the catalogue, or no data points
             return
 
-        if not env.args.no_requirements:
+        if env.args.no_requirements:
+            # Check if there are at least 2 points
+            if len(np.unique(dataset.X)) < 2:
+                console.log(f"{jname} {model_name}: Not enough data points to fit.", style='yellow')
+                return
+        else:
             # Check if the dataset meets the requirements
             if len(np.unique(dataset.X)) < max(4, len(env.model_dict[model_name]['labels'])):
                 console.log(f"{jname} {model_name}: Not enough data points to fit.", style='yellow')

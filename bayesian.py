@@ -27,13 +27,12 @@ def log_likelihood(p, model, labels, dataset: Dataset, env: Env):
     elif env.args.err_thresh:  # With systematic error for points with yerr/y < threshold
         err = dataset.combined_err(p[-1], thresh=env.args.err_thresh)
 
+    if dataset.len == 2:  # Patch formula for datasets with only 2 points
+        return np.sum(np.log(np.exp(- ((dataset.Y - Y_model) / err) ** 2)))
     if env.args.gaussian:  # Gaussian likelihood
-        if dataset.len < 3:
-            return np.sum(np.log(np.exp(- (dataset.Y - Y_model) ** 2 / (err * err)) * (2 * np.pi) ** -0.5 / err))
-        else:
-            return ss.norm.logpdf(dataset.Y, loc=Y_model, scale=err).sum()
+        return ss.norm.logpdf(dataset.Y, loc=Y_model, scale=err).sum()
     else:  # Student's-t likelihood
-        return ss.t.logpdf(dataset.Y, df=len(dataset.Y) - 1, loc=Y_model, scale=err).sum()
+        return ss.t.logpdf(dataset.Y, loc=Y_model, scale=err, df=dataset.len - 1).sum()
 
 
 def prior_transform(u, priors):
