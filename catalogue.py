@@ -44,8 +44,13 @@ class Dataset:
         else:
             return self.YERR[ix] / self.Y[ix]
 
+    @property
     def max_yerr_y(self) -> float:
         return float(np.max(self.yerr_y()))
+
+    @property
+    def min_yerr_y(self) -> float:
+        return float(np.min(self.yerr_y()))
 
     def combined_err(self, sigma: float, ix=None, thresh: float = None):
         if thresh is None:
