@@ -59,7 +59,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
                 priors[i] = (np.min(dataset.X), np.max(dataset.X) * 1.5)
 
     # Add a prior for the systematic error
-    if not env.args.no_err:
+    if env.args.err_all or env.args.err_thresh:
         priors.append((0., dataset.max_yerr_y))  # up to 50% of the flux density
         labels.append('σ')
 
