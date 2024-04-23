@@ -314,6 +314,14 @@ class Catalogue:
             print('Posselt_2023: Manually added measurements of 8 frequency channels from Posselt et al. (2023).')
 
 
+    def keys(self):
+        return self.cat_dict.keys()
+
+
+    def items(self):
+        return self.cat_dict.items()
+
+
 def collect_catalogue_from_ATNF(jname_list: list = None, atnf_ver: str = '1.54', p_only: bool = False) -> Catalogue:
     print('Collecting data from ATNF Pulsar Catalogue via psrqpy...', end='')
     query_obj = psrqpy.QueryATNF(psrs=jname_list, version=atnf_ver)
@@ -463,16 +471,18 @@ def collect_catalogue(custom_lit: list = None, jname_list: list = None) -> Catal
     return cat
 
 
-def get_catalogue(args: Namespace = None, load_dir: str = '') -> Catalogue:
+def load_catalogue(outdir: str = '') -> Catalogue:
+    if os.getcwd().endswith('notebooks'):
+        outdir = f'../output/{outdir}'
+    if not os.path.exists(f'{outdir}/catalogue.pkl'):
+        raise FileNotFoundError(f'{outdir}/catalogue.pkl')
+    with open(f'{outdir}/catalogue.pkl', 'rb') as f:
+        cat = pickle.load(f)
+    return cat
+
+
+def get_catalogue(args: Namespace) -> Catalogue:
     # Load catalogue from pickle
-    if load_dir:  # Bypass other options
-        if os.getcwd().endswith('notebooks'):
-            load_dir = f'../output/{load_dir}'
-        if not os.path.exists(f'{load_dir}/catalogue.pkl'):
-            raise FileNotFoundError(f'{load_dir}/catalogue.pkl')
-        with open(f'{load_dir}/catalogue.pkl', 'rb') as f:
-            cat = pickle.load(f)
-        return cat
     if not args.refresh and os.path.exists(f'{args.outdir}/catalogue.pkl'):
         with open(f'{args.outdir}/catalogue.pkl', 'rb') as f:
             cat = pickle.load(f)

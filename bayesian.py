@@ -38,7 +38,16 @@ def log_likelihood(p, model, labels, dataset: Dataset, env: Env):
 def prior_transform(u, priors):
     p = np.zeros_like(u)
     for i, q in enumerate(priors):
-        p[i] = q[0] + u[i] * (q[1] - q[0])
+        if q[0] > q[1]:
+            raise ValueError(f"Invalid prior: {q}")
+        if q[2] == 'uniform':        # Uniform prior
+            p[i] = ss.uniform(loc=q[0], scale=q[1] - q[0]).ppf(u[i])
+        elif q[2] == 'log_uniform':  # Log-uniform prior
+            if q[0] <= 0:
+                raise ValueError(f"Invalid lower bound for log_uniform prior: {q[0]}")
+            p[i] = 10 ** (ss.uniform(loc=np.log10(q[0]), scale=np.log10(q[1] / q[0])).ppf(u[i]))
+        else:
+            raise ValueError(f"Unknown prior type: {q[2]}")
     return p
 
 
@@ -50,17 +59,17 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
         if env.args.fixed_freq_prior:
             # Decide based on the whole picture
             if priors[i] == 'dynamic' or priors[i] == 'dynamic_expanded':
-                priors[i] = (10., 515250.)
+                priors[i] = (10., 515250., 'log_uniform')
         else:
             # Decide based on the current dataset
             if priors[i] == 'dynamic':
-                priors[i] = (np.min(dataset.X), np.max(dataset.X))
+                priors[i] = (np.min(dataset.X), np.max(dataset.X), 'log_uniform')
             elif priors[i] == 'dynamic_expanded':
-                priors[i] = (np.min(dataset.X), np.max(dataset.X) * 1.5)
+                priors[i] = (np.min(dataset.X), np.max(dataset.X) * 1.5, 'log_uniform')
 
     # Add a prior for the systematic error
     if env.args.err_all or env.args.err_thresh:
-        priors.append((0., dataset.max_yerr_y))  # up to 50% of the flux density
+        priors.append((0., dataset.max_yerr_y), 'uniform')  # up to 50% of the flux density
         labels.append('σ')
 
     if not env.args.override and Path(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl').exists():
@@ -115,14 +124,15 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
             'dataset': dataset.to_dict(),
             'model': model_name,
             'params': labels,
-            'priors': np.array(priors).tolist(),  # Format changed to numpy.int32 by dynesty, so convert them back for JSON compatibility
+            'priors': np.array(priors).tolist(),
+            # Format changed to numpy.int32 by dynesty, so convert them back for JSON compatibility
         }, f, ensure_ascii=False, indent=4)
 
     # Plots
     plot_corner(
         samples=samp_all,
         labels=labels,
-        scales=['log' if p == 'dynamic' else 'linear' for p in priors],
+        priors=priors,
         outpath=f'{env.outdir}/{dataset.jname}/{model_name}_corner',
     )
     plot(
