@@ -13,7 +13,7 @@ from rich.progress import Progress
 
 from aic import fit_aic
 from bayesian import fit_bayesian
-from catalogue import get_catalogue
+from catalogue import get_catalogue_from_args
 from env import Env
 from models import get_models
 
@@ -180,7 +180,7 @@ if __name__ == '__main__':
     with open(f'{args.outdir}/config.json', 'w', encoding='utf-8-sig') as f:
         json.dump(vars(args), f, ensure_ascii=False, indent=4)  # Save arguments
 
-    env = Env(args, get_models(args.model, aic=args.aic), get_catalogue(args))
+    env = Env(args, get_models(args.model, aic=args.aic), get_catalogue_from_args(args))
     if args.print_lit:
         env.catalogue.print_lit(args.outdir)
         exit()

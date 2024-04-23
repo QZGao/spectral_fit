@@ -64,7 +64,7 @@ def double_turn_over_spectrum(v, p: dict, v0, **kwargs):
     return np.where(x <= xc1, y1, y2)
 
 
-def get_models(model_names: str | list, aic: bool = False) -> dict:
+def get_models(model_names: str | list, aic: bool = False, log_uniform: bool = True) -> dict:
     if aic:
         # Use the models from pulsar_spectra instead
         from pulsar_spectra.models import simple_power_law, broken_power_law, double_broken_power_law, \
@@ -74,13 +74,18 @@ def get_models(model_names: str | list, aic: bool = False) -> dict:
         global simple_power_law, broken_power_law, double_broken_power_law, log_parabolic_spectrum, \
             high_frequency_cut_off_power_law, low_frequency_turn_over_power_law, double_turn_over_spectrum
 
+    # Common parameters
+    p_alpha = (-5., 5., 'uniform')  # Spectral index
+    p_beta = (0., 2.1, 'uniform')   # Smoothness of the turn-over
+    p_b = (1e-2, 1e3, 'log_uniform' if log_uniform else 'uniform')  # Scaling factor
+
     # 'start_params' and 'limits' are used in AIC calculation via pulsar_spectra
     model_dict = {
         'simple_power_law' : {
             'name': 'simple power law',
             'model': simple_power_law,
             'labels': ['α', 'b'],
-            'priors': [(-5., 5., 'uniform'), (1e-2, 1e3, 'log_uniform')],
+            'priors': [p_alpha, p_b],
             'start_params': [-1.6, 100.],
             'limits': [(-5., 5.), (0., None)],
         },
@@ -88,7 +93,7 @@ def get_models(model_names: str | list, aic: bool = False) -> dict:
             'name': 'broken power law',
             'model': broken_power_law,
             'labels': ['ν_b', 'α_1', 'α_2', 'b'],
-            'priors': ['dynamic', (-5., 5., 'uniform'), (-5., 5., 'uniform'), (1e-2, 1e3, 'log_uniform')],
+            'priors': ['dynamic', p_alpha, p_alpha, p_b],
             'start_params': ['xmid', 2., -1.6, 100.],
             'limits': ['dynamic', (-5., 5.), (-5., 5.), (0., None)],
         },
@@ -96,7 +101,7 @@ def get_models(model_names: str | list, aic: bool = False) -> dict:
             'name': 'double broken power law',
             'model': double_broken_power_law,
             'labels': ['ν_{b1}', 'ν_{b2}', 'α_1', 'α_2', 'α_3', 'b'],
-            'priors': ['dynamic', 'dynamic', (-5., 5., 'uniform'), (-5., 5., 'uniform'), (-5., 5., 'uniform'), (1e-2, 1e3, 'log_uniform')],
+            'priors': ['dynamic', 'dynamic', p_alpha, p_alpha, p_alpha, p_b],
             'start_params': ['xmid', 'xmid', -1.6, -1.6, -1.6, 100.],
             'limits': ['dynamic', 'dynamic', (-5., 5.), (-5., 5.), (-5., 5.), (0., None)],
         },
@@ -112,7 +117,7 @@ def get_models(model_names: str | list, aic: bool = False) -> dict:
             'name': 'high-frequency cut-off power law',
             'model': high_frequency_cut_off_power_law,
             'labels': ['ν_c', 'α', 'b'],
-            'priors': ['dynamic_expanded', (-5., 5., 'uniform'), (1e-2, 1e3, 'log_uniform')],
+            'priors': ['dynamic_expanded', p_alpha, p_b],
             'start_params': ['xmax', -1.6, 1.],
             'limits': ['dynamic_expanded', (-5., 5.), (0., None)],
         },
@@ -120,13 +125,13 @@ def get_models(model_names: str | list, aic: bool = False) -> dict:
         #     'name': 'high-frequency cut-off power law',
         #     'model': high_frequency_cut_off_power_law_jan,
         #     'labels': ['ν_c', 'b'],
-        #     'priors': ['dynamic_expanded', (1e-2, 1e3, 'log_uniform')],
+        #     'priors': ['dynamic_expanded', b],
         # },
         'low_frequency_turn_over_power_law' : {
             'name': 'low-frequency turn-over power law',
             'model': low_frequency_turn_over_power_law,
             'labels': ['ν_c', 'α', 'b', 'β'],
-            'priors': ['dynamic', (-5., 5., 'uniform'), (1e-2, 1e3, 'log_uniform'), (0., 2.1, 'uniform')],
+            'priors': ['dynamic', p_alpha, p_b, p_beta],
             'start_params': ['xmid', -1.6, 100., 1.],
             'limits': ['dynamic', (-5., 5.), (0., None) , (0., 2.1)],
         },
@@ -134,7 +139,7 @@ def get_models(model_names: str | list, aic: bool = False) -> dict:
             'name': 'double turn-over spectrum',
             'model': double_turn_over_spectrum,
             'labels': ['ν_{c1}', 'ν_{c2}', 'α', 'β', 'b'],
-            'priors': ['dynamic_expanded', 'dynamic', (-5., 5., 'uniform'), (0., 2.1, 'uniform'), (1e-2, 1e3, 'log_uniform')],
+            'priors': ['dynamic_expanded', 'dynamic', p_alpha, p_beta, p_b],
             'start_params': ['xmax', 'xmid', -1.6, 100., 1.],
             'limits': ['dynamic_expanded', 'dynamic', (-5., 5.), (0., 2.1), (0., None)],
         },

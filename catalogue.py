@@ -2,6 +2,7 @@ import os
 import pickle
 import re
 from argparse import Namespace
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -110,6 +111,9 @@ class Catalogue:
 
         v0 = 10 ** ((np.log10(X.max()) + np.log10(X.min())) / 2)  # central frequency
         return Dataset(jname, X, Y, YERR, REF, v0)
+
+    def __getitem__(self, item):
+        return self.get_pulsar(item)
 
     def is_MSP(self, jname: str) -> bool:
         if jname not in self.cat_dict:
@@ -481,41 +485,53 @@ def load_catalogue(outdir: str = '') -> Catalogue:
     return cat
 
 
-def get_catalogue(args: Namespace) -> Catalogue:
+def get_catalogue(outdir: str = None, refresh: bool = False, lit_set: str = None,
+                  atnf: bool = False, atnf_ver: str = '1.54', jan_set: bool = False) -> Catalogue:
     # Load catalogue from pickle
-    if not args.refresh and os.path.exists(f'{args.outdir}/catalogue.pkl'):
-        with open(f'{args.outdir}/catalogue.pkl', 'rb') as f:
+    if (outdir is not None) and (not refresh) and os.path.exists(f'{outdir}/catalogue.pkl'):
+        with open(f'{outdir}/catalogue.pkl', 'rb') as f:
             cat = pickle.load(f)
-        if args.lit_set == cat.embeded_info['lit_set'] and args.atnf == cat.embeded_info['atnf'] and \
-                args.atnf_ver == cat.embeded_info['atnf_ver'] and args.jan_set == cat.embeded_info['jan_set']:
+        if lit_set == cat.embeded_info['lit_set'] and atnf == cat.embeded_info['atnf'] and \
+                atnf_ver == cat.embeded_info['atnf_ver'] and jan_set == cat.embeded_info['jan_set']:
             return cat
 
     # Reproduce Jankowski et al. (2018)'s dataset
-    if args.jan_set:
+    if jan_set:
         with open('catalogue/Jankowski_2018_data.csv', 'r', encoding='utf-8-sig') as f:
             jan_df = pd.read_csv(f)
         jan_jnames = jan_df['PSRJ'].values.tolist()
-        catalogue = (collect_catalogue_from_ATNF(jname_list=jan_jnames, atnf_ver=args.atnf_ver) +
+        catalogue = (collect_catalogue_from_ATNF(jname_list=jan_jnames, atnf_ver=atnf_ver) +
                collect_catalogue(custom_lit=JANKOWSKI_LITERATURE_SET, jname_list=jan_jnames))
 
     else:
-        catalogue = collect_catalogue_from_ATNF(atnf_ver=args.atnf_ver, p_only=not args.atnf)
-        if args.lit_set is not None:  # Custom literature set
-            catalogue += collect_catalogue(custom_lit=args.lit_set.split(';'))
+        catalogue = collect_catalogue_from_ATNF(atnf_ver=atnf_ver, p_only=not atnf)
+        if lit_set is not None:  # Custom literature set
+            catalogue += collect_catalogue(custom_lit=lit_set.split(';'))
         else:
             catalogue += collect_catalogue()
 
     catalogue.cleanup()
     catalogue.embeded_info = {
-        'lit_set': args.lit_set,
-        'atnf': args.atnf, 'atnf_ver': args.atnf_ver,
-        'jan_set': args.jan_set
+        'lit_set': lit_set,
+        'atnf': atnf, 'atnf_ver': atnf_ver,
+        'jan_set': jan_set
     }
 
     # Save to pickle
-    with open(f'{args.outdir}/catalogue.pkl', 'wb') as f:
-        pickle.dump(catalogue, f)
+    if outdir is not None:
+        Path(outdir).mkdir(parents=True, exist_ok=True)
+        with open(f'{outdir}/catalogue.pkl', 'wb') as f:
+            pickle.dump(catalogue, f)
     return catalogue
+
+
+def get_catalogue_from_args(args: Namespace) -> Catalogue:
+    return get_catalogue(
+        outdir=args.outdir, refresh=args.refresh,
+        lit_set=args.lit_set,
+        atnf=args.atnf, atnf_ver=args.atnf_ver,
+        jan_set=args.jan_set
+    )
 
 
 DEFAULT_LITERATURE_SET = [

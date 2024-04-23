@@ -11,7 +11,7 @@ from dynesty.utils import resample_equal
 from rich.console import Console
 from rich.progress import Progress
 
-from catalogue import get_catalogue
+from catalogue import load_catalogue
 from models import get_models
 
 
@@ -56,10 +56,10 @@ if __name__ == "__main__":
 
     with (Progress() as progress):
         if args.var in ['chi_squared', 'reduced_chi_squared']:
-            catalogue = get_catalogue(load_dir=outdir)
+            catalogue = load_catalogue(outdir)
             models = {}
         if args.plot:
-            catalogue = get_catalogue(load_dir=outdir)
+            catalogue = load_catalogue(outdir)
             if '>' in args.plot or '<' in args.plot or '=' in args.plot:
                 if args.plot.startswith('>='):
                     folders = catalogue.at_least_n_points(int(args.plot[2:]))
