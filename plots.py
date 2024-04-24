@@ -21,28 +21,31 @@ def sci_notation(num: float):
 
 
 def plot_corner(samples, labels, priors, outpath: str):
-    fig, axes = plt.subplots(len(labels), len(labels), figsize=(3*len(labels), 3*len(labels)))
-    corner(
-        samples,
-        bins=100,
-        smooth=0.9,
-        smooth1d=0.9,
-        color='tab:blue',
-        labels=[f"${label}$" for label in labels],
-        label_kwargs=dict(fontsize=14),
-        show_titles=True,
-        title_fmt='.2f',
-        title_kwargs=dict(fontsize=14),
-        quantiles=[0.5-0.3413, 0.5, 0.5+0.3413],
-        use_math_text=True,
-        plot_density=False,
-        plot_datapoints=True,
-        fill_contours=True,
-        levels=(1 - np.exp(-0.5), 1 - np.exp(-2), 1 - np.exp(-9 / 2.)),
-        fig=fig,
-        range=[(p[0], p[1]) for p in priors],
-        axes_scale=['log' if p[2] == 'log_uniform' else 'linear' for p in priors],
-    )
+    corner_params = {
+        'bins': 100,
+        'smooth': 0.9,
+        'smooth1d': 0.9,
+        'color': 'tab:blue',
+        'labels': [f"${label}$" for label in labels],
+        'label_kwargs': dict(fontsize=14),
+        'show_titles': True,
+        'title_fmt': '.2f',
+        'title_kwargs': dict(fontsize=14),
+        'quantiles': [0.5-0.3413, 0.5, 0.5+0.3413],
+        'use_math_text': True,
+        'plot_density': False,
+        'plot_datapoints': True,
+        'fill_contours': True,
+        'levels': (1 - np.exp(-0.5), 1 - np.exp(-2), 1 - np.exp(-9 / 2.)),
+        'axes_scale': ['log' if p[2] == 'log_uniform' else 'linear' for p in priors],
+    }
+    try:
+        fig, axes = plt.subplots(len(labels), len(labels), figsize=(3*len(labels), 3*len(labels)))
+        corner(samples, fig=fig, **corner_params)
+    except:
+        plt.close()
+        fig, axes = plt.subplots(len(labels), len(labels), figsize=(3*len(labels), 3*len(labels)))
+        corner(samples, fig=fig, range=[(p[0], p[1]) for p in priors], **corner_params)
     plt.savefig(outpath + '.png', dpi=300, bbox_inches='tight')
     plt.close()
 
