@@ -37,7 +37,7 @@ def plot_corner(samples, labels, priors, outpath: str):
         'plot_datapoints': True,
         'fill_contours': True,
         'levels': (1 - np.exp(-0.5), 1 - np.exp(-2), 1 - np.exp(-9 / 2.)),
-        'axes_scale': ['log' if p[2] == 'log_uniform' else 'linear' for p in priors],
+        'axes_scale': ['linear' for p in priors],
     }
     try:
         fig, axes = plt.subplots(len(labels), len(labels), figsize=(3*len(labels), 3*len(labels)))

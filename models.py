@@ -64,7 +64,7 @@ def double_turn_over_spectrum(v, p: dict, v0, **kwargs):
     return np.where(x <= xc1, y1, y2)
 
 
-def get_models(model_names: str | list, aic: bool = False, log_uniform: bool = True) -> dict:
+def get_models(model_names: str | list, aic: bool = False, custom_p_b: tuple = None) -> dict:
     if aic:
         # Use the models from pulsar_spectra instead
         from pulsar_spectra.models import simple_power_law, broken_power_law, double_broken_power_law, \
@@ -77,7 +77,9 @@ def get_models(model_names: str | list, aic: bool = False, log_uniform: bool = T
     # Common parameters
     p_alpha = (-5., 5., 'uniform')  # Spectral index
     p_beta = (0., 2.1, 'uniform')   # Smoothness of the turn-over
-    p_b = (1e-2, 1e3, 'log_uniform' if log_uniform else 'uniform')  # Scaling factor
+    p_b = (1e-2, 1e4, 'log_uniform')  # Scaling factor
+    if custom_p_b:
+        p_b = custom_p_b
 
     # 'start_params' and 'limits' are used in AIC calculation via pulsar_spectra
     model_dict = {

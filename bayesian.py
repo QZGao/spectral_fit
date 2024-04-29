@@ -72,11 +72,16 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
         priors.append((0., dataset.max_yerr_y), 'uniform')  # up to 50% of the flux density
         labels.append('σ')
 
+    dres = None
     if not env.args.override and Path(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl').exists():
-        with open(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl', 'rb') as f:
-            dres = pickle.load(f)
+        try:
+            with open(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl', 'rb') as f:
+                dres = pickle.load(f)
+        except:
+            print(f'Failed to load {env.outdir}/{dataset.jname}/{model_name}_dres.pkl')
+            dres = None
 
-    else:
+    if dres is None:
         sampler = DynamicNestedSampler(
             loglikelihood=lambda *args: log_likelihood(*args, model=model, labels=labels, dataset=dataset, env=env),
             prior_transform=lambda *args: prior_transform(*args, priors=priors),
@@ -87,7 +92,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
         )
         sampler.run_nested(
             print_progress=False,
-            maxiter=20000,
+            # maxiter=20000,
         )
 
         dres = sampler.results
