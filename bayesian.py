@@ -110,7 +110,6 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
     # Calculate the log evidence and its error
     log_evidences = np.array(dres['logz'])
     log_evidence = logsumexp(log_evidences, b=1. / len(log_evidences))
-    print(dres['logz'][-1], log_evidence)
     log_errs = np.array(dres['logzerr'])
     log_evidence_err = 0.5 * logsumexp(log_errs * 2, b=1. / len(log_errs))
 
