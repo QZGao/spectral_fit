@@ -20,6 +20,7 @@ def fit_only_env(outdir: str, model_dict: dict, catalogue: Catalogue, **kwargs) 
             no_requirements=False,
             fixed_freq_prior=False,
             gaussian=False,
+            gaussian_patch=False,
             outliers_rm=False,
             outliers_min=None,
             outliers_all=None,

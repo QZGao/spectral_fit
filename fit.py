@@ -98,6 +98,7 @@ def parse_args() -> Namespace:
     # Dealing with outliers (not applicable to AIC method)
     # 1) Use Gaussian distribution
     parser.add_argument('--gaussian', help="Use Gaussian distribution", action='store_true')
+    parser.add_argument('--gaussian_patch', help="Use simplified Gaussian distribution", action='store_true')
 
     # 2) Remove outliers, set minimum YERR / Y, or set all YERR / Y to a value
     parser.add_argument('--outliers_rm', help="Remove outliers", action='store_true')

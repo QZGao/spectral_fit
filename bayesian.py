@@ -27,7 +27,7 @@ def log_likelihood(p, model, labels, dataset: Dataset, env: Env):
     elif env.args.err_thresh:  # With systematic error for points with yerr/y < threshold
         err = dataset.combined_err(p[-1], thresh=env.args.err_thresh)
 
-    if dataset.len < 4:  # Patch formula for dataset with only 2 or 3 points
+    if dataset.len < 4 or env.args.gaussian_patch:  # Patch formula for dataset with only 2 or 3 points
         return np.sum(np.log(np.exp(- ((dataset.Y - Y_model) / err) ** 2)))
     if env.args.gaussian:  # Gaussian likelihood
         return ss.norm.logpdf(dataset.Y, loc=Y_model, scale=err).sum()
