@@ -35,17 +35,25 @@ def log_likelihood(p, model, labels, dataset: Dataset, env: Env):
         return ss.t.logpdf(dataset.Y, loc=Y_model, scale=err, df=dataset.len - 1).sum()
 
 
+def uniform_ppf(q, low, high):
+    return low + q * (high - low)
+
+
+def log_uniform_ppf(q, low, high):
+    return 10 ** (uniform_ppf(q, np.log10(low), np.log10(high)))
+
+
 def prior_transform(u, priors):
     p = np.zeros_like(u)
     for i, q in enumerate(priors):
         if q[0] > q[1]:
             raise ValueError(f"Invalid prior: {q}")
         if q[2] == 'uniform':        # Uniform prior
-            p[i] = ss.uniform(loc=q[0], scale=q[1] - q[0]).ppf(u[i])
+            p[i] = uniform_ppf(u[i], q[0], q[1])
         elif q[2] == 'log_uniform':  # Log-uniform prior
             if q[0] <= 0:
                 raise ValueError(f"Invalid lower bound for log_uniform prior: {q[0]}")
-            p[i] = 10 ** (ss.uniform(loc=np.log10(q[0]), scale=np.log10(q[1] / q[0])).ppf(u[i]))
+            p[i] = log_uniform_ppf(u[i], q[0], q[1])
         else:
             raise ValueError(f"Unknown prior type: {q[2]}")
     return p
@@ -86,13 +94,10 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
             loglikelihood=lambda *args: log_likelihood(*args, model=model, labels=labels, dataset=dataset, env=env),
             prior_transform=lambda *args: prior_transform(*args, priors=priors),
             ndim=len(priors),
-            sample='rwalk',
-            bound='multi',
             nlive=2000,
         )
         sampler.run_nested(
             print_progress=False,
-            # maxiter=20000,
         )
 
         dres = sampler.results
@@ -105,6 +110,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
     # Calculate the log evidence and its error
     log_evidences = np.array(dres['logz'])
     log_evidence = logsumexp(log_evidences, b=1. / len(log_evidences))
+    print(dres['logz'][-1], log_evidence)
     log_errs = np.array(dres['logzerr'])
     log_evidence_err = 0.5 * logsumexp(log_errs * 2, b=1. / len(log_errs))
 

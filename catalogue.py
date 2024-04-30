@@ -36,6 +36,14 @@ class Dataset:
     def __len__(self):
         return self.len
 
+    def __str__(self):
+        return (f'{self.jname}: {self.len} points\n'
+                f'X = {self.X}\n'
+                f'Y = {self.Y}\n'
+                f'YERR = {self.YERR}\n'
+                f'REF = {self.REF}\n'
+                f'v0 = {self.v0}\n')
+
     def dof(self, n_params: int) -> int:
         return self.len - n_params
 
