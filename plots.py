@@ -20,7 +20,7 @@ def sci_notation(num: float):
     return f"{{{significand} \\times 10^{{{exponent}}}}}"
 
 
-def plot_corner(samples, labels, priors, outpath: str):
+def plot_corner(samples, labels, priors, outpath: str = None, show: bool = False):
     corner_params = {
         'bins': 100,
         'smooth': 0.9,
@@ -46,7 +46,10 @@ def plot_corner(samples, labels, priors, outpath: str):
         plt.close()
         fig, axes = plt.subplots(len(labels), len(labels), figsize=(3*len(labels), 3*len(labels)))
         corner(samples, fig=fig, range=[(p[0], p[1]) for p in priors], **corner_params)
-    plt.savefig(outpath + '.png', dpi=300, bbox_inches='tight')
+    if outpath:
+        plt.savefig(outpath + '.png', dpi=300, bbox_inches='tight')
+    if show:
+        plt.show()
     plt.close()
 
 

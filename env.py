@@ -14,7 +14,7 @@ class Env:
         return self.args.outdir
 
 
-def fit_only_env(outdir: str, model_dict: dict, catalogue: Catalogue, **kwargs) -> Env:
+def fit_only_env(outdir: str = '', model_dict: dict = None, catalogue: Catalogue = None, **kwargs) -> Env:
     args = Namespace(
             outdir=outdir,
             no_requirements=False,

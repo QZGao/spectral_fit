@@ -37,12 +37,12 @@ class Dataset:
         return self.len
 
     def __str__(self):
-        return (f'{self.jname}: {self.len} points\n'
-                f'X = {self.X}\n'
-                f'Y = {self.Y}\n'
-                f'YERR = {self.YERR}\n'
-                f'REF = {self.REF}\n'
-                f'v0 = {self.v0}\n')
+        return (f'{self.jname}: {self.len} measurements\n'
+                f'X = [{", ".join(map(str, self.X))}] MHz\n'
+                f'Y = [{", ".join(map(str, self.Y))}] mJy\n'
+                f'YERR = [{", ".join(map(str, self.YERR))}] mJy\n'
+                f'REF = [{", ".join(self.REF)}]\n'
+                f'v0 = {self.v0} MHz')
 
     def dof(self, n_params: int) -> int:
         return self.len - n_params

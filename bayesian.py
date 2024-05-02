@@ -59,10 +59,7 @@ def prior_transform(u, priors):
     return p
 
 
-def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
-    model = env.model_dict[model_name]['model']
-    labels = env.model_dict[model_name]['labels'].copy()
-    priors = env.model_dict[model_name]['priors'].copy()
+def prior_translate(priors, dataset: Dataset, env: Env) -> list:
     for i in range(len(priors)):
         if env.args.fixed_freq_prior:
             # Decide based on the whole picture
@@ -74,10 +71,18 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
                 priors[i] = (np.min(dataset.X), np.max(dataset.X), 'log_uniform')
             elif priors[i] == 'dynamic_expanded':
                 priors[i] = (np.min(dataset.X), np.max(dataset.X) * 1.5, 'log_uniform')
+    return priors
+
+
+def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
+    model = env.model_dict[model_name]['model']
+    labels = env.model_dict[model_name]['labels'].copy()
+    priors = env.model_dict[model_name]['priors'].copy()
+    priors = prior_translate(priors, dataset, env)
 
     # Add a prior for the systematic error
     if env.args.err_all or env.args.err_thresh:
-        priors.append((0., dataset.max_yerr_y), 'uniform')  # up to 50% of the flux density
+        priors.append((0., dataset.max_yerr_y, 'uniform'))  # up to 50% of the flux density
         labels.append('σ')
 
     dres = None
@@ -95,6 +100,8 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
             prior_transform=lambda *args: prior_transform(*args, priors=priors),
             ndim=len(priors),
             nlive=2000,
+            bound='multi',
+            sample='rwalk',
         )
         sampler.run_nested(
             print_progress=False,

@@ -1,5 +1,7 @@
 import json
-import multiprocessing
+from pebble import ProcessPool
+from multiprocessing import cpu_count
+from concurrent.futures import TimeoutError
 import traceback
 import warnings
 from argparse import ArgumentParser, Namespace
@@ -118,7 +120,7 @@ def parse_args() -> Namespace:
     parser.add_argument('--label', help="Output directory label (when --outdir is not set)")
     parser.add_argument("--outdir", help="Output directory")
     parser.add_argument('--override', help="Override finished jobs", action='store_true')
-    parser.add_argument('--nproc', help="Number of processes", type=int, default=multiprocessing.cpu_count() - 1 or 1)
+    parser.add_argument('--nproc', help="Number of processes", type=int, default=cpu_count() - 1 or 1)
 
     return parser.parse_args()
 
@@ -193,14 +195,20 @@ if __name__ == '__main__':
     console.log(f"Number of jobs: {len(job_list)}")
     with Progress() as progress:
         task = progress.add_task("[cyan]Fitting", total=len(job_list))
+        job_jnames = [job[0] for job in job_list]
+        job_models = [job[1] for job in job_list]
+        job_envs = [job[2] for job in job_list]
 
-        with multiprocessing.Pool(processes=args.nproc) as pool:
-            for jname, model_name, env in job_list:
-                pool.apply_async(
-                    fit,
-                    args=(jname, model_name, env),
-                    callback=lambda _: progress.update(task, advance=1),
-                )
-            pool.close()
-            pool.join()
+        with ProcessPool(max_workers=args.nproc) as pool:
+            future = pool.map(fit, job_jnames, job_models, job_envs, timeout=600)
+            iterator = future.result()
+            while True:
+                try:
+                    next(iterator)
+                except StopIteration:
+                    break
+                except TimeoutError as e:
+                    console.log(f"TimeoutError: {e}")
+                finally:
+                    progress.update(task, advance=1)
     console.log("All jobs finished.")
