@@ -29,6 +29,12 @@ class Dataset:
             'v0': self.v0,
         }
 
+    def __copy__(self):
+        return Dataset(self.jname, self.X.copy(), self.Y.copy(), self.YERR.copy(), self.REF.copy(), self.v0)
+
+    def copy(self):
+        return self.__copy__()
+
     @property
     def len(self):
         return len(self.X)

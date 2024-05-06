@@ -10,7 +10,7 @@ from env import Env
 from plots import plot
 
 
-def fit_aic(dataset: Dataset, model_name: str, env: Env):
+def fit_aic(dataset: Dataset, model_name: str, env: Env, dataset_plot: Dataset = None):
     model = env.model_dict[model_name]['model']
     labels = env.model_dict[model_name]['labels']
     start_params = env.model_dict[model_name]['start_params'].copy()
@@ -80,7 +80,7 @@ def fit_aic(dataset: Dataset, model_name: str, env: Env):
 
     # Plots
     plot(
-        dataset=dataset,
+        dataset=dataset if dataset_plot is None else dataset_plot,
         model=model,
         model_name_cap=env.model_dict[model_name]['name'],
         labels=labels,

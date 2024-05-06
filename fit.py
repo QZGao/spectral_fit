@@ -15,7 +15,7 @@ from rich.progress import Progress
 
 from aic import fit_aic
 from bayesian import fit_bayesian
-from catalogue import get_catalogue_from_args
+from catalogue import get_catalogue_from_args, Dataset
 from env import Env
 from models import get_models
 
@@ -23,9 +23,10 @@ warnings.filterwarnings("ignore")
 console = Console()
 
 
-def fit(jname: str, model_name: str, env: Env):
+def fit(jname: str, model_name: str, env: Env, dataset: Dataset = None, dataset_plot: Dataset = None):
     try:
-        dataset = env.catalogue.get_pulsar(jname, args=env.args)
+        if dataset is None:
+            dataset = env.catalogue.get_pulsar(jname, args=env.args)
         if dataset is None:  # Not in the catalogue, or no data points
             return
 
@@ -53,9 +54,9 @@ def fit(jname: str, model_name: str, env: Env):
         Path(f'{env.outdir}/{jname}').mkdir(parents=True, exist_ok=True)
 
         if env.args.aic:
-            fit_aic(dataset, model_name, env=env)
+            fit_aic(dataset, model_name, env=env, dataset_plot=dataset_plot)
         else:
-            fit_bayesian(dataset, model_name, env=env)
+            fit_bayesian(dataset, model_name, env=env, dataset_plot=dataset_plot)
     except Exception as e:
         # Most likely due to very wrong data points, can't fit at all
         console.log(f"Error: {jname} {model_name}\n{e}\n{traceback.format_exc()}", style='red')

@@ -74,7 +74,7 @@ def prior_translate(priors, dataset: Dataset, env: Env) -> list:
     return priors
 
 
-def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
+def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Dataset = None):
     model = env.model_dict[model_name]['model']
     labels = env.model_dict[model_name]['labels'].copy()
     priors = env.model_dict[model_name]['priors'].copy()
@@ -153,7 +153,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env):
         outpath=f'{env.outdir}/{dataset.jname}/{model_name}_corner',
     )
     plot(
-        dataset=dataset,
+        dataset=dataset if dataset_plot is None else dataset_plot,
         model=model,
         model_name_cap=env.model_dict[model_name]['name'],
         labels=labels,
