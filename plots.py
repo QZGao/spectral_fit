@@ -53,6 +53,49 @@ def plot_corner(samples, labels, priors, outpath: str = None, show: bool = False
     plt.close()
 
 
+def plot_raw(dataset, citation_dict: dict, outpath: str = None, show: bool = True):
+    fig, ax = plt.subplots(figsize=(5*4/3, 5))
+
+    custom_cycler = (cycler(color = [p[0] for p in MARKER_TYPES])
+                    + cycler(marker = [p[1] for p in MARKER_TYPES])
+                    + cycler(markersize = np.array([p[2] for p in MARKER_TYPES])*.7))
+    ax.set_prop_cycle(custom_cycler)
+    prop_cycle = ax._get_lines.prop_cycler
+
+    for g in np.unique(dataset.REF):
+        ix = np.where(dataset.REF == g)
+
+        ax.errorbar(dataset.X[ix], dataset.Y[ix], yerr=dataset.YERR[ix],
+                    linestyle='None',
+                    mec='k',
+                    markeredgewidth=.5,
+                    elinewidth=.7,
+                    capsize=1.5,
+                    label=citation_dict.get(g, g),
+                    **next(prop_cycle))
+
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+    ax.grid(linestyle=':')
+    xlim = ax.get_xlim()
+    ylim = ax.get_ylim()
+
+    ax.set_xlim(xlim)
+    ax.set_ylim(ylim)
+    ax.set_xlabel('Frequency $ν$ (MHz)')
+    ax.set_ylabel('Flux density $S$ (mJy)')
+    ax.set_title('PSR ' + dataset.jname.replace('-', '−'))
+
+    # Legend below the plot
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=2, frameon=False)
+
+    if outpath:
+        plt.savefig(outpath, dpi=300, bbox_inches='tight')
+    if show:
+        plt.show()
+    plt.close()
+
+
 def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env,
          param_estimates=None, samples=None, log_evidence=None, log_evidence_err=None,
          iminuit_result=None, aic=None):
@@ -154,7 +197,7 @@ def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env,
     ax.set_ylim(ylim)
     ax.set_xlabel('Frequency $ν$ (MHz)')
     ax.set_ylabel('Flux density $S$ (mJy)')
-    ax.set_title(dataset.jname)
+    ax.set_title('PSR ' + dataset.jname.replace('-', '−'))
 
     # Fit info in the lower left corner
     ax.text(0.05, 0.05, fit_info, transform=ax.transAxes, verticalalignment='bottom',

@@ -77,6 +77,10 @@ class Dataset:
                                 np.sqrt(self.YERR[ix] ** 2 + sigma ** 2 * self.Y[ix] ** 2),
                                 self.YERR[ix])
 
+    @property
+    def peak_frequency(self) -> float:
+        return self.X[np.argmax(self.Y)]
+
 
 class Catalogue:
     def __init__(self, cat_dict: dict, citation_dict: dict):
@@ -182,6 +186,8 @@ class Catalogue:
             YERR = [YERR]
         if isinstance(REF, str):
             REF = [REF]
+        if len(X) != len(Y) or len(Y) != len(YERR) or len(YERR) != len(REF):
+            raise ValueError('Lengths of X, Y, YERR, and REF must be the same.')
         if jname in self.cat_dict:
             self.cat_dict[jname]['X'] = np.concatenate((self.cat_dict[jname]['X'], X))
             self.cat_dict[jname]['Y'] = np.concatenate((self.cat_dict[jname]['Y'], Y))
@@ -194,6 +200,9 @@ class Catalogue:
                 'YERR': YERR,
                 'REF': REF
             }
+
+    def add_citations(self, citation_dict: dict):
+        self.citation_dict.update(citation_dict)
 
     @property
     def len(self):
