@@ -98,7 +98,7 @@ def plot_raw(dataset, citation_dict: dict, outpath: str = None, show: bool = Tru
 
 def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env,
          param_estimates=None, samples=None, log_evidence=None, log_evidence_err=None,
-         iminuit_result=None, aic=None):
+         iminuit_result=None, aic=None, display_info=True):
     fig, ax = plt.subplots(figsize=(5*4/3, 5))
 
     if env.args.aic:
@@ -200,8 +200,9 @@ def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env,
     ax.set_title('PSR ' + dataset.jname.replace('-', '−'))
 
     # Fit info in the lower left corner
-    ax.text(0.05, 0.05, fit_info, transform=ax.transAxes, verticalalignment='bottom',
-            bbox=dict(facecolor='none', edgecolor='none'), linespacing=1.5)
+    if display_info:
+        ax.text(0.05, 0.05, fit_info, transform=ax.transAxes, verticalalignment='bottom',
+                bbox=dict(facecolor='none', edgecolor='none'), linespacing=1.5)
 
     # Legend below the plot
     ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=2, frameon=False)

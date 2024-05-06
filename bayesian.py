@@ -163,4 +163,5 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
         log_evidence_err=log_evidence_err,
         outpath=f'{env.outdir}/{dataset.jname}/{model_name}_result',
         env=env,
+        display_info=dataset_plot is None,
     )
