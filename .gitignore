@@ -164,5 +164,6 @@ output/*
 !output/examples/
 catalogue/*
 !catalogue/*_data.csv
+!catalogue/bad_fits.txt
 notebooks/*.pdf
 notebooks/*.png
