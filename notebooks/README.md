@@ -6,9 +6,9 @@ You can generate everything you need in the notebooks by running the following c
 cd ..
 
 # Bayesian
-python fit.py --outdir "outdir_st"
-python processing.py "outdir_st"
-python processing.py "outdir_st" --var "param_estimates"
+python fit.py --outdir "outdir_bayesian"
+python processing.py "outdir_bayesian"
+python processing.py "outdir_bayesian" --var "param_estimates"
 
 # Frequentist
 python fit.py --outdir "outdir_aic" --aic
