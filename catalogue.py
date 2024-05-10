@@ -138,8 +138,8 @@ class Catalogue:
             return False
         if 'P' not in self.cat_dict[jname]:
             return False
-        # P < 100 ms and P_DOT < 1e-16
-        return self.cat_dict[jname]['P'] < 0.1 and self.cat_dict[jname]['P_DOT'] < 1e-16
+        # P < 70 ms and P_DOT < 1e-17
+        return self.cat_dict[jname]['P'] < 0.07 and self.cat_dict[jname]['P_DOT'] < 1e-17
 
     @property
     def MSPs(self) -> list[str]:
