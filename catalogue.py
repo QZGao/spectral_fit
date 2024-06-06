@@ -207,6 +207,28 @@ class Catalogue:
                 'REF': REF
             }
 
+    def remove_refs(self, refs: str | list):
+        if isinstance(refs, str):
+            refs = [refs]
+        for ref in refs:
+            for jname, data in self.cat_dict.items():
+                ix = np.where(data['REF'] == ref)
+                data['X'] = np.delete(data['X'], ix)
+                data['Y'] = np.delete(data['Y'], ix)
+                data['YERR'] = np.delete(data['YERR'], ix)
+                data['REF'] = np.delete(data['REF'], ix)
+
+    def remove_refs_from_pulsar(self, jname: str, refs: str | list):
+        if isinstance(refs, str):
+            refs = [refs]
+        if jname in self.cat_dict:
+            for ref in refs:
+                ix = np.where(self.cat_dict[jname]['REF'] == ref)
+                self.cat_dict[jname]['X'] = np.delete(self.cat_dict[jname]['X'], ix)
+                self.cat_dict[jname]['Y'] = np.delete(self.cat_dict[jname]['Y'], ix)
+                self.cat_dict[jname]['YERR'] = np.delete(self.cat_dict[jname]['YERR'], ix)
+                self.cat_dict[jname]['REF'] = np.delete(self.cat_dict[jname]['REF'], ix)
+
     def add_citations(self, citation_dict: dict):
         self.citation_dict.update(citation_dict)
 
@@ -264,6 +286,11 @@ class Catalogue:
         lit_df.to_csv(f'{outdir}/literature.csv', index_label='Citekey')
         print(f'Literature list saved to {outdir}/literature.csv.')
 
+    def apply_efrac_to_ref(self, ref: str, efrac: float):
+        for jname, data in self.cat_dict.items():
+            ix = np.where(data['REF'] == ref)
+            data['YERR'][ix] = np.sqrt(data['Y'][ix] ** 2 * efrac ** 2 + data['YERR'][ix] ** 2)
+
     def apply_fixes(self, lit_set: list):
         """Patches to the catalogue in pulsar_spectra v2.0.4"""
 
@@ -288,14 +315,19 @@ class Catalogue:
                 )
             print('Maron_2000: Manually added measurements from Maron et al. (2000).')
 
+        # Kouwenhoven et al. (2000) data is already in the catalogue, but the values are incorrect
+        # We replace the values with the correct ones from Table 2-4 of the paper
+        if 'Kouwenhoven_2000' in lit_set:
+            kouwenhoven_df = pd.read_csv('catalogue/Kouwenhoven_2000_data.csv')
+            self.remove_refs('Kouwenhoven_2000')
+            for _, row in kouwenhoven_df.iterrows():
+                self.extend(row['PSRJ'], 325., float(row['S325']), np.sqrt(float(row['E1_S325'])**2 + float(row['E2_S325'])**2), 'Kouwenhoven_2000')
+            print('Kouwenhoven_2000: Corrected measurements from Kouwenhoven et al. (2000).')
+
         # Remove incorrect data from Johnston & Kerr (2018)
         # https://github.com/NickSwainston/pulsar_spectra/issues/93
         if 'J1842-0359' in self.cat_dict and 'Johnston_2018' in self.cat_dict['J1842-0359']['REF']:
-            ix = np.where(np.array(self.cat_dict['J1842-0359']['REF']) == 'Johnston_2018')
-            self.cat_dict['J1842-0359']['X'] = np.delete(self.cat_dict['J1842-0359']['X'], ix)
-            self.cat_dict['J1842-0359']['Y'] = np.delete(self.cat_dict['J1842-0359']['Y'], ix)
-            self.cat_dict['J1842-0359']['YERR'] = np.delete(self.cat_dict['J1842-0359']['YERR'], ix)
-            self.cat_dict['J1842-0359']['REF'] = np.delete(self.cat_dict['J1842-0359']['REF'], ix)
+            self.remove_refs_from_pulsar('J1842-0359', 'Johnston_2018')
             print('Johnston_2018: Removed incorrect data for J1842-0359 (0.01 mJy, class "N") from Johnston & Kerr (2018).')
 
         # Add data from Spiewak et al. (2022)
@@ -303,15 +335,9 @@ class Catalogue:
         # https://github.com/NickSwainston/pulsar_spectra/pull/56/commits/824371ddcb3190ff1ddfd7bd22e07d0d39db3544
         if 'Spiewak_2022' in lit_set:
             spiewak_df = pd.read_csv('catalogue/Spiewak_2022_data.csv')
+            self.remove_refs('Spiewak_2022')
             for _, row in spiewak_df.iterrows():
                 jname = row['PSRJ']
-                if jname in self.cat_dict and 'Spiewak_2022' in self.cat_dict[jname]['REF']:
-                    # Remove the existing mean flux data (which only has one mean value for each pulsar)
-                    idx = np.where(np.array(self.cat_dict[jname]['REF']) == 'Spiewak_2022')
-                    self.cat_dict[jname]['X'] = np.delete(self.cat_dict[jname]['X'], idx)
-                    self.cat_dict[jname]['Y'] = np.delete(self.cat_dict[jname]['Y'], idx)
-                    self.cat_dict[jname]['YERR'] = np.delete(self.cat_dict[jname]['YERR'], idx)
-                    self.cat_dict[jname]['REF'] = np.delete(self.cat_dict[jname]['REF'], idx)
                 x, y, yerr, ref = [], [], [], []
                 for i in range(0, 8):
                     if not pd.isna(row[f'FLUX_{i}_FRQ']):
@@ -339,6 +365,30 @@ class Catalogue:
                 yerr = [0.5 * y[i] if yerr[i] == 0. else yerr[i] for i in range(len(y))]
                 self.extend(jname, x, y, yerr, ref)
             print('Posselt_2023: Manually added measurements of 8 frequency channels from Posselt et al. (2023).')
+
+        # Add data from Anumarlapudi et al. (2023) and Gordon et al. (2021)
+        # Extracted from Table B1 of the former paper
+        if 'Anumarlapudi_2023' in lit_set:
+            anumarlapudi_df = pd.read_csv('catalogue/Anumarlapudi_2023_data.csv')
+            for _, row in anumarlapudi_df.iterrows():
+                jname = row['Name']
+                x = [888.]
+                y = [float(row['S888'])]
+                yerr = [float(row['e_S888'])]
+                ref = ['Anumarlapudi_2023']
+                if not np.isnan(row['S3000']):
+                    x.append(3000.)
+                    y.append(float(row['S3000']))
+                    yerr.append(float(row['e_S3000']))
+                    ref.append('Gordon_2021')
+                self.extend(jname, x, y, yerr, ref)
+            print('Anumarlapudi_2023: Manually added measurements of 8 frequency channels from Anumarlapudi et al. (2023) and Gordon et al. (2021).')
+
+        # Apply added fractional error based on the declarement of the authors
+        efrac_df = pd.read_csv('catalogue/efrac.csv')
+        for _, row in efrac_df.iterrows():
+            self.apply_efrac_to_ref(row['REF'], float(row['EFRAC']))
+            print(f'{row["REF"]}: Applied additional fractional error of {row["EFRAC"]} to the flux densities.')
 
 
     def keys(self):
@@ -529,7 +579,10 @@ def get_catalogue(outdir: str = None, refresh: bool = False, lit_set: str = None
     else:
         catalogue = collect_catalogue_from_ATNF(atnf_ver=atnf_ver, p_only=not atnf)
         if lit_set is not None:  # Custom literature set
-            catalogue += collect_catalogue(custom_lit=lit_set.split(';'))
+            if lit_set == 'IMAGING_SURVEYS':
+                catalogue += collect_catalogue(custom_lit=IMAGING_SURVEYS_LITERATURE_SET)
+            else:
+                catalogue += collect_catalogue(custom_lit=lit_set.split(';'))
         else:
             catalogue += collect_catalogue()
 
@@ -658,6 +711,14 @@ DEFAULT_LITERATURE_SET = [
     'Bhat_2023',
     'Gitika_2023',
     'Posselt_2023'
+]
+IMAGING_SURVEYS_LITERATURE_SET = [
+    'Kouwenhoven_2000',
+    'Bilous_2016',
+    'Kondratiev_2016',
+    'Frail_2016',
+    'Murphy_2017',
+    'Anumarlapudi_2023'
 ]
 DEFAULT_LITERATURE_CITATIONS = {
     'Sieber_1973': 'Sieber (1973)',
@@ -788,12 +849,14 @@ DEFAULT_LITERATURE_CITATIONS = {
     'Han_2021': 'Han et al. (2021)',
     'Johnston_2021': 'Johnston et al. (2021)',
     'Shapiro_Albert_2021': 'Shapiro-Albert et al. (2021)',
+    'Gordon_2021': 'Gordon et al. (2021)',
     'Kravtsov_2022': 'Kravtsov et al. (2022)',
     'Lee_2022': 'Lee et al. (2022)',
     'Spiewak_2022': 'Spiewak et al. (2022)',
     'Bhat_2023': 'Bhat et al. (2023)',
     'Gitika_2023': 'Gitika et al. (2023)',
-    'Posselt_2023': 'Posselt et al. (2023)'
+    'Posselt_2023': 'Posselt et al. (2023)',
+    'Anumarlapudi_2023': 'Anumarlapudi et al. (2023)'
 }
 JANKOWSKI_LITERATURE_SET = [  # Part of literature used by Jankowski et al. (2018)
     'Jankowski_2018',
