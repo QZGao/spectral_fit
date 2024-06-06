@@ -5,6 +5,7 @@ import numpy as np
 from corner import corner
 from cycler import cycler
 from jacobi import propagate
+from matplotlib.ticker import LogLocator
 from ultranest.plot import PredictionBand
 
 from env import Env
@@ -195,6 +196,10 @@ def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env,
 
     ax.set_xlim(xlim)
     ax.set_ylim(ylim)
+    ax.xaxis.set_major_locator(LogLocator(numticks=999))
+    ax.xaxis.set_minor_locator(LogLocator(numticks=999, subs="auto"))
+    ax.yaxis.set_major_locator(LogLocator(numticks=999))
+    ax.yaxis.set_minor_locator(LogLocator(numticks=999, subs="auto"))
     ax.set_xlabel('Frequency $ν$ (MHz)')
     ax.set_ylabel('Flux density $S$ (mJy)')
     ax.set_title('PSR ' + dataset.jname.replace('-', '−'))

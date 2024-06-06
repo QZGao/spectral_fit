@@ -31,8 +31,8 @@ def log_likelihood(p, model, labels, dataset: Dataset, env: Env):
         return np.sum(np.log(np.exp(- ((dataset.Y - Y_model) / err) ** 2)))
     if env.args.gaussian:  # Gaussian likelihood
         return ss.norm.logpdf(dataset.Y, loc=Y_model, scale=err).sum()
-    else:  # Student's-t likelihood
-        return ss.t.logpdf(dataset.Y, loc=Y_model, scale=err, df=dataset.len - 1).sum()
+    else:  # Cauchy likelihood
+        return ss.cauchy.logpdf(dataset.Y, loc=Y_model, scale=err).sum()
 
 
 def uniform_ppf(q, low, high):
