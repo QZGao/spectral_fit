@@ -212,22 +212,39 @@ class Catalogue:
             refs = [refs]
         for ref in refs:
             for jname, data in self.cat_dict.items():
-                ix = np.where(data['REF'] == ref)
-                data['X'] = np.delete(data['X'], ix)
-                data['Y'] = np.delete(data['Y'], ix)
-                data['YERR'] = np.delete(data['YERR'], ix)
-                data['REF'] = np.delete(data['REF'], ix)
+                x, y, yerr, ref = [], [], [], []
+                for i in range(len(data['X'])):
+                    if data['REF'][i] != ref:
+                        x.append(data['X'][i])
+                        y.append(data['Y'][i])
+                        yerr.append(data['YERR'][i])
+                        ref.append(data['REF'][i])
+                self.cat_dict[jname] = {
+                    'X': x,
+                    'Y': y,
+                    'YERR': yerr,
+                    'REF': ref
+                }
 
     def remove_refs_from_pulsar(self, jname: str, refs: str | list):
         if isinstance(refs, str):
             refs = [refs]
         if jname in self.cat_dict:
             for ref in refs:
-                ix = np.where(self.cat_dict[jname]['REF'] == ref)
-                self.cat_dict[jname]['X'] = np.delete(self.cat_dict[jname]['X'], ix)
-                self.cat_dict[jname]['Y'] = np.delete(self.cat_dict[jname]['Y'], ix)
-                self.cat_dict[jname]['YERR'] = np.delete(self.cat_dict[jname]['YERR'], ix)
-                self.cat_dict[jname]['REF'] = np.delete(self.cat_dict[jname]['REF'], ix)
+                data = self.cat_dict[jname]
+                x, y, yerr, ref = [], [], [], []
+                for i in range(len(data['X'])):
+                    if data['REF'][i] != ref:
+                        x.append(data['X'][i])
+                        y.append(data['Y'][i])
+                        yerr.append(data['YERR'][i])
+                        ref.append(data['REF'][i])
+                self.cat_dict[jname] = {
+                    'X': x,
+                    'Y': y,
+                    'YERR': yerr,
+                    'REF': ref
+                }
 
     def add_citations(self, citation_dict: dict):
         self.citation_dict.update(citation_dict)
@@ -288,13 +305,14 @@ class Catalogue:
 
     def apply_efrac_to_ref(self, ref: str, efrac: float):
         for jname, data in self.cat_dict.items():
-            ix = np.where(data['REF'] == ref)
-            data['YERR'][ix] = np.sqrt(data['Y'][ix] ** 2 * efrac ** 2 + data['YERR'][ix] ** 2)
+            for i in range(len(data['X'])):
+                if data['REF'][i] == ref:
+                    data['YERR'][i] = np.sqrt(data['Y'][i] ** 2 * efrac ** 2 + data['YERR'][i] ** 2)
 
     def apply_fixes(self, lit_set: list):
         """Patches to the catalogue in pulsar_spectra v2.0.4"""
 
-        # Add data from Sieber (1973) (for the sake of reproducing Jankowski et al. (2018))
+        # Add data from Sieber (1973)
         # https://github.com/NickSwainston/pulsar_spectra/commit/1793a21607eed71a4556701517ccd14f6193b6f4
         # Extracted from Table 1 of the paper, flux densities are calculated by Swainston
         if 'Sieber_1973' in lit_set:
@@ -303,7 +321,7 @@ class Catalogue:
                 self.extend(row['PSRJ'], float(row['FREQ']), float(row['FLUX']), float(row['FLUX_ERR']), 'Sieber_1973')
             print('Sieber_1973: Manually added measurements from Sieber (1973).')
 
-        # Add data from Maron et al. (2000) (for the sake of reproducing Jankowski et al. (2018))
+        # Add data from Maron et al. (2000)
         # https://web.archive.org/web/20100106132709/http://astro.ia.uz.zgora.pl/olaf/paper1/
         # Extracted from a PostScript file named "table2.ps" in the "tables.tar.gz".
         if 'Maron_2000' in lit_set:
@@ -382,13 +400,14 @@ class Catalogue:
                     yerr.append(float(row['e_S3000']))
                     ref.append('Gordon_2021')
                 self.extend(jname, x, y, yerr, ref)
-            print('Anumarlapudi_2023: Manually added measurements of 8 frequency channels from Anumarlapudi et al. (2023) and Gordon et al. (2021).')
+            print('Anumarlapudi_2023 & Gordon_2021: Manually added measurements of 8 frequency channels from Anumarlapudi et al. (2023) and Gordon et al. (2021).')
 
         # Apply added fractional error based on the declarement of the authors
         efrac_df = pd.read_csv('catalogue/efrac.csv')
         for _, row in efrac_df.iterrows():
-            self.apply_efrac_to_ref(row['REF'], float(row['EFRAC']))
-            print(f'{row["REF"]}: Applied additional fractional error of {row["EFRAC"]} to the flux densities.')
+            if not np.isnan(float(row['EFRAC'])):
+                self.apply_efrac_to_ref(row['REF'], float(row['EFRAC']))
+            # print(f'{row["REF"]}: Applied additional fractional error of {row["EFRAC"]} to the flux densities.')
 
 
     def keys(self):
@@ -560,6 +579,9 @@ def load_catalogue(outdir: str = '') -> Catalogue:
 
 def get_catalogue(outdir: str = None, refresh: bool = False, lit_set: str = None,
                   atnf: bool = False, atnf_ver: str = '1.54', jan_set: bool = False) -> Catalogue:
+    if os.getcwd().endswith('notebooks'):
+        os.chdir('..')
+
     # Load catalogue from pickle
     if (outdir is not None) and (not refresh) and os.path.exists(f'{outdir}/catalogue.pkl'):
         with open(f'{outdir}/catalogue.pkl', 'rb') as f:
@@ -612,6 +634,7 @@ def get_catalogue_from_args(args: Namespace) -> Catalogue:
 
 DEFAULT_LITERATURE_SET = [
     'McLean_1973',
+    'Sieber_1973',  # Added
     'Bartel_1978',
     'Manchester_1978a',
     'Izvekova_1981',
@@ -639,7 +662,9 @@ DEFAULT_LITERATURE_SET = [
     'Stairs_1999',
     'Weisberg_1999',
     'Lommen_2000',
+    'Maron_2000',  # Added
     'Malofeev_2000',
+    'Kouwenhoven_2000',  # Replaced
     'Giacani_2001',
     'Kuzmin_2001',
     'Manchester_2001',
@@ -686,7 +711,7 @@ DEFAULT_LITERATURE_SET = [
     'Brinkman_2018',
     'Gentile_2018',
     'Jankowski_2018',
-    'Johnston_2018',
+    'Johnston_2018',  # Modified
     'RoZko_2018',
     'Jankowski_2019',
     'Kaur_2019',
@@ -706,11 +731,13 @@ DEFAULT_LITERATURE_SET = [
     'Han_2021',
     'Johnston_2021',
     'Shapiro_Albert_2021',
+    'Gordon_2021',  # Added
     'Lee_2022',
-    'Spiewak_2022',
+    'Spiewak_2022',  # Replaced
     'Bhat_2023',
     'Gitika_2023',
-    'Posselt_2023'
+    'Posselt_2023',  # Added
+    'Anumarlapudi_2023'  # Added
 ]
 IMAGING_SURVEYS_LITERATURE_SET = [
     'Kouwenhoven_2000',
@@ -718,6 +745,7 @@ IMAGING_SURVEYS_LITERATURE_SET = [
     'Kondratiev_2016',
     'Frail_2016',
     'Murphy_2017',
+    'Gordon_2021',
     'Anumarlapudi_2023'
 ]
 DEFAULT_LITERATURE_CITATIONS = {
