@@ -116,11 +116,11 @@ def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env,
     for g in np.unique(dataset.REF):
         ix = np.where(dataset.REF == g)
 
-        if not env.args.aic and (env.args.err_all or env.args.err_thresh):
-            if env.args.err_all:  # All with the same systematic error
-                err = dataset.combined_err(median[-1], ix)
-            else:  # With systematic error for points with yerr/y < threshold
-                err = dataset.combined_err(median[-1], ix, thresh=env.args.err_thresh)
+        if not env.args.aic and (env.args.efac or env.args.equad):
+            if env.args.efac:
+                err = dataset.YERR[ix] * env.args.efac
+            if env.args.equad:
+                err = np.sqrt(dataset.YERR[ix]**2 + env.args.equad**2 * dataset.Y[ix]**2)
 
             prop_cycle, prop_cycle_copy = itertools.tee(prop_cycle)
             eb = ax.errorbar(dataset.X[ix], dataset.Y[ix], yerr=err,
@@ -184,6 +184,8 @@ def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env,
     else:
         fit_info = f"{model_name_cap}\n$\ln z = {log_evidence:.2f} \pm {log_evidence_err:.2f}$"
     for i in range(len(labels)):
+        if labels[i].startswith('e'):
+            continue
         fit_info += f"\n${labels[i]} = "
         fit_info += f"{sci_notation(median[i])}" if len(f'{median[i]:.2f}') > 8 else f"{median[i]:.2f}"
         if env.args.aic:

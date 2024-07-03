@@ -23,7 +23,7 @@ warnings.filterwarnings("ignore")
 console = Console()
 
 
-def fit(jname: str, model_name: str, env: Env, dataset: Dataset = None, dataset_plot: Dataset = None):
+def fit(jname: str, model_name: str, env: Env, dataset: Dataset = None, dataset_plot: Dataset = None, output: bool = False):
     try:
         if dataset is None:
             dataset = env.catalogue.get_pulsar(jname, args=env.args)
@@ -54,9 +54,9 @@ def fit(jname: str, model_name: str, env: Env, dataset: Dataset = None, dataset_
         Path(f'{env.outdir}/{jname}').mkdir(parents=True, exist_ok=True)
 
         if env.args.aic:
-            fit_aic(dataset, model_name, env=env, dataset_plot=dataset_plot)
+            fit_aic(dataset, model_name, env=env, dataset_plot=dataset_plot, output=output)
         else:
-            fit_bayesian(dataset, model_name, env=env, dataset_plot=dataset_plot)
+            fit_bayesian(dataset, model_name, env=env, dataset_plot=dataset_plot, output=output)
     except Exception as e:
         # Most likely due to very wrong data points, can't fit at all
         console.log(f"Error: {jname} {model_name}\n{e}\n{traceback.format_exc()}", style='red')
@@ -111,8 +111,8 @@ def parse_args() -> Namespace:
                         type=float)
 
     # 3) Use additional systematic error
-    parser.add_argument('--err_all', help="Use systematic error for all points", action='store_true')
-    parser.add_argument('--err_thresh', help="Threshold for systematic error", type=float)
+    parser.add_argument('--equad', help="Add an additional systematic error", type=float)
+    parser.add_argument('--efac', help="Multiply by an additional systematic error", type=float)
 
     # Jan et al. (2018)'s method, a.k.a. AIC method in pulsar_spectra
     parser.add_argument('--aic', help="Use Jankowski et al. (2018)'s method instead", action='store_true')
@@ -195,22 +195,27 @@ if __name__ == '__main__':
         console.log("All jobs finished.")
         exit()
     console.log(f"Number of jobs: {len(job_list)}")
-    with Progress() as progress:
-        task = progress.add_task("[cyan]Fitting", total=len(job_list))
-        job_jnames = [job[0] for job in job_list]
-        job_models = [job[1] for job in job_list]
-        job_envs = [job[2] for job in job_list]
 
-        with ProcessPool(max_workers=args.nproc) as pool:
-            future = pool.map(fit, job_jnames, job_models, job_envs, timeout=600)
-            iterator = future.result()
-            while True:
-                try:
-                    next(iterator)
-                except StopIteration:
-                    break
-                except TimeoutError as e:
-                    console.log(f"TimeoutError: {e}")
-                finally:
-                    progress.update(task, advance=1)
+    if len(job_list) == 1:
+        fit(*job_list[0], output=True)
+
+    else:
+        with Progress() as progress:
+            task = progress.add_task("[cyan]Fitting", total=len(job_list))
+            job_jnames = [job[0] for job in job_list]
+            job_models = [job[1] for job in job_list]
+            job_envs = [job[2] for job in job_list]
+
+            with ProcessPool(max_workers=args.nproc) as pool:
+                future = pool.map(fit, job_jnames, job_models, job_envs, timeout=600)
+                iterator = future.result()
+                while True:
+                    try:
+                        next(iterator)
+                    except StopIteration:
+                        break
+                    except TimeoutError as e:
+                        console.log(f"TimeoutError: {e}")
+                    finally:
+                        progress.update(task, advance=1)
     console.log("All jobs finished.")

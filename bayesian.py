@@ -21,11 +21,17 @@ def log_likelihood(p, model, labels, dataset: Dataset, env: Env):
         dataset.v0,
     )
 
-    err = dataset.YERR
-    if env.args.err_all:  # All with the same systematic error
-        err = dataset.combined_err(p[-1])
-    elif env.args.err_thresh:  # With systematic error for points with yerr/y < threshold
-        err = dataset.combined_err(p[-1], thresh=env.args.err_thresh)
+    err = dataset.YERR.copy()
+    if env.args.efac or env.args.equad:
+        ref_set = list(set(dataset.REF))
+        for ref in ref_set:
+            if env.args.efac:
+                err[dataset.REF == ref] *= p[labels.index('e_{\mathrm{fac,\,' + ref.replace('_', '\_') + '}}')]
+            if env.args.equad:
+                err[dataset.REF == ref] = np.sqrt(
+                    err[dataset.REF == ref] ** 2 +
+                    p[labels.index('e_{\mathrm{quad,\,' + ref.replace('_', '\_') + '}}')] ** 2 * dataset.Y[dataset.REF == ref] ** 2
+                )
 
     if dataset.len < 4 or env.args.gaussian_patch:  # Patch formula for dataset with only 2 or 3 points
         return np.sum(np.log(np.exp(- ((dataset.Y - Y_model) / err) ** 2)))
@@ -48,7 +54,7 @@ def prior_transform(u, priors):
     for i, q in enumerate(priors):
         if q[0] > q[1]:
             raise ValueError(f"Invalid prior: {q}")
-        if q[2] == 'uniform':        # Uniform prior
+        if q[2] == 'uniform':  # Uniform prior
             p[i] = uniform_ppf(u[i], q[0], q[1])
         elif q[2] == 'log_uniform':  # Log-uniform prior
             if q[0] <= 0:
@@ -74,16 +80,22 @@ def prior_translate(priors, dataset: Dataset, env: Env) -> list:
     return priors
 
 
-def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Dataset = None):
+def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Dataset = None, output: bool = False):
     model = env.model_dict[model_name]['model']
     labels = env.model_dict[model_name]['labels'].copy()
     priors = env.model_dict[model_name]['priors'].copy()
     priors = prior_translate(priors, dataset, env)
 
     # Add a prior for the systematic error
-    if env.args.err_all or env.args.err_thresh:
-        priors.append((0., dataset.max_yerr_y, 'uniform'))  # up to 50% of the flux density
-        labels.append('σ_{\mathrm{sys}}')
+    if env.args.efac or env.args.equad:
+        ref_set = list(set(dataset.REF))
+        for ref in ref_set:
+            if env.args.efac:
+                labels.append('e_{\mathrm{fac,\,' + ref.replace('_', '\_') + '}}')
+                priors.append((1., env.args.efac, 'uniform'))
+            if env.args.equad:
+                labels.append('e_{\mathrm{quad,\,' + ref.replace('_', '\_') + '}}')
+                priors.append((0., env.args.equad, 'uniform'))
 
     dres = None
     if not env.args.override and Path(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl').exists():
@@ -104,7 +116,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
             sample='rwalk',
         )
         sampler.run_nested(
-            print_progress=False,
+            print_progress=output,
         )
 
         dres = sampler.results
