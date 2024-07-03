@@ -83,7 +83,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
     # Add a prior for the systematic error
     if env.args.err_all or env.args.err_thresh:
         priors.append((0., dataset.max_yerr_y, 'uniform'))  # up to 50% of the flux density
-        labels.append('σ')
+        labels.append('σ_{\mathrm{sys}}')
 
     dres = None
     if not env.args.override and Path(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl').exists():

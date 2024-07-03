@@ -117,7 +117,10 @@ class Catalogue:
             else:
                 # Set minimum YERR / Y
                 if args.outliers_min:
-                    YERR = np.where(YERR / Y < args.outliers_min, args.outliers_min * Y, YERR)
+                    if args.outliers_min_plus:
+                        YERR = np.where(YERR / Y < args.outliers_min, np.sqrt(Y ** 2 * args.outliers_min_plus ** 2 + YERR ** 2), YERR)
+                    else:
+                        YERR = np.where(YERR / Y < args.outliers_min, args.outliers_min * Y, YERR)
 
             # Don't believe in any of the YERRs
             if args.outliers_all:
@@ -212,18 +215,18 @@ class Catalogue:
             refs = [refs]
         for ref in refs:
             for jname, data in self.cat_dict.items():
-                x, y, yerr, ref = [], [], [], []
+                X, Y, YERR, REF = [], [], [], []
                 for i in range(len(data['X'])):
                     if data['REF'][i] != ref:
-                        x.append(data['X'][i])
-                        y.append(data['Y'][i])
-                        yerr.append(data['YERR'][i])
-                        ref.append(data['REF'][i])
+                        X.append(data['X'][i])
+                        Y.append(data['Y'][i])
+                        YERR.append(data['YERR'][i])
+                        REF.append(data['REF'][i])
                 self.cat_dict[jname] = {
-                    'X': x,
-                    'Y': y,
-                    'YERR': yerr,
-                    'REF': ref
+                    'X': X,
+                    'Y': Y,
+                    'YERR': YERR,
+                    'REF': REF
                 }
 
     def remove_refs_from_pulsar(self, jname: str, refs: str | list):
@@ -232,18 +235,18 @@ class Catalogue:
         if jname in self.cat_dict:
             for ref in refs:
                 data = self.cat_dict[jname]
-                x, y, yerr, ref = [], [], [], []
+                X, Y, YERR, REF = [], [], [], []
                 for i in range(len(data['X'])):
                     if data['REF'][i] != ref:
-                        x.append(data['X'][i])
-                        y.append(data['Y'][i])
-                        yerr.append(data['YERR'][i])
-                        ref.append(data['REF'][i])
+                        X.append(data['X'][i])
+                        Y.append(data['Y'][i])
+                        YERR.append(data['YERR'][i])
+                        REF.append(data['REF'][i])
                 self.cat_dict[jname] = {
-                    'X': x,
-                    'Y': y,
-                    'YERR': yerr,
-                    'REF': ref
+                    'X': X,
+                    'Y': Y,
+                    'YERR': YERR,
+                    'REF': REF
                 }
 
     def add_citations(self, citation_dict: dict):
@@ -403,10 +406,10 @@ class Catalogue:
             print('Anumarlapudi_2023 & Gordon_2021: Manually added measurements of 8 frequency channels from Anumarlapudi et al. (2023) and Gordon et al. (2021).')
 
         # Apply added fractional error based on the declarement of the authors
-        efrac_df = pd.read_csv('catalogue/efrac.csv')
-        for _, row in efrac_df.iterrows():
-            if not np.isnan(float(row['EFRAC'])):
-                self.apply_efrac_to_ref(row['REF'], float(row['EFRAC']))
+        # efrac_df = pd.read_csv('catalogue/efrac.csv')
+        # for _, row in efrac_df.iterrows():
+        #     if not np.isnan(float(row['EFRAC'])):
+        #         self.apply_efrac_to_ref(row['REF'], float(row['EFRAC']))
             # print(f'{row["REF"]}: Applied additional fractional error of {row["EFRAC"]} to the flux densities.')
 
 
@@ -577,7 +580,7 @@ def load_catalogue(outdir: str = '') -> Catalogue:
     return cat
 
 
-def get_catalogue(outdir: str = None, refresh: bool = False, lit_set: str = None,
+def get_catalogue(outdir: str = None, refresh: bool = False, lit_set: str | list = None,
                   atnf: bool = False, atnf_ver: str = '1.54', jan_set: bool = False) -> Catalogue:
     if os.getcwd().endswith('notebooks'):
         os.chdir('..')
@@ -604,7 +607,9 @@ def get_catalogue(outdir: str = None, refresh: bool = False, lit_set: str = None
             if lit_set == 'IMAGING_SURVEYS':
                 catalogue += collect_catalogue(custom_lit=IMAGING_SURVEYS_LITERATURE_SET)
             else:
-                catalogue += collect_catalogue(custom_lit=lit_set.split(';'))
+                if isinstance(lit_set, str):
+                    lit_set = lit_set.split(';')
+                catalogue += collect_catalogue(custom_lit=lit_set)
         else:
             catalogue += collect_catalogue()
 
@@ -741,6 +746,7 @@ DEFAULT_LITERATURE_SET = [
 ]
 IMAGING_SURVEYS_LITERATURE_SET = [
     'Kouwenhoven_2000',
+    'McGary_2001',
     'Bilous_2016',
     'Kondratiev_2016',
     'Frail_2016',

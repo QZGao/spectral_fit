@@ -106,6 +106,7 @@ def parse_args() -> Namespace:
     # 2) Remove outliers, set minimum YERR / Y, or set all YERR / Y to a value
     parser.add_argument('--outliers_rm', help="Remove outliers", action='store_true')
     parser.add_argument('--outliers_min', help="Set minimum YERR / Y (when --outliers_rm is not set)", type=float)
+    parser.add_argument('--outliers_min_plus', help="Add a systematic error to the uncertainty instead of replacing it", type=float)
     parser.add_argument('--outliers_all', help="Don't believe in any of the YERRs and set them all to this value",
                         type=float)
 

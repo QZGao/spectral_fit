@@ -1,106 +1,106 @@
-REF,EFRAC,LOCATION,UNDERESTIMATED
-McLean_1973,0.1,p165: ...the expected uncertainty due to scintillation is about 5 or 10 per cent in such a measurement.,FALSE
-Sieber_1973,,,FALSE
-Bartel_1978,,,FALSE
-Manchester_1978a,,,FALSE
-Izvekova_1981,,,FALSE
-Dewey_1985,,,FALSE
-Stokes_1985,,,FALSE
-Stokes_1986,,,FALSE
-Wolszczan_1992,,,FALSE
-Malofeev_1993,,,FALSE
-Camilo_1995,,,FALSE
-Lorimer_1995b,0.5,"(only ""standard error"" given)",FALSE
-Manchester_1995,,,FALSE
-Qiao_1995,,,FALSE
-Seiradakis_1995,,,FALSE
-Biggs_1996,,,FALSE
-Manchester_1996,,,FALSE
-Hoensbroech_1997,,,FALSE
-Kramer_1997,,,FALSE
-van_Ommen_1997,,,FALSE
-Kijak_1998,,,FALSE
-Kramer_1998,,,FALSE
-Shrauner_1998,,,FALSE
-Toscano_1998,0.5,"(only ""standard error"" given)",TRUE
-Han_1999,0.5,p575: They are generally within a factor of 2 of the published densities...,TRUE
-Kramer_1999,,,FALSE
-Stairs_1999,,,FALSE
-Weisberg_1999,,,FALSE
-Lommen_2000,,,TRUE
-Maron_2000,,,TRUE
-Malofeev_2000,,,FALSE
-Kouwenhoven_2000,,,FALSE
-Giacani_2001,,,TRUE
-Kuzmin_2001,,,FALSE
-Manchester_2001,,,FALSE
-McGary_2001,,,TRUE
-Morris_2002,,,TRUE
-Esamdin_2004,,,TRUE
-Hobbs_2004a,,,TRUE
-Champion_2005a,,,TRUE
-Champion_2005b,,,FALSE
-Karastergiou_2005,,,FALSE
-Lorimer_2005,,,FALSE
-Johnston_2006,,,FALSE
-Crawford_2007,,,FALSE
-Kijak_2007,,,TRUE
-Deller_2009,,,FALSE
-Joshi_2009,,,FALSE
-Keith_2011,,,FALSE
-Kijak_2011,,,TRUE
-Lynch_2012,,,FALSE
-Boyles_2013,,,TRUE
-Demorest_2013,,,FALSE
-Dowell_2013,,,FALSE
-Manchester_2013,,,FALSE
-Zakharenko_2013,,,FALSE
-Dembska_2014,,,TRUE
-Stovall_2014,,,FALSE
-Dai_2015,,,TRUE
-Dembska_2015,,,FALSE
-Lazarus_2015,,,TRUE
-Ng_2015,,,TRUE
-Basu_2016,,,FALSE
-Bell_2016,,,FALSE
-Bhattacharyya_2016,,,TRUE
-Bilous_2016,,,FALSE
-Frail_2016,0.5,p6: ...thus the resulting flux density scale was quoted with errors of ??50%.,FALSE
-Han_2016,,,TRUE
-Kondratiev_2016,0.5,"p11: Comparing measured fluxes to spectra fit through the literature values, the authors estimate the uncertainty of a single LOFAR flux measurement as 50%. Thus, MSP fluxes reported here should also be used with this uncertainty.",FALSE
-Kijak_2017,,,FALSE
-Mignani_2017,,,FALSE
-Murphy_2017,,,TRUE
-Xue_2017,,,TRUE
-Zhao_2017,,,TRUE
-Basu_2018,,,FALSE
-Brinkman_2018,,,FALSE
-Gentile_2018,,,FALSE
-Jankowski_2018,,,TRUE
-Johnston_2018,,,FALSE
-RoZko_2018,,,FALSE
-Jankowski_2019,,,FALSE
-Kaur_2019,,,FALSE
-Sanidas_2019,,,FALSE
-Surnis_2019,,,FALSE
-Xie_2019,,,TRUE
-Zhang_2019,,,TRUE
-Zhao_2019,,,TRUE
-Bilous_2020,,,FALSE
-Bondonneau_2020,,,FALSE
-Crowter_2020,,,FALSE
-Curylo_2020,,,FALSE
-Michilli_2020,,,FALSE
-Tan_2020,,,FALSE
-Alam_2021,,,FALSE
-Bondonneau_2021,,,FALSE
-Han_2021,,,FALSE
-Johnston_2021,,,TRUE
-Shapiro_Albert_2021,,,FALSE
-Gordon_2021,0.15,p16: Flux density measurements  are underestimated by ?15% above 3 mJy beam?1 and may be less reliable below this.,FALSE
-Lee_2022,,,FALSE
-Spiewak_2022,,,TRUE
-Bhat_2023,,,TRUE
-Gitika_2023,,,TRUE
-Posselt_2023,,,TRUE
-Anumarlapudi_2023,0.18,"p5: We find that for most of the pulsars in our sample, the fractional error varies from 6% to 18% (the 16th and 84th percentiles).",FALSE
+REF,EFRAC,LOCATION
+McLean_1973,0.1,p165: ...the expected uncertainty due to scintillation is about 5 or 10 per cent in such a measurement.
+Sieber_1973,,
+Bartel_1978,,
+Manchester_1978a,,
+Izvekova_1981,,
+Dewey_1985,,
+Stokes_1985,,
+Stokes_1986,,
+Wolszczan_1992,,
+Malofeev_1993,,
+Camilo_1995,,
+Lorimer_1995b,,standard error (measurement error only)
+Manchester_1995,,
+Qiao_1995,,
+Seiradakis_1995,,
+Biggs_1996,,
+Manchester_1996,,
+Hoensbroech_1997,,
+Kramer_1997,,
+van_Ommen_1997,,
+Kijak_1998,,
+Kramer_1998,,
+Shrauner_1998,,
+Toscano_1998,,standard error (measurement error only)
+Han_1999,1,p575: They are generally within a factor of 2 of the published densities...
+Kramer_1999,,
+Stairs_1999,,
+Weisberg_1999,,
+Lommen_2000,0.5,(no more than 50%) p1008: We estimate the overall sensitivity of the search to be approximately 1 mJy.
+Maron_2000,0.5,"p197: We try to circumvent this unpleasant situation by estimating errors for the pulsar flux densities in our sample from published values, wherever available, and standard deviations of the average of single measurements."
+Malofeev_2000,,
+Kouwenhoven_2000,,
+Giacani_2001,,(measurement error only) p3134: The errors quoted include the rms noise of each image and the uncertainty in the choice of the integration boundaries.
+Kuzmin_2001,,
+Manchester_2001,,
+McGary_2001,,
+Morris_2002,,
+Esamdin_2004,,p951 (estimated using the modulation index)
+Hobbs_2004a,,
+Champion_2005a,,p930: The error is based on the standard deviation (s.d.) of the observed fluxes.
+Champion_2005b,,
+Karastergiou_2005,,
+Lorimer_2005,,
+Johnston_2006,,
+Crawford_2007,,
+Kijak_2007,,(standard deviation)
+Deller_2009,,
+Joshi_2009,,
+Keith_2011,,
+Kijak_2011,,p2: The estimated uncertainties include contributions from both the calibration procedure and the pulse energy estimation.
+Lynch_2012,,
+Boyles_2013,,
+Demorest_2013,,
+Dowell_2013,,
+Manchester_2013,,
+Zakharenko_2013,,
+Dembska_2014,,"p3106: Most sources in our sample have high DMs and hence the flux-density variations caused by interstellar scintillations should be minimal. Nevertheless, observations at each frequency (with a few exceptions) were conducted at two to three different epochs to give us reliable estimates of the average flux and its uncertainties, which are used to construct the spectra for these pulsars, in combination with flux-density data available from the literature."
+Stovall_2014,,
+Dai_2015,,p3230: The uncertainty of flux density is estimated as the baseline rms noise of the profile.
+Dembska_2015,,
+Lazarus_2015,,
+Ng_2015,,
+Basu_2016,,
+Bell_2016,,
+Bhattacharyya_2016,0.5,p11: The majority of the detections have observed flux densities within±50% of the expected values (marked by green shaded region).
+Bilous_2016,,
+Frail_2016,0.5,p6: ...thus the resulting flux density scale was quoted with errors of +-50%.
+Han_2016,,
+Kondratiev_2016,0.5,"p11: Comparing measured fluxes to spectra fit through the literature values, the authors estimate the uncertainty of a single LOFAR flux measurement as 50%. Thus, MSP fluxes reported here should also be used with this uncertainty."
+Kijak_2017,,
+Mignani_2017,,
+Murphy_2017,,
+Xue_2017,,"p5: The quoted errors on the flux densities (S185) are essentially the uncertainties from our estimation of S/N and hence largely reflect the quality of our detections. However, these errors do not account for large flux density variations arising from other substantial sources of error such as the calibration technique we adopted..."
+Zhao_2017,,standard error (measurement error only)
+Basu_2018,,
+Brinkman_2018,,
+Gentile_2018,,
+Jankowski_2018,,p4439 eq3
+Johnston_2018,,
+RoZko_2018,,
+Jankowski_2019,,
+Kaur_2019,,
+Sanidas_2019,,
+Surnis_2019,,
+Xie_2019,,
+Zhang_2019,,p2: The uncertainty of the flux density is estimated as the root-mean-square (rms) noise of the profile baseline.
+Zhao_2019,,
+Bilous_2020,,
+Bondonneau_2020,,
+Crowter_2020,,
+Curylo_2020,,
+Michilli_2020,,
+Tan_2020,,
+Alam_2021,,
+Bondonneau_2021,,
+Han_2021,,
+Johnston_2021,,
+Shapiro_Albert_2021,,
+Gordon_2021,0.15,p16: Flux density measurements are underestimated by ~15% above 3 mJy beam-1 and may be less reliable below this.
+Lee_2022,,
+Spiewak_2022,,p11: The error bars indicate the formal error on the means.
+Bhat_2023,,
+Gitika_2023,0.2,p3375: From our comparisons above we suspect that any systematic bias is at most 20 per cent.
+Posselt_2023,,
+Anumarlapudi_2023,0.18,"p5: We find that for most of the pulsars in our sample, the fractional error varies from 6% to 18% (the 16th and 84th percentiles)."
