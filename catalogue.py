@@ -136,6 +136,41 @@ class Catalogue:
     def __getitem__(self, item):
         return self.get_pulsar(item)
 
+    def by_jname_ref(self):
+        cat_dict_mod = {}
+        for jname, data in self.cat_dict.items():
+            cat_dict_mod[jname] = {}
+            for i in range(len(data['X'])):
+                x, y, yerr, ref = data['X'][i], data['Y'][i], data['YERR'][i], data['REF'][i]
+                if ref not in cat_dict_mod[jname]:
+                    cat_dict_mod[jname][ref] = {
+                        'X': [],
+                        'Y': [],
+                        'YERR': []
+                    }
+                cat_dict_mod[jname][ref]['X'].append(x)
+                cat_dict_mod[jname][ref]['Y'].append(y)
+                cat_dict_mod[jname][ref]['YERR'].append(yerr)
+        return cat_dict_mod
+
+    def by_ref_jname(self):
+        cat_dict_mod = {}
+        for jname, data in self.cat_dict.items():
+            for i in range(len(data['X'])):
+                x, y, yerr, ref = data['X'][i], data['Y'][i], data['YERR'][i], data['REF'][i]
+                if ref not in cat_dict_mod:
+                    cat_dict_mod[ref] = {}
+                if jname not in cat_dict_mod[ref]:
+                    cat_dict_mod[ref][jname] = {
+                        'X': [],
+                        'Y': [],
+                        'YERR': []
+                    }
+                cat_dict_mod[ref][jname]['X'].append(x)
+                cat_dict_mod[ref][jname]['Y'].append(y)
+                cat_dict_mod[ref][jname]['YERR'].append(yerr)
+        return cat_dict_mod
+
     def is_MSP(self, jname: str) -> bool:
         if jname not in self.cat_dict:
             return False
