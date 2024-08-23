@@ -87,6 +87,18 @@ class Dataset:
     def peak_frequency(self) -> float:
         return self.X[np.argmax(self.Y)]
 
+    def by_ref(self) -> dict:
+        ds_by_ref = {}
+        ref_set = list(set(self.REF))
+        for ref in ref_set:
+            indices = [i for i, r in enumerate(self.REF) if r == ref]
+            ds_by_ref[ref] = {
+                'X': self.X[indices],
+                'Y': self.Y[indices],
+                'YERR': self.YERR[indices],
+            }
+        return ds_by_ref
+
 
 class Catalogue:
     def __init__(self, cat_dict: dict, citation_dict: dict):

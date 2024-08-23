@@ -115,12 +115,14 @@ def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env,
 
     for g in np.unique(dataset.REF):
         ix = np.where(dataset.REF == g)
+        iy = np.where(np.array(labels) == 'e_{\mathrm{fac,\,' + g.replace('_', '\_') + '}}')
+        err_m = np.array(median)[iy]
 
-        if not env.args.aic and (env.args.efac or env.args.equad):
-            if env.args.efac:
-                err = dataset.YERR[ix] * env.args.efac
+        if not env.args.aic and (env.args.efac or env.args.equad or env.args.efac_qbound):
+            if env.args.efac or env.args.efac_qbound:
+                err = dataset.YERR[ix] * err_m
             if env.args.equad:
-                err = np.sqrt(dataset.YERR[ix]**2 + env.args.equad**2 * dataset.Y[ix]**2)
+                err = np.sqrt(dataset.YERR[ix]**2 + err_m**2 * dataset.Y[ix]**2)
 
             prop_cycle, prop_cycle_copy = itertools.tee(prop_cycle)
             eb = ax.errorbar(dataset.X[ix], dataset.Y[ix], yerr=err,

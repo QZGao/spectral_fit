@@ -87,15 +87,24 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
     priors = prior_translate(priors, dataset, env)
 
     # Add a prior for the systematic error
-    if env.args.efac or env.args.equad:
+    if env.args.efac or env.args.equad or env.args.efac_qbound:
         ref_set = list(set(dataset.REF))
-        for ref in ref_set:
-            if env.args.efac:
+        if env.args.efac_qbound:
+            by_ref = dataset.by_ref()
+            for ref in ref_set:
+                min_yerr_y = np.min(by_ref[ref]['YERR'] / by_ref[ref]['Y'])
+                efac_deduced = np.sqrt(1. + env.args.efac_qbound**2 / min_yerr_y**2)  # sqrt(original^2 + equad^2) = original * efac
                 labels.append('e_{\mathrm{fac,\,' + ref.replace('_', '\_') + '}}')
-                priors.append((1., env.args.efac, 'uniform'))
-            if env.args.equad:
-                labels.append('e_{\mathrm{quad,\,' + ref.replace('_', '\_') + '}}')
-                priors.append((0., env.args.equad, 'uniform'))
+                priors.append((1., efac_deduced, 'uniform'))
+        else:
+            for ref in ref_set:
+                if env.args.efac:
+                    labels.append('e_{\mathrm{fac,\,' + ref.replace('_', '\_') + '}}')
+                    priors.append((1., env.args.efac, 'uniform'))
+                if env.args.equad:
+                    labels.append('e_{\mathrm{quad,\,' + ref.replace('_', '\_') + '}}')
+                    priors.append((0., env.args.equad, 'uniform'))
+
 
     dres = None
     if not env.args.override and Path(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl').exists():
