@@ -62,16 +62,20 @@ def fit(jname: str, model_name: str, env: Env, dataset: Dataset = None, dataset_
         console.log(f"Error: {jname} {model_name}\n{e}\n{traceback.format_exc()}", style='red')
 
         # Clean up
-        if Path(f'{env.outdir}/{jname}/{model_name}_dres.pkl').exists():
-            Path(f'{env.outdir}/{jname}/{model_name}_dres.pkl').unlink()
-        if Path(f'{env.outdir}/{jname}/{model_name}_corner.png').exists():
-            Path(f'{env.outdir}/{jname}/{model_name}_corner.png').unlink()
-        if Path(f'{env.outdir}/{jname}/{model_name}_result.png').exists():
-            Path(f'{env.outdir}/{jname}/{model_name}_result.png').unlink()
-        if Path(f'{env.outdir}/{jname}/{model_name}_result.pdf').exists():
-            Path(f'{env.outdir}/{jname}/{model_name}_result.pdf').unlink()
-        if Path(f'{env.outdir}/{jname}/{model_name}_results.json').exists():
-            Path(f'{env.outdir}/{jname}/{model_name}_results.json').unlink()
+        # if Path(f'{env.outdir}/{jname}/{model_name}_dres.pkl').exists():
+        #     Path(f'{env.outdir}/{jname}/{model_name}_dres.pkl').unlink()
+        # if env.args.pdf:
+        #     if Path(f'{env.outdir}/{jname}/{model_name}_result.pdf').exists():
+        #         Path(f'{env.outdir}/{jname}/{model_name}_result.pdf').unlink()
+        #     if Path(f'{env.outdir}/{jname}/{model_name}_corner.png').exists():
+        #         Path(f'{env.outdir}/{jname}/{model_name}_corner.png').unlink()
+        # else:
+        #     if Path(f'{env.outdir}/{jname}/{model_name}_result.png').exists():
+        #         Path(f'{env.outdir}/{jname}/{model_name}_result.png').unlink()
+        #     if Path(f'{env.outdir}/{jname}/{model_name}_corner.png').exists():
+        #         Path(f'{env.outdir}/{jname}/{model_name}_corner.png').unlink()
+        # if Path(f'{env.outdir}/{jname}/{model_name}_results.json').exists():
+        #     Path(f'{env.outdir}/{jname}/{model_name}_results.json').unlink()
 
 
 def parse_args() -> Namespace:
@@ -124,6 +128,8 @@ def parse_args() -> Namespace:
     parser.add_argument("--outdir", help="Output directory")
     parser.add_argument('--override', help="Override finished jobs", action='store_true')
     parser.add_argument('--nproc', help="Number of processes", type=int, default=cpu_count() - 1 or 1)
+    parser.add_argument('--corner', help="Plot corner plot", action='store_true')
+    parser.add_argument('--pdf', help="Save the plot as a PDF file", action='store_true')
 
     return parser.parse_args()
 

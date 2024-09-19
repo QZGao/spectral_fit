@@ -1,4 +1,8 @@
 import numpy as np
+from matplotlib import pyplot as plt
+
+from catalogue import Dataset
+from env import Env
 
 
 # simple power law
@@ -76,6 +80,7 @@ def get_models(model_names: str | list, aic: bool = False, custom_p_b: tuple = N
 
     # Common parameters
     p_alpha = (-5., 5., 'uniform')  # Spectral index
+    p_alpha_half = (-5., 0., 'uniform')  # Spectral index
     p_beta = (0., 2.1, 'uniform')   # Smoothness of the turn-over
     p_b = (1e-2, 1e4, 'log_uniform')  # Scaling factor
     if custom_p_b:
@@ -87,25 +92,25 @@ def get_models(model_names: str | list, aic: bool = False, custom_p_b: tuple = N
             'name': 'simple power law',
             'model': simple_power_law,
             'labels': ['α', 'b'],
-            'priors': [p_alpha, p_b],
+            'priors': [p_alpha_half, p_b],
             'start_params': [-1.6, 100.],
-            'limits': [(-5., 5.), (0., None)],
+            'limits': [(-5., 0.), (0., None)],
         },
         'broken_power_law' : {
             'name': 'broken power law',
             'model': broken_power_law,
             'labels': ['ν_b', 'α_1', 'α_2', 'b'],
-            'priors': ['dynamic', p_alpha, p_alpha, p_b],
+            'priors': ['dynamic', p_alpha, p_alpha_half, p_b],
             'start_params': ['xmid', 2., -1.6, 100.],
-            'limits': ['dynamic', (-5., 5.), (-5., 5.), (0., None)],
+            'limits': ['dynamic', (-5., 5.), (-5., 0.), (0., None)],
         },
         'double_broken_power_law' : {
             'name': 'double broken power law',
             'model': double_broken_power_law,
             'labels': ['ν_{b1}', 'ν_{b2}', 'α_1', 'α_2', 'α_3', 'b'],
-            'priors': ['dynamic', 'dynamic', p_alpha, p_alpha, p_alpha, p_b],
+            'priors': ['dynamic', 'dynamic', p_alpha, p_alpha, p_alpha_half, p_b],
             'start_params': ['xmid', 'xmid', -1.6, -1.6, -1.6, 100.],
-            'limits': ['dynamic', 'dynamic', (-5., 5.), (-5., 5.), (-5., 5.), (0., None)],
+            'limits': ['dynamic', 'dynamic', (-5., 5.), (-5., 5.), (-5., 0.), (0., None)],
         },
         'log_parabolic_spectrum' : {
             'name': 'log-parabolic spectrum',
@@ -119,9 +124,9 @@ def get_models(model_names: str | list, aic: bool = False, custom_p_b: tuple = N
             'name': 'high-frequency cut-off power law',
             'model': high_frequency_cut_off_power_law,
             'labels': ['ν_c', 'α', 'b'],
-            'priors': ['dynamic_expanded', p_alpha, p_b],
+            'priors': ['dynamic_expanded', p_alpha_half, p_b],
             'start_params': ['xmax', -1.6, 1.],
-            'limits': ['dynamic_expanded', (-5., 5.), (0., None)],
+            'limits': ['dynamic_expanded', (-5., 0.), (0., None)],
         },
         # 'high_frequency_cut_off_power_law_jan' : {
         #     'name': 'high-frequency cut-off power law',
@@ -133,17 +138,17 @@ def get_models(model_names: str | list, aic: bool = False, custom_p_b: tuple = N
             'name': 'low-frequency turn-over power law',
             'model': low_frequency_turn_over_power_law,
             'labels': ['ν_c', 'α', 'b', 'β'],
-            'priors': ['dynamic', p_alpha, p_b, p_beta],
+            'priors': ['dynamic', p_alpha_half, p_b, p_beta],
             'start_params': ['xmid', -1.6, 100., 1.],
-            'limits': ['dynamic', (-5., 5.), (0., None) , (0., 2.1)],
+            'limits': ['dynamic', (-5., 0.), (0., None) , (0., 2.1)],
         },
         'double_turn_over_spectrum' : {
             'name': 'double turn-over spectrum',
             'model': double_turn_over_spectrum,
             'labels': ['ν_{c1}', 'ν_{c2}', 'α', 'β', 'b'],
-            'priors': ['dynamic_expanded', 'dynamic', p_alpha, p_beta, p_b],
+            'priors': ['dynamic_expanded', 'dynamic', p_alpha_half, p_beta, p_b],
             'start_params': ['xmax', 'xmid', -1.6, 100., 1.],
-            'limits': ['dynamic_expanded', 'dynamic', (-5., 5.), (0., 2.1), (0., None)],
+            'limits': ['dynamic_expanded', 'dynamic', (-5., 0.), (0., 2.1), (0., None)],
         },
     }
 
@@ -159,3 +164,33 @@ def get_models(model_names: str | list, aic: bool = False, custom_p_b: tuple = N
             model_dict.pop(model_name)
 
     return model_dict
+
+
+def is_good_fit(dataset: Dataset, params_dict: dict, fitted_model, env: Env) -> bool:
+    err = dataset.YERR.copy()
+    if env.args.efac or env.args.equad:  # Apply the error factors
+        ref_set = list(set(dataset.REF))
+        for ref in ref_set:
+            if env.args.efac:
+                err[dataset.REF == ref] *= params_dict['e_{\mathrm{fac,\,' + ref.replace('_', '\_') + '}}']
+            if env.args.equad:
+                err[dataset.REF == ref] = np.sqrt(
+                    err[dataset.REF == ref] ** 2 +
+                    params_dict['e_{\mathrm{quad,\,' + ref.replace('_', '\_') + '}}'] ** 2 * dataset.Y[dataset.REF == ref] ** 2
+                )
+    err = np.maximum(err, .5 * dataset.Y)  # lower bound for the error
+
+    fig, ax = plt.subplots()  # Create a dummy plot to calculate y limits
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+    ax.errorbar(dataset.X, dataset.Y, yerr=err, linestyle='None')
+    ylim = ax.get_ylim()  # y limits of the dummy plot
+    plt.close()
+
+    fitted_Y = np.maximum(fitted_model(dataset.X), ylim[0] * .1)
+    log_residuals = np.abs(np.log10(dataset.Y) - np.log10(fitted_Y))
+    log_half_errbar = .5 * (np.log10(dataset.Y + err) - np.log10(np.maximum(dataset.Y - err, 1e-10)))
+    n_outliers = np.sum(log_residuals / log_half_errbar > 3)
+    good_fit = (n_outliers / len(dataset)) <= .2  # no more than 20% outliers
+
+    return good_fit

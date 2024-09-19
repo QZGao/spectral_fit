@@ -7,6 +7,7 @@ from pulsar_spectra.spectral_fit import robust_cost_function, huber_loss_functio
 
 from catalogue import Dataset
 from env import Env
+from models import is_good_fit
 from plots import plot
 
 
@@ -63,6 +64,11 @@ def fit_aic(dataset: Dataset, model_name: str, env: Env, dataset_plot: Dataset =
         median.append(m.values[i])
         plus_minus.append(m.errors[i])
 
+    # Goodness of fit
+    params_dict = {k: v for k, v in zip(labels, median)}
+    fitted_model = lambda v: model(v, *median, dataset.v0)
+    good_fit = is_good_fit(dataset, params_dict, fitted_model, env)
+
     # Save the results
     with open(f'{env.outdir}/{dataset.jname}/{model_name}_results.json', 'w', encoding='utf-8-sig') as f:
         json.dump({
@@ -76,6 +82,7 @@ def fit_aic(dataset: Dataset, model_name: str, env: Env, dataset_plot: Dataset =
             'params': labels,
             'start_params': env.model_dict[model_name]['start_params'],
             'limits': env.model_dict[model_name]['limits'],
+            'good_fit': str(good_fit),
         }, f, ensure_ascii=False, indent=4)
 
     # Plots
@@ -87,6 +94,7 @@ def fit_aic(dataset: Dataset, model_name: str, env: Env, dataset_plot: Dataset =
         param_estimates=(median, plus_minus),
         iminuit_result=m,
         aic=aic,
+        good_fit=good_fit,
         outpath=f'{env.outdir}/{dataset.jname}/{model_name}_result',
         env=env,
     )

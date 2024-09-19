@@ -21,7 +21,7 @@ def sci_notation(num: float):
     return f"{{{significand} \\times 10^{{{exponent}}}}}"
 
 
-def plot_corner(samples, labels, priors, outpath: str = None, show: bool = False):
+def plot_corner(samples, labels, priors, env: Env, outpath: str = None, show: bool = False):
     corner_params = {
         'bins': 100,
         'smooth': 0.9,
@@ -48,7 +48,10 @@ def plot_corner(samples, labels, priors, outpath: str = None, show: bool = False
         fig, axes = plt.subplots(len(labels), len(labels), figsize=(3*len(labels), 3*len(labels)))
         corner(samples, fig=fig, range=[(p[0], p[1]) for p in priors], **corner_params)
     if outpath:
-        plt.savefig(outpath + '.png', dpi=300, bbox_inches='tight')
+        if env.args.pdf:
+            plt.savefig(outpath + '.pdf', bbox_inches='tight')
+        else:
+            plt.savefig(outpath + '.png', dpi=300, bbox_inches='tight')
     if show:
         plt.show()
     plt.close()
@@ -97,7 +100,7 @@ def plot_raw(dataset, citation_dict: dict, outpath: str = None, show: bool = Tru
     plt.close()
 
 
-def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env,
+def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env, good_fit: bool,
          param_estimates=None, samples=None, log_evidence=None, log_evidence_err=None,
          iminuit_result=None, aic=None, display_info=True):
     fig, ax = plt.subplots(figsize=(5*4/3, 5))
@@ -115,16 +118,18 @@ def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env,
 
     for g in np.unique(dataset.REF):
         ix = np.where(dataset.REF == g)
-        iy = np.where(np.array(labels) == 'e_{\mathrm{fac,\,' + g.replace('_', '\_') + '}}')
-        err_m = np.array(median)[iy]
-
         if not env.args.aic and (env.args.efac or env.args.equad or env.args.efac_qbound):
-            if env.args.efac or env.args.efac_qbound:
-                err = dataset.YERR[ix] * err_m
             if env.args.equad:
+                iy = np.where(np.array(labels) == 'e_{\mathrm{quad,\,' + g.replace('_', '\_') + '}}')
+                err_m = np.array(median)[iy]
                 err = np.sqrt(dataset.YERR[ix]**2 + err_m**2 * dataset.Y[ix]**2)
+            else:
+                iy = np.where(np.array(labels) == 'e_{\mathrm{fac,\,' + g.replace('_', '\_') + '}}')
+                err_m = np.array(median)[iy]
+                err = dataset.YERR[ix] * err_m
 
             prop_cycle, prop_cycle_copy = itertools.tee(prop_cycle)
+
             eb = ax.errorbar(dataset.X[ix], dataset.Y[ix], yerr=err,
                         linestyle='None',
                         mec='k',
@@ -134,6 +139,7 @@ def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env,
                         label='_nolegend_',
                         alpha=0.5,
                         **next(prop_cycle_copy))
+
             # Set the line dashed
             eb[-1][0].set_linestyle('--')
 
@@ -181,10 +187,12 @@ def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env,
         band.line(color='tab:orange', marker='', linewidth=1)
         band.shade(color='tab:orange', alpha=0.2)
 
+    good_fit_mask = '✔' if good_fit else '✖'
+
     if env.args.aic:
-        fit_info = f"{model_name_cap}\n$\\mathrm{{AIC}} = {aic:.2f}$"
+        fit_info = f"{good_fit_mask} {model_name_cap}\n$\\mathrm{{AIC}} = {aic:.2f}$"
     else:
-        fit_info = f"{model_name_cap}\n$\ln z = {log_evidence:.2f} \pm {log_evidence_err:.2f}$"
+        fit_info = f"{good_fit_mask} {model_name_cap}\n$\ln z = {log_evidence:.2f} \pm {log_evidence_err:.2f}$"
     for i in range(len(labels)):
         if labels[i].startswith('e'):
             continue
@@ -216,8 +224,10 @@ def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env,
     # Legend below the plot
     ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=2, frameon=False)
 
-    plt.savefig(outpath + '.png', dpi=300, bbox_inches='tight')
-    plt.savefig(outpath + '.pdf', bbox_inches='tight')
+    if env.args.pdf:
+        plt.savefig(outpath + '.pdf', bbox_inches='tight')
+    else:
+        plt.savefig(outpath + '.png', dpi=300, bbox_inches='tight')
     plt.close()
 
 

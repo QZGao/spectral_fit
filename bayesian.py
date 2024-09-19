@@ -6,11 +6,13 @@ import numpy as np
 from dynesty import DynamicNestedSampler
 from dynesty.utils import quantile as _quantile
 from dynesty.utils import resample_equal
+from matplotlib import pyplot as plt
 from scipy.special import logsumexp
 import scipy.stats as ss
 
 from catalogue import Dataset
 from env import Env
+from models import is_good_fit
 from plots import plot_corner, plot
 
 
@@ -95,7 +97,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
                 min_yerr_y = np.min(by_ref[ref]['YERR'] / by_ref[ref]['Y'])
                 efac_deduced = np.sqrt(1. + env.args.efac_qbound**2 / min_yerr_y**2)  # sqrt(original^2 + equad^2) = original * efac
                 labels.append('e_{\mathrm{fac,\,' + ref.replace('_', '\_') + '}}')
-                priors.append((1., efac_deduced, 'uniform'))
+                priors.append((1., efac_deduced, 'log_uniform'))
         else:
             for ref in ref_set:
                 if env.args.efac:
@@ -149,6 +151,11 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
     plus = (np.array(upper) - np.array(median)).tolist()
     minus = (np.array(median) - np.array(lower)).tolist()
 
+    # Goodness of fit
+    params_dict = {k: v for k, v in zip(labels, median)}
+    fitted_model = lambda v: model(v, params_dict, dataset.v0)
+    good_fit = is_good_fit(dataset, params_dict, fitted_model, env)
+
     # Save the results
     with open(f'{env.outdir}/{dataset.jname}/{model_name}_results.json', 'w', encoding='utf-8-sig') as f:
         json.dump({
@@ -163,16 +170,19 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
             'model': model_name,
             'params': labels,
             'priors': np.array(priors).tolist(),
+            'good_fit': str(good_fit),
             # Format changed to numpy.int32 by dynesty, so convert them back for JSON compatibility
         }, f, ensure_ascii=False, indent=4)
 
     # Plots
-    plot_corner(
-        samples=samp_all,
-        labels=labels,
-        priors=priors,
-        outpath=f'{env.outdir}/{dataset.jname}/{model_name}_corner',
-    )
+    if env.args.corner:
+        plot_corner(
+            samples=samp_all,
+            labels=labels,
+            priors=priors,
+            env=env,
+            outpath=f'{env.outdir}/{dataset.jname}/{model_name}_corner',
+        )
     plot(
         dataset=dataset if dataset_plot is None else dataset_plot,
         model=model,
@@ -182,6 +192,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
         param_estimates=(median, plus, minus),
         log_evidence=log_evidence,
         log_evidence_err=log_evidence_err,
+        good_fit=good_fit,
         outpath=f'{env.outdir}/{dataset.jname}/{model_name}_result',
         env=env,
         display_info=dataset_plot is None,
