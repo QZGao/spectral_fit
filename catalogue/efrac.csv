@@ -63,7 +63,7 @@ Lazarus_2015,,
 Ng_2015,,
 Basu_2016,,
 Bell_2016,,
-Bhattacharyya_2016,0.5,p11: The majority of the detections have observed flux densities within±50% of the expected values (marked by green shaded region).
+Bhattacharyya_2016,0.5,p11: The majority of the detections have observed flux densities within�����50% of the expected values (marked by green shade
 Bilous_2016,,
 Frail_2016,0.5,p6: ...thus the resulting flux density scale was quoted with errors of +-50%.
 Han_2016,,
@@ -104,3 +104,20 @@ Bhat_2023,,
 Gitika_2023,0.2,p3375: From our comparisons above we suspect that any systematic bias is at most 20 per cent.
 Posselt_2023,,
 Anumarlapudi_2023,0.18,"p5: We find that for most of the pulsars in our sample, the fractional error varies from 6% to 18% (the 16th and 84th percentiles)."
+,,
+Bailes_1994,,50% by pulsar-spectra
+Camilo_1996,,Some were given errors; others 50% by pulsar-spectra
+Champion_2008,,
+Fruchter_1988,,
+Fruchter_1990,,
+Hessels_2011,,
+Keith_2024,,
+Kijak_1997,,
+Kowalinska_2012,,
+Kumar_2025,,
+Levin_2016,,
+Maron_2004,,
+Navarro_1995,,
+Slee_1986,,
+Wang_2024,,
+Wielebinski_1993,,

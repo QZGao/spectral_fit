@@ -8,7 +8,7 @@ numpy>=1.13.3
 pandas>=2.0.1
 pebble>=4.6.0
 psrqpy>=1.2.4
-pulsar-spectra==2.0.4
+pulsar-spectra==2.1.0
 rich>=13.3.5
 scipy>=1.10.1
 ultranest>=3.5.7

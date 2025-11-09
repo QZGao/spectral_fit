@@ -392,12 +392,6 @@ class Catalogue:
                 self.extend(row['PSRJ'], 325., float(row['S325']), np.sqrt(float(row['E1_S325'])**2 + float(row['E2_S325'])**2), 'Kouwenhoven_2000')
             print('Kouwenhoven_2000: Corrected measurements from Kouwenhoven et al. (2000).')
 
-        # Remove incorrect data from Johnston & Kerr (2018)
-        # https://github.com/NickSwainston/pulsar_spectra/issues/93
-        if 'J1842-0359' in self.cat_dict and 'Johnston_2018' in self.cat_dict['J1842-0359']['REF']:
-            self.remove_refs_from_pulsar('J1842-0359', 'Johnston_2018')
-            print('Johnston_2018: Removed incorrect data for J1842-0359 (0.01 mJy, class "N") from Johnston & Kerr (2018).')
-
         # Add data from Spiewak et al. (2022)
         # pulsar_spectra uses the data from Table 1 of the paper, but we can use the supporting data published by the author
         # https://github.com/NickSwainston/pulsar_spectra/pull/56/commits/824371ddcb3190ff1ddfd7bd22e07d0d39db3544

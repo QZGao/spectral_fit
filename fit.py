@@ -117,7 +117,7 @@ def parse_args() -> Namespace:
     # 3) Use additional systematic error
     parser.add_argument('--equad', help="Add an additional systematic error", type=float)
     parser.add_argument('--efac', help="Multiply by a systematic error factor", type=float)
-    parser.add_argument('--efac_qbound', help="Multiple by a systematic error factor that is determinied by equad bound", type=float)
+    parser.add_argument('--efac_qbound', help="Multiply by a systematic error factor that is determined by equad bound", type=float)
 
     # Jan et al. (2018)'s method, a.k.a. AIC method in pulsar_spectra
     parser.add_argument('--aic', help="Use Jankowski et al. (2018)'s method instead", action='store_true')
