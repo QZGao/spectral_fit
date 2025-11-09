@@ -127,6 +127,8 @@ def parse_args() -> Namespace:
     parser.add_argument('--label', help="Output directory label (when --outdir is not set)")
     parser.add_argument("--outdir", help="Output directory")
     parser.add_argument('--override', help="Override finished jobs", action='store_true')
+    parser.add_argument("--checkpoint", help="Save pickle dump file", type=bool, default=True)
+    parser.add_argument("--plot", help="Plot results", type=bool, default=True)
     parser.add_argument('--nproc', help="Number of processes", type=int, default=cpu_count() - 1 or 1)
     parser.add_argument('--corner', help="Plot corner plot", action='store_true')
     parser.add_argument('--pdf', help="Save the plot as a PDF file", action='store_true')

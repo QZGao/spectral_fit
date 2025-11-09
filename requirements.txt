@@ -5,7 +5,7 @@ iminuit>=2.11.1
 jacobi>=0.9.2
 matplotlib>=3.4.0,<3.8.0
 numpy>=1.13.3
-pandas>=2.0.1
+pandas<2
 pebble>=4.6.0
 psrqpy>=1.2.4
 pulsar-spectra==2.1.0

@@ -109,7 +109,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
 
 
     dres = None
-    if not env.args.override and Path(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl').exists():
+    if not env.args.override and env.args.checkpoint and Path(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl').exists():
         try:
             with open(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl', 'rb') as f:
                 dres = pickle.load(f)
@@ -131,8 +131,9 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
         )
 
         dres = sampler.results
-        with open(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl', 'wb') as f:
-            pickle.dump(dres, f)
+        if env.args.checkpoint:
+            with open(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl', 'wb') as f:
+                pickle.dump(dres, f)
 
     weights = np.exp(dres['logwt'] - dres['logz'][-1])
     samp_all = resample_equal(dres.samples, weights)
@@ -175,25 +176,26 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
         }, f, ensure_ascii=False, indent=4)
 
     # Plots
-    if env.args.corner:
-        plot_corner(
-            samples=samp_all,
+    if env.args.plot:
+        if env.args.corner:
+            plot_corner(
+                samples=samp_all,
+                labels=labels,
+                priors=priors,
+                env=env,
+                outpath=f'{env.outdir}/{dataset.jname}/{model_name}_corner',
+            )
+        plot(
+            dataset=dataset if dataset_plot is None else dataset_plot,
+            model=model,
+            model_name_cap=env.model_dict[model_name]['name'],
             labels=labels,
-            priors=priors,
+            samples=samp_all,
+            param_estimates=(median, plus, minus),
+            log_evidence=log_evidence,
+            log_evidence_err=log_evidence_err,
+            good_fit=good_fit,
+            outpath=f'{env.outdir}/{dataset.jname}/{model_name}_result',
             env=env,
-            outpath=f'{env.outdir}/{dataset.jname}/{model_name}_corner',
+            display_info=dataset_plot is None,
         )
-    plot(
-        dataset=dataset if dataset_plot is None else dataset_plot,
-        model=model,
-        model_name_cap=env.model_dict[model_name]['name'],
-        labels=labels,
-        samples=samp_all,
-        param_estimates=(median, plus, minus),
-        log_evidence=log_evidence,
-        log_evidence_err=log_evidence_err,
-        good_fit=good_fit,
-        outpath=f'{env.outdir}/{dataset.jname}/{model_name}_result',
-        env=env,
-        display_info=dataset_plot is None,
-    )
