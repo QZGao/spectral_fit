@@ -83,6 +83,9 @@ def prior_translate(priors, dataset: Dataset, env: Env) -> list:
 
 
 def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Dataset = None, output: bool = False):
+    outdir_path = Path(env.outdir) / dataset.jname
+    outdir_path.mkdir(parents=True, exist_ok=True)
+
     model = env.model_dict[model_name]['model']
     labels = env.model_dict[model_name]['labels'].copy()
     priors = env.model_dict[model_name]['priors'].copy()
@@ -109,9 +112,9 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
 
 
     dres = None
-    if not env.args.override and not env.args.no_checkpoint and Path(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl').exists():
+    if not env.args.override and not env.args.no_checkpoint and Path(str(outdir_path / f'{model_name}_dres.pkl')).exists():
         try:
-            with open(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl', 'rb') as f:
+            with open(str(outdir_path / f'{model_name}_dres.pkl'), 'rb') as f:
                 dres = pickle.load(f)
         except:
             print(f'Failed to load {env.outdir}/{dataset.jname}/{model_name}_dres.pkl')
@@ -132,7 +135,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
 
         dres = sampler.results
         if not env.args.no_checkpoint:
-            with open(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl', 'wb') as f:
+            with open(str(outdir_path / f'{model_name}_dres.pkl'), 'wb') as f:
                 pickle.dump(dres, f)
 
     weights = np.exp(dres['logwt'] - dres['logz'][-1])
@@ -158,7 +161,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
     good_fit = is_good_fit(dataset, params_dict, fitted_model, env)
 
     # Save the results
-    with open(f'{env.outdir}/{dataset.jname}/{model_name}_results.json', 'w', encoding='utf-8-sig') as f:
+    with open(str(outdir_path / f'{model_name}_results.json'), 'w', encoding='utf-8-sig') as f:
         json.dump({
             'log_evidence': float(log_evidence),
             'log_evidence_err': float(log_evidence_err),
@@ -183,7 +186,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
                 labels=labels,
                 priors=priors,
                 env=env,
-                outpath=f'{env.outdir}/{dataset.jname}/{model_name}_corner',
+                outpath=str(outdir_path / f'{model_name}_corner'),
             )
         plot(
             dataset=dataset if dataset_plot is None else dataset_plot,
@@ -195,7 +198,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
             log_evidence=log_evidence,
             log_evidence_err=log_evidence_err,
             good_fit=good_fit,
-            outpath=f'{env.outdir}/{dataset.jname}/{model_name}_result',
+            outpath=str(outdir_path / f'{model_name}_result'),
             env=env,
             display_info=dataset_plot is None,
         )
