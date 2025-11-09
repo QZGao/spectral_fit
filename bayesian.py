@@ -109,7 +109,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
 
 
     dres = None
-    if not env.args.override and env.args.checkpoint and Path(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl').exists():
+    if not env.args.override and env.args.no_checkpoint and Path(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl').exists():
         try:
             with open(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl', 'rb') as f:
                 dres = pickle.load(f)
@@ -131,7 +131,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
         )
 
         dres = sampler.results
-        if env.args.checkpoint:
+        if env.args.no_checkpoint:
             with open(f'{env.outdir}/{dataset.jname}/{model_name}_dres.pkl', 'wb') as f:
                 pickle.dump(dres, f)
 
@@ -176,7 +176,7 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
         }, f, ensure_ascii=False, indent=4)
 
     # Plots
-    if env.args.plot:
+    if env.args.no_plot:
         if env.args.corner:
             plot_corner(
                 samples=samp_all,
