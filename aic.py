@@ -3,6 +3,7 @@
 # https://github.com/NickSwainston/pulsar_spectra
 
 import json
+from pathlib import Path
 
 import numpy as np
 from iminuit import Minuit
@@ -16,6 +17,9 @@ from plots import plot
 
 
 def fit_aic(dataset: Dataset, model_name: str, env: Env, dataset_plot: Dataset = None, output: bool = False):
+    outdir_path = Path(env.outdir) / dataset.jname
+    outdir_path.mkdir(parents=True, exist_ok=True)
+
     model = env.model_dict[model_name]['model']
     labels = env.model_dict[model_name]['labels']
     start_params = env.model_dict[model_name]['start_params'].copy()
@@ -74,7 +78,7 @@ def fit_aic(dataset: Dataset, model_name: str, env: Env, dataset_plot: Dataset =
     good_fit = is_good_fit(dataset, params_dict, fitted_model, env)
 
     # Save the results
-    with open(f'{env.outdir}/{dataset.jname}/{model_name}_results.json', 'w', encoding='utf-8-sig') as f:
+    with open(str(outdir_path / f'{model_name}_results.json'), 'w', encoding='utf-8-sig') as f:
         json.dump({
             'aic': aic,
             'param_estimates': {
@@ -90,15 +94,16 @@ def fit_aic(dataset: Dataset, model_name: str, env: Env, dataset_plot: Dataset =
         }, f, ensure_ascii=False, indent=4)
 
     # Plots
-    plot(
-        dataset=dataset if dataset_plot is None else dataset_plot,
-        model=model,
-        model_name_cap=env.model_dict[model_name]['name'],
-        labels=labels,
-        param_estimates=(median, plus_minus),
-        iminuit_result=m,
-        aic=aic,
-        good_fit=good_fit,
-        outpath=f'{env.outdir}/{dataset.jname}/{model_name}_result',
-        env=env,
-    )
+    if not env.args.no_plot:
+        plot(
+            dataset=dataset if dataset_plot is None else dataset_plot,
+            model=model,
+            model_name_cap=env.model_dict[model_name]['name'],
+            labels=labels,
+            param_estimates=(median, plus_minus),
+            iminuit_result=m,
+            aic=aic,
+            good_fit=good_fit,
+            outpath=str(outdir_path / f'{model_name}_result'),
+            env=env,
+        )

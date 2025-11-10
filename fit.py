@@ -51,8 +51,6 @@ def fit(jname: str, model_name: str, env: Env, dataset: Dataset = None, dataset_
             console.log(f'{jname} {model_name}: Not enough data points to calculate AIC.', style='yellow')
             return
 
-        Path(f'{env.outdir}/{jname}').mkdir(parents=True, exist_ok=True)
-
         if env.args.aic:
             fit_aic(dataset, model_name, env=env, dataset_plot=dataset_plot, output=output)
         else:

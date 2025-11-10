@@ -1,6 +1,10 @@
 # Pulsar spectrum fitting
 
-This repository contains code to fit pulsar radio spectra using Bayesian methods. The dataset is based on a compilation of literature data, including the latest `pulsar-spectra` catalogue (version 2.1.0) and a set of additional recent measurements. The fitting methods include various spectral models and options for handling outliers and systematic uncertainties.
+This repository contains code to fit pulsar radio spectra using Bayesian methods.
+
+The dataset is based on a compilation of literature data, including the latest `pulsar-spectra` catalogue (version 2.1.0) and a set of additional recent measurements.
+
+The fitting methods include various spectral models and options for handling outliers and systematic uncertainties. Although most of the options are not used in the paper, they present our attempts to improve the fitting process and account for data issues.
 
 ## Installation
 
@@ -59,6 +63,7 @@ Systematic error / extra uncertainty parameters:
 AIC / Jankowski et al. (2018) method:
 * `--aic`: Use Jankowski et al. (2018)'s AIC-based method instead of the Bayesian fit (flag, default: False). Code is adapted from `pulsar-spectra`.
 * `--aic_no_corr`: Do not apply the small-sample correction term in the AIC calculation (flag, default: False).
+* Note: none of the following parameters apply to the AIC method: `--fixed_freq_prior`, `--gaussian`, `--gaussian_patch`, `--outliers_rm`, `--outliers_min`, `--outliers_min_plus`, `--outliers_all`, `--equad`, `--efac`, `--efac_qbound`, `--no_checkpoint`, `--corner`.
 
 Output, multiprocessing and plotting:
 * `--label <label>`: Output directory label (used when `--outdir` is not set).
@@ -69,14 +74,14 @@ Output, multiprocessing and plotting:
 * `--no_plot`: Do not create result plots (flag, default: False).
 * `--corner`: Generate a corner plot (flag, default: False).
 * `--pdf`: Save plots as PDF instead of PNG (flag, default: False).
-* `--print_lit`: Print literature list and save it to the output directory (flag, default: False).
+* `--print_lit`: Print literature list and save it to the output directory (flag, default: False). Exits the program after printing without performing any fitting.
 
 ### Processing fitted results
 
 Extract variables from the output files:
 ```bash
 python processing.py <output_dir>              # default variable is 'log_evidence'
-python processing.py <output_dir> --var "aic"  # extract AIC values
+python processing.py <output_dir> --var "aic"  # extract AIC values (if AIC method was used)
 ```
 
 Extract estimated parameter values (including errors) from the output files:
@@ -89,3 +94,4 @@ Extract frequency-flux plots from the output files (`<filter>` can be a list of 
 python processing.py <output_dir> --plot <filter>           # default format to be extracted is "png"
 python processing.py <output_dir> --plot <filter> --plot_format "pdf" # specify format
 ```
+

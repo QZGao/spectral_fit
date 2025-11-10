@@ -130,7 +130,8 @@ class Catalogue:
                 # Set minimum YERR / Y
                 if args.outliers_min:
                     if args.outliers_min_plus:
-                        YERR = np.where(YERR / Y < args.outliers_min, np.sqrt(Y ** 2 * args.outliers_min_plus ** 2 + YERR ** 2), YERR)
+                        YERR = np.where(YERR / Y < args.outliers_min,
+                                        np.sqrt(Y ** 2 * args.outliers_min_plus ** 2 + YERR ** 2), YERR)
                     else:
                         YERR = np.where(YERR / Y < args.outliers_min, args.outliers_min * Y, YERR)
 
@@ -389,7 +390,8 @@ class Catalogue:
             kouwenhoven_df = pd.read_csv('catalogue/Kouwenhoven_2000_data.csv')
             self.remove_refs('Kouwenhoven_2000')
             for _, row in kouwenhoven_df.iterrows():
-                self.extend(row['PSRJ'], 325., float(row['S325']), np.sqrt(float(row['E1_S325'])**2 + float(row['E2_S325'])**2), 'Kouwenhoven_2000')
+                self.extend(row['PSRJ'], 325., float(row['S325']),
+                            np.sqrt(float(row['E1_S325']) ** 2 + float(row['E2_S325']) ** 2), 'Kouwenhoven_2000')
             print('Kouwenhoven_2000: Corrected measurements from Kouwenhoven et al. (2000).')
 
         # Add data from Spiewak et al. (2022)
@@ -444,19 +446,18 @@ class Catalogue:
                     yerr.append(float(row['e_S3000']))
                     ref.append('Gordon_2021')
                 self.extend(jname, x, y, yerr, ref)
-            print('Anumarlapudi_2023 & Gordon_2021: Manually added measurements of 8 frequency channels from Anumarlapudi et al. (2023) and Gordon et al. (2021).')
+            print(
+                'Anumarlapudi_2023 & Gordon_2021: Manually added measurements of 8 frequency channels from Anumarlapudi et al. (2023) and Gordon et al. (2021).')
 
         # Apply added fractional error based on the declarement of the authors
         # efrac_df = pd.read_csv('catalogue/efrac.csv')
         # for _, row in efrac_df.iterrows():
         #     if not np.isnan(float(row['EFRAC'])):
         #         self.apply_efrac_to_ref(row['REF'], float(row['EFRAC']))
-            # print(f'{row["REF"]}: Applied additional fractional error of {row["EFRAC"]} to the flux densities.')
-
+        # print(f'{row["REF"]}: Applied additional fractional error of {row["EFRAC"]} to the flux densities.')
 
     def keys(self):
         return self.cat_dict.keys()
-
 
     def items(self):
         return self.cat_dict.items()
@@ -640,7 +641,7 @@ def get_catalogue(outdir: str = None, refresh: bool = False, lit_set: str | list
             jan_df = pd.read_csv(f)
         jan_jnames = jan_df['PSRJ'].values.tolist()
         catalogue = (collect_catalogue_from_ATNF(jname_list=jan_jnames, atnf_ver=atnf_ver) +
-               collect_catalogue(custom_lit=JANKOWSKI_LITERATURE_SET, jname_list=jan_jnames))
+                     collect_catalogue(custom_lit=JANKOWSKI_LITERATURE_SET, jname_list=jan_jnames))
 
     else:
         catalogue = collect_catalogue_from_ATNF(atnf_ver=atnf_ver, p_only=not atnf)
@@ -679,8 +680,8 @@ def get_catalogue_from_args(args: Namespace) -> Catalogue:
 
 
 DEFAULT_LITERATURE_SET = [
+    # `pulsar-spectra` v2.0.4 catalogue
     'McLean_1973',
-    'Sieber_1973',  # Added
     'Bartel_1978',
     'Manchester_1978a',
     'Izvekova_1981',
@@ -708,7 +709,6 @@ DEFAULT_LITERATURE_SET = [
     'Stairs_1999',
     'Weisberg_1999',
     'Lommen_2000',
-    'Maron_2000',  # Added
     'Malofeev_2000',
     'Kouwenhoven_2000',  # Replaced
     'Giacani_2001',
@@ -757,7 +757,7 @@ DEFAULT_LITERATURE_SET = [
     'Brinkman_2018',
     'Gentile_2018',
     'Jankowski_2018',
-    'Johnston_2018',  # Modified
+    'Johnston_2018',  # Modified (fixed in v2.1.0)
     'RoZko_2018',
     'Jankowski_2019',
     'Kaur_2019',
@@ -777,14 +777,37 @@ DEFAULT_LITERATURE_SET = [
     'Han_2021',
     'Johnston_2021',
     'Shapiro_Albert_2021',
-    'Gordon_2021',  # Added
     'Lee_2022',
     'Spiewak_2022',  # Replaced
     'Bhat_2023',
     'Gitika_2023',
-    'Posselt_2023',  # Added
-    'Anumarlapudi_2023'  # Added
+
+    # `pulsar-spectra` v2.1.0 additions
+    'Kumar_2025',
+    'Bailes_1994',
+    'Camilo_1996',
+    'Champion_2008',
+    'Fruchter_1988',
+    'Fruchter_1990',
+    'Hessels_2011',
+    'Keith_2024',
+    'Kijak_1997',
+    'Kowalinska_2012',
+    'Levin_2016',
+    'Maron_2004',
+    'Navarro_1995',
+    'Slee_1986',
+    'Wang_2024',
+    'Wielebinski_1993',
+
+    # Supplementary additions
+    'Sieber_1973',
+    'Maron_2000',
+    'Gordon_2021',
+    'Posselt_2023',
+    'Anumarlapudi_2023'
 ]
+
 IMAGING_SURVEYS_LITERATURE_SET = [
     'Kouwenhoven_2000',
     'McGary_2001',
@@ -795,6 +818,7 @@ IMAGING_SURVEYS_LITERATURE_SET = [
     'Gordon_2021',
     'Anumarlapudi_2023'
 ]
+
 DEFAULT_LITERATURE_CITATIONS = {
     'Sieber_1973': 'Sieber (1973)',
     'McLean_1973': 'McLean (1973)',
@@ -804,12 +828,17 @@ DEFAULT_LITERATURE_CITATIONS = {
     'Dewey_1985': 'Dewey et al. (1985)',
     'Stokes_1985': 'Stokes et al. (1985)',
     'Stokes_1986': 'Stokes et al. (1986)',
+    'Slee_1986': 'Slee et al. (1986)',
+    'Fruchter_1988': 'Fruchter et al. (1988)',
+    'Fruchter_1990': 'Fruchter et al. (1990)',
     'McConnell_1991': 'McConnell et al. (1991)',
     'Johnston_1992': 'Johnston et al. (1992)',
     'Wolszczan_1992': 'Wolszczan & Frail (1992)',
     'Johnston_1993': 'Johnston et al. (1993)',
     'Malofeev_1993': 'Malofeev (1993)',
     'Manchester_1993': 'Manchester et al. (1993)',
+    'Wielebinski_1993': 'Wielebinski et al. (1993)',
+    'Bailes_1994': 'Bailes et al. (1994)',
     'Camilo_1995': 'Camilo & Nice (1995)',
     'Lorimer_1995': 'Lorimer et al. (1995)',
     'Lorimer_1995b': 'Lorimer et al. (1995)',
@@ -819,16 +848,19 @@ DEFAULT_LITERATURE_CITATIONS = {
     'Qiao_1995': 'Qiao et al. (1995)',
     'Robinson_1995': 'Robinson et al. (1995)',
     'Seiradakis_1995': 'Seiradakis et al. (1995)',
+    'Navarro_1995': 'Navarro et al. (1995)',
     'Biggs_1996': 'Biggs & Lyne (1996)',
     'Lorimer_1996': 'Lorimer et al. (1996)',
     'Manchester_1996': 'Manchester et al. (1996)',
     'Zepka_1996': 'Zepka et al. (1996)',
+    'Camilo_1996': 'Camilo et al. (1996)',
     'Bailes_1997': 'Bailes et al. (1997)',
     'Hoensbroech_1997': 'von Hoensbroech & Xilouris (1997)',
     'Kaspi_1997': 'Kaspi et al. (1997)',
     'Kramer_1997': 'Kramer et al. (1997)',
     'Sayer_1997': 'Sayer et al. (1997)',
     'van_Ommen_1997': 'van Ommen et al. (1997)',
+    'Kijak_1997': 'Kijak et al. (1997)',
     'Kijak_1998': 'Kijak et al. (1998)',
     'Kramer_1998': 'Kramer et al. (1998)',
     'Shrauner_1998': 'Shrauner et al. (1998)',
@@ -851,6 +883,7 @@ DEFAULT_LITERATURE_CITATIONS = {
     'Esamdin_2004': 'Esamdin et al. (2004)',
     'Hobbs_2004a': 'Hobbs et al. (2004)',
     'Lewandowski_2004': 'Lewandowski et al. (2004)',
+    'Maron_2004': 'Maron et al. (2004)',
     'Champion_2005a': 'Champion et al. (2005)',
     'Champion_2005b': 'Champion (2005)',
     'Karastergiou_2005': 'Karastergiou et al. (2005)',
@@ -862,14 +895,17 @@ DEFAULT_LITERATURE_CITATIONS = {
     'Kijak_2007': 'Kijak et al. (2007)',
     'Lorimer_2007': 'Lorimer et al. (2007)',
     'Stappers_2008': 'Stappers et al. (2008)',
+    'Champion_2008': 'Champion et al. (2008)',
     'Deller_2009': 'Deller et al. (2009)',
     'Janssen_2009': 'Janssen et al. (2009)',
     'Joshi_2009': 'Joshi et al. (2009)',
     'Bates_2011': 'Bates et al. (2011)',
     'Keith_2011': 'Keith et al. (2011)',
     'Kijak_2011': 'Kijak et al. (2011)',
+    'Hessels_2011': 'Hessels et al. (2011)',
     'Lynch_2012': 'Lynch et al. (2012)',
     'Mickaliger_2012': 'Mickaliger et al. (2012)',
+    'Kowalinska_2012': 'Kowalińska et al. (2012)',
     'Boyles_2013': 'Boyles et al. (2013)',
     'Demorest_2013': 'Demorest et al. (2013)',
     'Dowell_2013': 'Dowell et al. (2013)',
@@ -892,6 +928,7 @@ DEFAULT_LITERATURE_CITATIONS = {
     'Han_2016': 'Han et al. (2016)',
     'Kondratiev_2016': 'Kondratiev et al. (2016)',
     'Mikhailov_2016': 'Mikhailov & van Leeuwen (2016)',
+    'Levin_2016': 'Levin et al. (2016)',
     'Kijak_2017': 'Kijak et al. (2017)',
     'Mignani_2017': 'Mignani et al. (2017)',
     'Murphy_2017': 'Murphy et al. (2017)',
@@ -931,8 +968,12 @@ DEFAULT_LITERATURE_CITATIONS = {
     'Bhat_2023': 'Bhat et al. (2023)',
     'Gitika_2023': 'Gitika et al. (2023)',
     'Posselt_2023': 'Posselt et al. (2023)',
-    'Anumarlapudi_2023': 'Anumarlapudi et al. (2023)'
+    'Anumarlapudi_2023': 'Anumarlapudi et al. (2023)',
+    'Keith_2024': 'Keith et al. (2024)',
+    'Wang_2024': 'Wang et al. (2024)',
+    'Kumar_2025': 'Kumar et al. (2025)',
 }
+
 JANKOWSKI_LITERATURE_SET = [  # Part of literature used by Jankowski et al. (2018)
     'Jankowski_2018',
     'Sieber_1973',
