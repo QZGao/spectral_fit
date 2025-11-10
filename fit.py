@@ -83,22 +83,21 @@ def parse_args() -> Namespace:
 
     # Data used for fitting
     parser.add_argument('--jname', help="Specific pulsar name")
-    parser.add_argument('--model', help="Specific model name", default='simple_power_law;'
-                                                                       'broken_power_law;'
-                                                                       'log_parabolic_spectrum;'
-                                                                       'high_frequency_cut_off_power_law;'
-                                                                       'low_frequency_turn_over_power_law;'
-                                                                       'double_turn_over_spectrum')
 
     # Dataset
     parser.add_argument('--lit_set', help="Customize literature list", type=str, default=None)
     parser.add_argument('--atnf', help="Include ATNF pulsar catalogue", action='store_true')
     parser.add_argument('--atnf_ver', help="ATNF pulsar catalogue version", type=str, default='1.54')
     parser.add_argument('--jan_set', help="Use Jankowski et al. (2018)'s (reproduced) dataset", action='store_true')
-    parser.add_argument('--print_lit', help="Print literature list", action='store_true')
     parser.add_argument('--refresh', help="Refresh the catalogue", action='store_true')
 
     # Fitting
+    parser.add_argument('--model', help="Specific model name", default='simple_power_law;'
+                                                                       'broken_power_law;'
+                                                                       'log_parabolic_spectrum;'
+                                                                       'high_frequency_cut_off_power_law;'
+                                                                       'low_frequency_turn_over_power_law;'
+                                                                       'double_turn_over_spectrum')
     parser.add_argument('--no_requirements', help="Do not require the dataset to have at least 4 points and a frequency range of at least 2", action='store_true')
     parser.add_argument('--fixed_freq_prior', help="Use fixed frequency prior", action='store_true')
 
@@ -127,11 +126,12 @@ def parse_args() -> Namespace:
     parser.add_argument('--label', help="Output directory label (when --outdir is not set)")
     parser.add_argument("--outdir", help="Output directory")
     parser.add_argument('--override', help="Override finished jobs", action='store_true')
+    parser.add_argument('--nproc', help="Number of processes", type=int, default=cpu_count() - 1 or 1)
     parser.add_argument("--no_checkpoint", help="Save pickle dump file", action='store_true')
     parser.add_argument("--no_plot", help="Plot results", action='store_true')
-    parser.add_argument('--nproc', help="Number of processes", type=int, default=cpu_count() - 1 or 1)
     parser.add_argument('--corner', help="Plot corner plot", action='store_true')
     parser.add_argument('--pdf', help="Save the plot as a PDF file", action='store_true')
+    parser.add_argument('--print_lit', help="Print literature list", action='store_true')
 
     return parser.parse_args()
 

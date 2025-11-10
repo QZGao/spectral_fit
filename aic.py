@@ -1,3 +1,7 @@
+# AIC fitting procedure for pulsar spectra using iminuit and `pulsar-spectra`.
+# Most of the code are adapted from `pulsar-spectra` by Nick Swainston under MIT license:
+# https://github.com/NickSwainston/pulsar_spectra
+
 import json
 
 import numpy as np
