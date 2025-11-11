@@ -4,7 +4,7 @@ This repository contains code to fit pulsar radio spectra using Bayesian methods
 
 The dataset is based on a compilation of literature data, including the latest [`pulsar-spectra`](https://github.com/NickSwainston/pulsar_spectra) catalogue (version 2.1.0) and a set of additional recent measurements.
 
-The fitting methods include various spectral models and options for handling outliers and systematic uncertainties. Although most of the options are not used in the paper, they present our attempts to improve the fitting process and account for data issues.
+The fitting methods include various spectral models and options for handling outliers and systematic uncertainties. Although most of the options are not used in Gao et al. (2025), they present our attempts to improve the fitting process and account for data issues.
 
 ## Installation
 
@@ -24,14 +24,14 @@ pip install --upgrade pandas
 
 ### Data compilation and fitting
 
-Default Bayesian fitting with Cauchy likelihood:
+Default Bayesian fitting with Cauchy likelihood (method used in Gao's BS thesis):
 ```bash
 python fit.py
 ```
 
-Method used in the paper: Bayesian fitting with Gaussian likelihood, and a dynamic $e_{\text{fac}}$ that is calculated based on a 50% $e_{\text{quad}}$:
+Bayesian fitting with Gaussian likelihood, and a dynamic $e_{\text{fac}}$ that is calculated based on a 50% $e_{\text{quad}}$ (method used in Gao et al. (2025)):
 ```bash
-python fit.py --gaussian --efac_qbound .5
+python fit.py --gaussian --efac_qbound 0.5
 ```
 
 Catalogue options:
@@ -39,7 +39,7 @@ Catalogue options:
 * `--lit_set <file>`: Customize literature list (string, default: None).
 * `--atnf`: Include [The ATNF Pulsar Catalogue](https://www.atnf.csiro.au/research/pulsar/psrcat/) (flag, default: False).
 * `--atnf_ver <version>`: The ATNF Pulsar Catalogue version (string, default: `1.54`).
-* `--jan_set`: Use Jankowski et al. (2018)'s (reproduced) dataset (flag, default: False). This is an incomplete dataset reproduced from their literature list, to our best effort.
+* `--jan_set`: Use [Jankowski et al. (2018)](http://academic.oup.com/mnras/article/473/4/4436/4315944)'s (reproduced) dataset (flag, default: False). This is an incomplete dataset reproduced from their literature list, to our best effort.
 * `--refresh`: Refresh the catalogue (flag, default: False).
 
 Fitting behaviour and priors:
@@ -58,23 +58,23 @@ Outlier handling / likelihood options:
 Systematic error / extra uncertainty parameters:
 * `--equad <value>`: Add an additional systematic error (float).
 * `--efac <value>`: Multiply reported uncertainties by this systematic error factor (float).
-* `--efac_qbound <value>`: Determine $e_{\text{fac}}$ dynamically based on an $e_{\text{quad}}$ bound (float). Example used in the paper: `--efac_qbound .5`.
+* `--efac_qbound <value>`: Determine $e_{\text{fac}}$ dynamically based on an $e_{\text{quad}}$ bound (float).
 
 AIC / [Jankowski et al. (2018)](http://academic.oup.com/mnras/article/473/4/4436/4315944) method:
 * `--aic`: Use Jankowski et al. (2018)'s AIC-based method instead of the Bayesian fit (flag, default: False). Code is adapted from `pulsar-spectra`.
 * `--aic_no_corr`: Do not apply the small-sample correction term in the AIC calculation (flag, default: False).
-* Note: none of the following parameters apply to the AIC method: `--fixed_freq_prior`, `--gaussian`, `--gaussian_patch`, `--outliers_rm`, `--outliers_min`, `--outliers_min_plus`, `--outliers_all`, `--equad`, `--efac`, `--efac_qbound`, `--no_checkpoint`, `--corner`.
+* Note: none of the following CLI flags will work if the AIC method is used: `--fixed_freq_prior`, `--gaussian`, `--gaussian_patch`, `--outliers_rm`, `--outliers_min`, `--outliers_min_plus`, `--outliers_all`, `--equad`, `--efac`, `--efac_qbound`, `--no_checkpoint`, `--corner`.
 
 Output, multiprocessing and plotting:
 * `--label <label>`: Output directory label (used when `--outdir` is not set).
 * `--outdir <dir>`: Output directory (if not set, a timestamped `output/outdir_YYYY-MM-DD_HH-MM-SS` is created).
 * `--override`: Override finished jobs (flag, default: False).
-* `--nproc <int>`: Number of parallel processes to use (int). Default: `cpu_count() - 1` or 1.
+* `--nproc <int>`: Number of parallel processes to use (int). Default: `cpu_count() - 1 or 1`.
 * `--no_checkpoint`: Do not save intermediate pickle dump files (flag, default: False).
-* `--no_plot`: Do not create result plots (flag, default: False).
-* `--corner`: Generate a corner plot (flag, default: False).
+* `--no_plot`: Do not generate plots (flag, default: False).
+* `--corner`: Generate a corner plot of the posterior distribution of parameters (flag, default: False).
 * `--pdf`: Save plots as PDF instead of PNG (flag, default: False).
-* `--print_lit`: Print literature list and save it to the output directory (flag, default: False). Exits the program after printing without performing any fitting.
+* `--print_lit`: Print literature list and save it to the output directory (flag, default: False). Adding this CLI flag will exit the program after printing without performing any fitting.
 
 ### Processing fitted results
 
@@ -101,8 +101,8 @@ The literature dataset used in this work is compiled from various sources. The m
 
 [^a]: Literature present in the `pulsar-spectra` catalogue version 2.0.4.
 [^b]: New literature added in the `pulsar-spectra` catalogue version 2.1.0.
-[^c]: Supplementary literature added to the catalogue as part of the effort of the paper.
-[^i]: Literature with data obtained through imaging surveys.
+[^c]: Supplementary literature added to the catalogue as part of the effort of the work.
+[^i]: Literature with measurements obtained through imaging surveys.
 [^j]: Literature present in [Jankowski et al. (2018)](http://academic.oup.com/mnras/article/473/4/4436/4315944)'s dataset.
 
 |       Cite key        |                                                     Citation                                                     | Pulsar count | Frequency range (MHz) | Note         |
