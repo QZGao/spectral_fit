@@ -1,4 +1,4 @@
-# Pulsar spectrum fitting
+# Bayesian Fitting of the Pulsar Spectra
 
 This repository contains code to fit pulsar radio spectra using Bayesian methods.
 
@@ -37,8 +37,8 @@ python fit.py --gaussian --efac_qbound .5
 Catalogue options:
 * `--jname <name>`: Specific pulsar name (string). Can be a single name or multiple names separated by `;`.
 * `--lit_set <file>`: Customize literature list (string, default: None).
-* `--atnf`: Include ATNF pulsar catalogue (flag, default: False).
-* `--atnf_ver <version>`: ATNF pulsar catalogue version (string, default: `1.54`).
+* `--atnf`: Include [The ATNF Pulsar Catalogue](https://www.atnf.csiro.au/research/pulsar/psrcat/) (flag, default: False).
+* `--atnf_ver <version>`: The ATNF Pulsar Catalogue version (string, default: `1.54`).
 * `--jan_set`: Use Jankowski et al. (2018)'s (reproduced) dataset (flag, default: False). This is an incomplete dataset reproduced from their literature list, to our best effort.
 * `--refresh`: Refresh the catalogue (flag, default: False).
 
@@ -60,7 +60,7 @@ Systematic error / extra uncertainty parameters:
 * `--efac <value>`: Multiply reported uncertainties by this systematic error factor (float).
 * `--efac_qbound <value>`: Determine $e_{\text{fac}}$ dynamically based on an $e_{\text{quad}}$ bound (float). Example used in the paper: `--efac_qbound .5`.
 
-AIC / Jankowski et al. (2018) method:
+AIC / [Jankowski et al. (2018)](http://academic.oup.com/mnras/article/473/4/4436/4315944) method:
 * `--aic`: Use Jankowski et al. (2018)'s AIC-based method instead of the Bayesian fit (flag, default: False). Code is adapted from `pulsar-spectra`.
 * `--aic_no_corr`: Do not apply the small-sample correction term in the AIC calculation (flag, default: False).
 * Note: none of the following parameters apply to the AIC method: `--fixed_freq_prior`, `--gaussian`, `--gaussian_patch`, `--outliers_rm`, `--outliers_min`, `--outliers_min_plus`, `--outliers_all`, `--equad`, `--efac`, `--efac_qbound`, `--no_checkpoint`, `--corner`.
@@ -97,13 +97,13 @@ python processing.py <output_dir> --plot <filter> --plot_format "pdf" # specify 
 
 ## Dataset
 
-The literature dataset used in this work is compiled from various sources. The main component is the `pulsar-spectra` catalogue version 2.1.0. In addition, we have added several recent publications and some older literature that were not included in the catalogue.
+The literature dataset used in this work is compiled from various sources. The main component is the [`pulsar-spectra`](https://github.com/NickSwainston/pulsar_spectra) catalogue version 2.1.0. In addition, we have added several recent publications and some older literature that were not included in the catalogue.
 
 [^a]: Literature present in the `pulsar-spectra` catalogue version 2.0.4.
 [^b]: New literature added in the `pulsar-spectra` catalogue version 2.1.0.
 [^c]: Supplementary literature added to the catalogue as part of the effort of the paper.
 [^i]: Literature with data obtained through imaging surveys.
-[^j]: Literature present in Jankowski et al. (2018)'s dataset.
+[^j]: Literature present in [Jankowski et al. (2018)](http://academic.oup.com/mnras/article/473/4/4436/4315944)'s dataset.
 
 |       Cite key        |                                                     Citation                                                     | Pulsar count | Frequency range (MHz) | Note         |
 |:---------------------:|:----------------------------------------------------------------------------------------------------------------:|:------------:|:---------------------:|:-------------|
