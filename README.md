@@ -97,7 +97,7 @@ python processing.py <output_dir> --plot <filter> --plot_format "pdf" # specify 
 
 ## Dataset
 
-The literature dataset used in this work is compiled from various sources. The main component is the [`pulsar-spectra`](https://github.com/NickSwainston/pulsar_spectra) catalogue version 2.1.0. In addition, we have added several recent publications and some older literature that were not included in the catalogue.
+The literature dataset used in this work is compiled from various sources. The main component is the [`pulsar-spectra`](https://github.com/NickSwainston/pulsar_spectra) catalogue version 2.1.0. In addition, we have added several recent publications and some older literature that were not included in the catalogue. We also removed some literature that did not include calibration in their measurements.
 
 [^a]: Literature present in the `pulsar-spectra` catalogue version 2.0.4.
 [^b]: New literature added in the `pulsar-spectra` catalogue version 2.1.0.
