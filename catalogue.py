@@ -449,6 +449,20 @@ class Catalogue:
             print(
                 'Anumarlapudi_2023 & Gordon_2021: Manually added measurements of 8 frequency channels from Anumarlapudi et al. (2023) and Gordon et al. (2021).')
 
+        # Add data from Levin et al. (2010) for J1622-4950
+        x =    [1400.0, 3100.0, 5500.0, 6300.0, 9000.0] # MHz
+        y =    [   4.8,    4.9,   13.0,   12.0,   14.3] # mJy
+        yerr = [   2.8,    2.5,    1.0,    2.0,    0.8] # mJy
+        self.extend('J1622-4950', x, y, yerr, ['Levin_2010']*5)
+        self.add_citations({'Levin_2010': 'Levin et al. (2010)'})
+
+        # Add data from Anderson et al. (2012) for J1622-4950
+        x =    [4800.0, 5312.0, 8256.0, 8767.0] # MHz
+        y =    [  40.4,   33.0,   31.9,   30.9] # mJy
+        yerr = [   0.3,    0.3,    0.6,    0.6] # mJy
+        self.extend('J1622-4950', x, y, yerr, ['Anderson_2012']*4)
+        self.add_citations({'Anderson_2012': 'Anderson et al. (2012)'})
+
         # Apply added fractional error based on the declarement of the authors
         # efrac_df = pd.read_csv('catalogue/efrac.csv')
         # for _, row in efrac_df.iterrows():

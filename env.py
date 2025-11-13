@@ -19,16 +19,25 @@ def fit_only_env(outdir: str = '', model_dict: dict = None, catalogue: Catalogue
             outdir=outdir,
             no_requirements=False,
             fixed_freq_prior=False,
-            gaussian=False,
+            gaussian=True,
             gaussian_patch=False,
             outliers_rm=False,
             outliers_min=None,
+            outliers_min_plus=None,
             outliers_all=None,
+            equad=False,
+            efac=False,
+            efac_qbound=0.5,
             err_all=False,
             err_thresh=None,
             aic=False,
             aic_no_corr=False,
-            override=False,
+            override=True,
+            no_checkpoint=False,
+            no_plot=False,
+            corner=False,
+            pdf=False,
+            print_lit=False
         )
     args.__dict__.update(kwargs)
     return Env(
