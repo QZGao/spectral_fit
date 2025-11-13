@@ -164,11 +164,13 @@ The literature dataset used in this work is compiled from various sources. The m
 |     `Kijak_2007`      |          [Kijak et al. (2007)](https://www.aanda.org/articles/aa/abs/2007/05/aa6125-06/aa6125-06.html)           |      11      |       325-1060        | [^a][^j]     |
 |    `Champion_2008`    |                 [Champion et al. (2008)](https://ui.adsabs.harvard.edu/abs/2008Sci...320.1309C)                  |      1       |       1400-5000       | [^b]         |
 |     `Deller_2009`     |                  [Deller et al. (2009)](https://ui.adsabs.harvard.edu/abs/2009ApJ...701.1243D)                   |      9       |       1650-1650       | [^a]         |
+|     `Levin_2010`      |                      [Levin et al. (2010)](https://dx.doi.org/10.1088/2041-8205/721/1/L33)                       |      1       |       1400-9000       | [^c]         |
 |     `Joshi_2009`      |                   [Joshi et al. (2009)](https://ui.adsabs.harvard.edu/abs/2009MNRAS.398..943J)                   |      3       |       626-1400        | [^a]         |
 |     `Bates_2011`      |                   [Bates et al. (2011)](https://ui.adsabs.harvard.edu/abs/2011MNRAS.411.1575B)                   |      18      |       6591-6591       | [^a][^j]     |
 |     `Kijak_2011`      |         [Kijak et al. (2011)](https://www.aanda.org/articles/aa/abs/2011/07/aa14274-10/aa14274-10.html)          |      15      |       610-4850        | [^a][^j]     |
 |     `Keith_2011`      |                   [Keith et al. (2011)](https://ui.adsabs.harvard.edu/abs/2011MNRAS.416..346K)                   |      9       |      17000-24000      | [^a][^j]     |
 |    `Hessels_2011`     |                  [Hessels et al. (2011)](https://ui.adsabs.harvard.edu/abs/2011AIPC.1357...40H)                  |      12      |        350-350        | [^b]         |
+|    `Anderson_2012`    |                     [Anderson et al. (2012)](https://dx.doi.org/10.1088/0004-637X/751/1/53)                      |      1       |       4800-8767       | [^c]         |
 |     `Lynch_2012`      |                   [Lynch et al. (2012)](https://ui.adsabs.harvard.edu/abs/2012ApJ...745..109L)                   |      12      |       2000-2000       | [^a]         |
 |   `Kowalinska_2012`   |                [Kowalińska et al. (2012)](https://ui.adsabs.harvard.edu/abs/2012ASPC..466..101K)                 |      5       |       8350-8350       | [^b]         |
 |    `Demorest_2013`    |                 [Demorest et al. (2013)](https://ui.adsabs.harvard.edu/abs/2013ApJ...762...94D)                  |      17      |       327-2300        | [^a]         |
