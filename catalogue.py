@@ -450,18 +450,20 @@ class Catalogue:
                 'Anumarlapudi_2023 & Gordon_2021: Manually added measurements of 8 frequency channels from Anumarlapudi et al. (2023) and Gordon et al. (2021).')
 
         # Add data from Levin et al. (2010) for J1622-4950
-        x =    [1400.0, 3100.0, 5500.0, 6300.0, 9000.0] # MHz
-        y =    [   4.8,    4.9,   13.0,   12.0,   14.3] # mJy
-        yerr = [   2.8,    2.5,    1.0,    2.0,    0.8] # mJy
-        self.extend('J1622-4950', x, y, yerr, ['Levin_2010']*5)
-        self.add_citations({'Levin_2010': 'Levin et al. (2010)'})
+        if 'Levin_2010' in lit_set:
+            x =    [1400.0, 3100.0, 5500.0, 6300.0, 9000.0] # MHz
+            y =    [   4.8,    4.9,   13.0,   12.0,   14.3] # mJy
+            yerr = [   2.8,    2.5,    1.0,    2.0,    0.8] # mJy
+            self.extend('J1622-4950', x, y, yerr, ['Levin_2010']*5)
+            print('Levin_2010: Manually added measurements for J1622-4950 from Levin et al. (2010).')
 
         # Add data from Anderson et al. (2012) for J1622-4950
-        x =    [4800.0, 5312.0, 8256.0, 8767.0] # MHz
-        y =    [  40.4,   33.0,   31.9,   30.9] # mJy
-        yerr = [   0.3,    0.3,    0.6,    0.6] # mJy
-        self.extend('J1622-4950', x, y, yerr, ['Anderson_2012']*4)
-        self.add_citations({'Anderson_2012': 'Anderson et al. (2012)'})
+        if 'Anderson_2012' in lit_set:
+            x =    [4800.0, 5312.0, 8256.0, 8767.0] # MHz
+            y =    [  40.4,   33.0,   31.9,   30.9] # mJy
+            yerr = [   0.3,    0.3,    0.6,    0.6] # mJy
+            self.extend('J1622-4950', x, y, yerr, ['Anderson_2012']*4)
+            print('Anderson_2012: Manually added measurements for J1622-4950 from Anderson et al. (2012).')
 
         # Apply added fractional error based on the declarement of the authors
         # efrac_df = pd.read_csv('catalogue/efrac.csv')
@@ -818,6 +820,8 @@ DEFAULT_LITERATURE_SET = [
     # Supplementary additions
     'Sieber_1973',
     'Maron_2000',
+    'Levin_2010',
+    'Anderson_2012',
     'Gordon_2021',
     'Posselt_2023',
     'Anumarlapudi_2023'
@@ -914,10 +918,12 @@ DEFAULT_LITERATURE_CITATIONS = {
     'Deller_2009': 'Deller et al. (2009)',
     'Janssen_2009': 'Janssen et al. (2009)',
     'Joshi_2009': 'Joshi et al. (2009)',
+    'Levin_2010': 'Levin et al. (2010)',
     'Bates_2011': 'Bates et al. (2011)',
     'Keith_2011': 'Keith et al. (2011)',
     'Kijak_2011': 'Kijak et al. (2011)',
     'Hessels_2011': 'Hessels et al. (2011)',
+    'Anderson_2012': 'Anderson et al. (2012)',
     'Lynch_2012': 'Lynch et al. (2012)',
     'Mickaliger_2012': 'Mickaliger et al. (2012)',
     'Kowalinska_2012': 'Kowalińska et al. (2012)',
