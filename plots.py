@@ -103,6 +103,11 @@ def plot_raw(dataset, citation_dict: dict, outpath: str = None, show: bool = Tru
 def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env, good_fit: bool,
          param_estimates=None, samples=None, log_evidence=None, log_evidence_err=None,
          iminuit_result=None, aic=None, display_info=True):
+    if env.args.plot_bigger_font:
+        plt.rcParams.update({'font.size': 14})
+    else:
+        plt.rcParams.update({'font.size': 10})
+
     fig, ax = plt.subplots(figsize=(5*4/3, 5))
 
     if env.args.aic:
@@ -189,10 +194,15 @@ def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env, good_fi
 
     good_fit_mask = '✔' if good_fit else '✖'
 
+    fit_info = ''
     if env.args.aic:
-        fit_info = f"{good_fit_mask} {model_name_cap}\n$\\mathrm{{AIC}} = {aic:.2f}$"
+        if not env.args.plot_hide_model_name:
+            fit_info += f"{good_fit_mask} {model_name_cap}\n"
+        fit_info += f"$\\mathrm{{AIC}} = {aic:.2f}$"
     else:
-        fit_info = f"{good_fit_mask} {model_name_cap}\n$\ln z = {log_evidence:.2f} \pm {log_evidence_err:.2f}$"
+        if not env.args.plot_hide_model_name:
+            fit_info += f"{good_fit_mask} {model_name_cap}\n"
+        fit_info += f"$\ln z = {log_evidence:.2f} \pm {log_evidence_err:.2f}$"
     for i in range(len(labels)):
         if labels[i].startswith('e'):
             continue
@@ -222,7 +232,11 @@ def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env, good_fi
                 bbox=dict(facecolor='none', edgecolor='none'), linespacing=1.5)
 
     # Legend below the plot
-    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=2, frameon=False)
+    if not env.args.plot_hide_legend:
+        if env.args.plot_legend_top:
+            ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1.15), ncol=2, frameon=False)
+        else:
+            ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=2, frameon=False)
 
     if env.args.pdf:
         plt.savefig(outpath + '.pdf', bbox_inches='tight')

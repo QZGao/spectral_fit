@@ -128,6 +128,10 @@ def parse_args() -> Namespace:
     parser.add_argument("--no_checkpoint", help="Save pickle dump file", action='store_true')
     parser.add_argument("--no_plot", help="Plot results", action='store_true')
     parser.add_argument('--corner', help="Plot corner plot", action='store_true')
+    parser.add_argument('--plot_hide_model_name', help="Hide model name on the plot", action='store_true')
+    parser.add_argument('--plot_hide_legend', help="Hide legend on the plot", action='store_true')
+    parser.add_argument('--plot_legend_top', help="Place legend at the top of the plot", action='store_true')
+    parser.add_argument('--plot_bigger_font', help="Use bigger font size on the plot", action='store_true')
     parser.add_argument('--pdf', help="Save the plot as a PDF file", action='store_true')
     parser.add_argument('--print_lit', help="Print literature list", action='store_true')
 
@@ -214,7 +218,7 @@ if __name__ == '__main__':
             job_envs = [job[2] for job in job_list]
 
             with ProcessPool(max_workers=args.nproc) as pool:
-                future = pool.map(fit, job_jnames, job_models, job_envs, timeout=600)
+                future = pool.map(fit, job_jnames, job_models, job_envs, timeout=1800)
                 iterator = future.result()
                 while True:
                     try:

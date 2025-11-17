@@ -36,6 +36,10 @@ def fit_only_env(outdir: str = '', model_dict: dict = None, catalogue: Catalogue
             no_checkpoint=False,
             no_plot=False,
             corner=False,
+            plot_hide_model_name=False,
+            plot_hide_legend=False,
+            plot_legend_top=False,
+            plot_bigger_font=False,
             pdf=False,
             print_lit=False
         )
