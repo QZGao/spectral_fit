@@ -73,6 +73,10 @@ Output, multiprocessing and plotting:
 * `--no_checkpoint`: Do not save intermediate pickle dump files (flag, default: False).
 * `--no_plot`: Do not generate plots (flag, default: False).
 * `--corner`: Generate a corner plot of the posterior distribution of parameters (flag, default: False).
+* `--plot_hide_model_name`: Hide model name on the plot (flag, default: False).
+* `--plot_hide_legend`: Hide the legend on the plot (flag, default: False).
+* `--plot_legend_top`: Place the legend at the top of the plot instead of the default position (flag, default: False).
+* `--plot_bigger_font`: Use a bigger font size on the plots (flag, default: False).
 * `--pdf`: Save plots as PDF instead of PNG (flag, default: False).
 * `--print_lit`: Print literature list and save it to the output directory (flag, default: False). Adding this CLI flag will exit the program after printing without performing any fitting.
 

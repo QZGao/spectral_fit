@@ -465,13 +465,6 @@ class Catalogue:
             self.extend('J1622-4950', x, y, yerr, ['Anderson_2012']*4)
             print('Anderson_2012: Manually added measurements for J1622-4950 from Anderson et al. (2012).')
 
-        # Apply added fractional error based on the declarement of the authors
-        # efrac_df = pd.read_csv('catalogue/efrac.csv')
-        # for _, row in efrac_df.iterrows():
-        #     if not np.isnan(float(row['EFRAC'])):
-        #         self.apply_efrac_to_ref(row['REF'], float(row['EFRAC']))
-        # print(f'{row["REF"]}: Applied additional fractional error of {row["EFRAC"]} to the flux densities.')
-
     def keys(self):
         return self.cat_dict.keys()
 
