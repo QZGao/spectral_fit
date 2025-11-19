@@ -59,6 +59,8 @@ def plot_corner(samples, labels, priors, env: Env, outpath: str = None, show: bo
 
 def plot_raw(dataset, citation_dict: dict, outpath: str = None, show: bool = True):
     fig, ax = plt.subplots(figsize=(5*4/3, 5))
+    ax.set_xscale('log')
+    ax.set_yscale('log')
 
     custom_cycler = (cycler(color = [p[0] for p in MARKER_TYPES])
                     + cycler(marker = [p[1] for p in MARKER_TYPES])
@@ -78,8 +80,6 @@ def plot_raw(dataset, citation_dict: dict, outpath: str = None, show: bool = Tru
                     label=citation_dict.get(g, g),
                     **next(prop_cycle))
 
-    ax.set_xscale('log')
-    ax.set_yscale('log')
     ax.grid(linestyle=':')
     xlim = ax.get_xlim()
     ylim = ax.get_ylim()
@@ -109,6 +109,8 @@ def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env, good_fi
         plt.rcParams.update({'font.size': 10})
 
     fig, ax = plt.subplots(figsize=(5*4/3, 5))
+    ax.set_xscale('log')
+    ax.set_yscale('log')
 
     if env.args.aic:
         median, plus_minus = param_estimates
@@ -157,8 +159,6 @@ def plot(dataset, model, model_name_cap, labels, outpath: str, env: Env, good_fi
                     label=env.catalogue.citation_dict.get(g, g),
                     **next(prop_cycle))
 
-    ax.set_xscale('log')
-    ax.set_yscale('log')
     ax.grid(linestyle=':')
     xlim = ax.get_xlim()
     ylim = ax.get_ylim()
