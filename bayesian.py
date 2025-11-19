@@ -27,7 +27,7 @@ def log_likelihood(p, model, labels, dataset: Dataset, env: Env):
     if env.args.efac or env.args.equad:
         ref_set = list(set(dataset.REF))
         for ref in ref_set:
-            if env.args.efac:
+            if env.args.efac or env.args.efac_qbound:
                 err[dataset.REF == ref] *= p[labels.index('e_{\mathrm{fac,\,' + ref.replace('_', '\_') + '}}')]
             if env.args.equad:
                 err[dataset.REF == ref] = np.sqrt(
@@ -137,9 +137,14 @@ def fit_bayesian(dataset: Dataset, model_name: str, env: Env, dataset_plot: Data
         if not env.args.no_checkpoint:
             with open(str(outdir_path / f'{model_name}_dres.pkl'), 'wb') as f:
                 pickle.dump(dres, f)
+    else:
+        with open(str(outdir_path / f'{model_name}_results.json'), 'r', encoding='utf-8-sig') as f:
+            existing_results = json.load(f)
+            labels = existing_results['params']
+            priors = existing_results['priors']
 
     weights = np.exp(dres['logwt'] - dres['logz'][-1])
-    samp_all = resample_equal(dres.samples, weights)
+    samp_all = resample_equal(dres.samples, weights, rstate=np.random.RandomState(0))
 
     # Calculate the log evidence and its error
     log_evidences = np.array(dres['logz'])
