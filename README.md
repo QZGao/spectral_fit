@@ -93,6 +93,11 @@ Extract estimated parameter values (including errors) from the output files:
 python processing.py <output_dir> --var "param_estimates"
 ```
 
+Extract $\chi^2$-like good-fit statistics from the output files:
+```bash
+python processing.py <output_dir> --var "good_fit"
+```
+
 Extract frequency-flux plots from the output files (`<filter>` can be a list of pulsar names separated by `;`, or an expression regarding the number of measurements in a pulsar e.g. `>=15`):
 ```bash
 python processing.py <output_dir> --plot <filter>           # default format to be extracted is "png"
