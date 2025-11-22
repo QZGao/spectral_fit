@@ -168,10 +168,10 @@ def get_models(model_names: str | list, aic: bool = False, custom_p_b: tuple = N
 
 def is_good_fit(dataset: Dataset, params_dict: dict, fitted_model, env: Env) -> bool:
     err = dataset.YERR.copy()
-    if env.args.efac or env.args.equad:  # Apply the error factors
+    if env.args.efac or env.args.equad or env.args.efac_qbound:  # Apply the error factors
         ref_set = list(set(dataset.REF))
         for ref in ref_set:
-            if env.args.efac:
+            if env.args.efac or env.args.efac_qbound:
                 err[dataset.REF == ref] *= params_dict['e_{\mathrm{fac,\,' + ref.replace('_', '\_') + '}}']
             if env.args.equad:
                 err[dataset.REF == ref] = np.sqrt(
