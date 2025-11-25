@@ -4,7 +4,7 @@ This repository contains code to fit pulsar radio spectra using Bayesian methods
 
 The dataset is based on a compilation of literature data, including the latest [`pulsar-spectra`](https://github.com/NickSwainston/pulsar_spectra) catalogue (version 2.1.0) and a set of additional recent measurements.
 
-The fitting methods include various spectral models and options for handling outliers and systematic uncertainties. Although most of the options are not used in Gao et al. (2025), they present our attempts to improve the fitting process and account for data issues.
+The fitting methods include various spectral models and options for handling outliers and systematic uncertainties. Although most of the options are not used in [Gao et al. (2025)](https://arxiv.org/abs/2511.18348), they present our attempts to improve the fitting process and account for data issues.
 
 ## Installation
 
@@ -29,7 +29,7 @@ Default Bayesian fitting with Cauchy likelihood (method used in Gao's BS thesis)
 python fit.py
 ```
 
-Bayesian fitting with Gaussian likelihood, and a dynamic $e_{\text{fac}}$ that is calculated based on a 50% $e_{\text{quad}}$ (method used in Gao et al. (2025)):
+Bayesian fitting with Gaussian likelihood, and a dynamic $e_{\text{fac}}$ that is calculated based on a 50% $e_{\text{quad}}$ (method used in [Gao et al. (2025)](https://arxiv.org/abs/2511.18348)):
 ```bash
 python fit.py --gaussian --efac_qbound 0.5
 ```
